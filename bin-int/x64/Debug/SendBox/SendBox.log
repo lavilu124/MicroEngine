@@ -1,0 +1,37 @@
+﻿  C:\github\MicroEngine\bin\x64\Debug\MicroEngine\MicroEngine.dll
+  1 File(s) copied
+  SendBoxApp.cpp
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(9,41): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(9,28): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(13,30): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         with
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:             T=int
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         ]
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         and
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:             T=float
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         ]
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         with
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:             T=int
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         ]
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         and
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:             T=float
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         ]
+  SendBox.vcxproj -> C:\github\MicroEngine\bin\x64\Debug\SendBox\SendBox.exe
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\openal32.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-audio-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-audio-d-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-graphics-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-graphics-d-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-network-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-network-d-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-system-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-system-d-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-window-2.dll
+  C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-window-d-2.dll
+  11 File(s) copied
