@@ -8,7 +8,7 @@ welcome to micro engine a **2D c++ Game Engine**
 3. [Tools Used](#Tool-list)
 4. [Features](#Feature-List)
 5. [How to build](#How-to-build)
-6. [Code exmpl](#🏁-Code exmpl)
+6. [Code exmpl](#Code-exmpl)
 
 ## expactaions
 currrently this is more of an extanion to sfml rather then a game engine
@@ -46,7 +46,7 @@ Here is a list of the features that exist in this game engine, and the features 
 ## How to build
 - ❗ to create and build copy the repository go to Scripts and the run setup depending on your system
 
-## 🏁 Code exmpl
+## Code exmpl
 this is the example that will load (the sendbox project to use)
 [text](SendBox/src/SendBoxApp.cpp)
 
