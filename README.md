@@ -6,9 +6,9 @@ welcome to micro engine a **2D c++ Game Engine**
 1. [Welcome To Micro Engine](#welcome-to-Micro-Engine)
 2. [expactaions](#expactaions)
 3. [Tools Used](#Tool-list)
-4. [Features](#features)
-5. [How to build](#how-to-build)
-6. [Code exmpl](#getting-started)
+4. [Features](#Feature-List)
+5. [How to build](#How-to-build)
+6. [Code exmpl](#Code-exmpl)
 
 ## expactaions
 currrently this is more of an extanion to sfml rather then a game engine
@@ -22,6 +22,7 @@ The tools used to create this project
 | 🔧 Tool|Use|
 |-----|-------------|
 |SFML|Graphic & Sounds|
+|json library| stores all scenes in a json file |
 |premake(the cherno project template)| (https://github.com/TheCherno/ProjectTemplate) Build system|
 |TheCherno| [Youtuber](https://www.youtube.com/@TheCherno) (helped me learn a lot of c++) |
 |new 2000h sprite engine| took inspraiton for the readme file (the new version not the old one)|
