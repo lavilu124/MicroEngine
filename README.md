@@ -8,11 +8,13 @@ welcome to micro engine a **2D c++ Game Engine**
 3. [Tools Used](#Tool-list)
 4. [Features](#Feature-List)
 5. [How to build](#How-to-build)
-6. [Code exmpl](#Code-exmpl)
+6. [Code exmpl](#🏁-Code exmpl)
 
 ## expactaions
 currrently this is more of an extanion to sfml rather then a game engine
-i am a busy 16 years old who programs this in his free time so i do not have a lot of time to work on this so it might be a bit rough around the edges but this is mostly practices for myself
+i am a busy 16 years old who programs this in his free time so i do not have a lot of time to work on this so it might be a bit rough around the edges but this is mostly practices for myself.
+there are stuff that i started developing that are not finished (namespaces that aren't in all places....)
+sadly my last repo was giving me problems so i moved to a new one meaing all not finished stuff are in the main branch
 (this engine is still being build and is not a perfect or a complete product)
 (currently dosent have any ui of game engine just a core)
 
