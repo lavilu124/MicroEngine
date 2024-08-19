@@ -8,26 +8,25 @@ sf::Time SystemManager::deltaTimeT;
 float SystemManager::deltaTime = 0;
 
 
-SystemManager::SystemManager(sf::RenderWindow& window) : m_currentScene(window, window.getSize().x, window.getSize().y){
-    FileManager::SetPaths();
-    FileManager::LoadInput();
+
+SystemManager::SystemManager(sf::RenderWindow& window) : m_sceneManager(window, window.getSize().x, window.getSize().y){
+    m_fileManager.SetPaths();
+    m_fileManager.LoadInput();
 
     deltaTime = 0;
 }
 
 void SystemManager::Start() {
-    std::vector<GameObject>& objects = m_currentScene.GetObjects();
-    if (objects.empty()) return;
+    if (m_sceneManager.objects.empty()) return;
 
-    for (std::vector<GameObject>::iterator it = objects.begin(); it != objects.end(); ++it)
+    for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
         (*it).Start();
 }
 
 void SystemManager::Update(Camera* cam) {
-    std::vector<GameObject>& objects = m_currentScene.GetObjects();
-    if (objects.empty()) return;
+    if (m_sceneManager.objects.empty()) return;
 
-    for (std::vector<GameObject>::iterator it = objects.begin(); it != objects.end(); ++it)
+    for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
         (*it).Update(deltaTime);
 
     deltaTimeT = clock.restart();
@@ -37,28 +36,29 @@ void SystemManager::Update(Camera* cam) {
 }
 
 void SystemManager::Render(sf::RenderWindow& window) {
-    std::vector<GameObject>& objects = m_currentScene.GetObjects();
-    for (std::vector<GameObject>::iterator it = objects.begin(); it != objects.end(); ++it)
+    for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
         window.draw((*it).GetSprite());
 
 }
 
-int SystemManager::CreateGameObject(GameObject& ob) {
-    return (m_currentScene.CheckExistingObject(ob.GetName()) != -1) ?
-        m_currentScene.CheckExistingObject(ob.GetName()) :
-        m_currentScene.CreateObject(ob);
+int SystemManager::CheckExistingObject(std::string name) {
+    for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
+        if (m_sceneManager.objects[i].GetName() == name) {
+            return i;
+        }
+    }
 
     return -1;
 }
 
 bool SystemManager::CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith, GameObject* collideInfo) {
-    std::vector<GameObject>& objects = m_currentScene.GetObjects();
-    for (int i = 0; i < objects.size(); ++i) {
-        if (objects[i].GetName().compare(name) && (objects[i].GetLayer() == layerToCollideWith || (layerToCollideWith == Collision::ALL && objects[i].GetLayer() < 6))) {
-            if (Collision::PixelPerfectCollision(sprite, objects[i].GetSprite())) {
+    for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
+        if (m_sceneManager.objects[i].GetName().compare(name) && (m_sceneManager.objects[i].GetLayer() == layerToCollideWith || (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i].GetLayer() < 6))) {
+            if (Collision::PixelPerfectCollision(sprite, m_sceneManager.objects[i].GetSprite())) {
                 if (collideInfo != nullptr) {
-                    collideInfo = &objects[i];
+                    collideInfo = &m_sceneManager.objects[i];
                 }
+
                 return true;
             }
         }
@@ -67,27 +67,28 @@ bool SystemManager::CheckForCollision(sf::Sprite sprite, std::string name, Colli
 }
 
 void SystemManager::RunInput(sf::Event event) {
-    for (std::map<std::string, Input::InputAction>::iterator Input = FileManager::inputs.begin(); Input != FileManager::inputs.end(); ++Input)
+    for (std::map<std::string, Input::InputAction>::iterator Input = m_fileManager.inputs.begin(); Input != m_fileManager.inputs.end(); ++Input)
         (*Input).second.Active(event);
 
 }
 
 void SystemManager::LoadScene(std::string scene) {
-    m_currentScene.LoadSceneFromFile(scene, this);
+    m_sceneManager.LoadSceneFromFile(scene, this, m_fileManager);
 
     Start();
 }
 
-Camera& SystemManager::GetCamera() { return m_currentScene.camera; }
+Camera& SystemManager::GetCamera() { return m_sceneManager.camera; }
+
+void SystemManager::CreateGameObject(GameObject& ob) {
+    if (!CheckExistingObject(ob.GetName()))
+        m_sceneManager.objects.push_back(ob);
+}
 
 int SystemManager::GetObjectByName(const std::string& name) {
-    return m_currentScene.CheckExistingObject(name);
+    return CheckExistingObject(name);
 }
 
 void SystemManager::DestroyObject(std::string name) {
-    m_currentScene.DestroyObject(name);
-}
-
-void SystemManager::DestroyObject(int index) {
-    m_currentScene.DestroyObject(index);
+    m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
 }

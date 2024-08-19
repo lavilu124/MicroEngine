@@ -19,6 +19,7 @@ public:
 	}
 
 	void Run() override{
+
 		int light = m_lightSystem.AddLight(Light::LightType::Directional, 400, 135.f);
 
 		while (m_window.isOpen()) {

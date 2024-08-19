@@ -9,14 +9,8 @@
 
 using std::filesystem::directory_iterator;
 
-std::map <std::string, Input::InputAction> FileManager::inputs;
-std::map <std::string, void(*)()> FileManager::m_functionMap;
-
 std::vector <sf::Texture> textures;
 std::vector <sf::SoundBuffer> buffers;
-
-std::map <std::string, sf::Sound> FileManager::sounds;
-std::map <std::string, sf::Sprite> FileManager::sprites;
 
 void FileManager::AddInputFunc(std::string name, void(*function)()) {
     m_functionMap[name] = function;
@@ -115,7 +109,7 @@ void FileManager::LoadInput() {
 }
 
 void FileManager::SetPaths() {          
-    std::string Folders[] = {"\\Resources\\sounds" }; // "\\Resources\\graphics", 
+    std::string Folders[] = {"\\Resources\\m_sounds" }; // "\\Resources\\graphics", 
     std::string path = std::filesystem::current_path().string();
 
     /*const std::string remove = "\\Engine";
@@ -158,7 +152,7 @@ int GetFileCount(std::string Directory) {
 }
 
 void FileManager::GetFilesInDir(std::string Dir) {
-    if (Dir.find("sounds") != std::string::npos) {
+    if (Dir.find("m_sounds") != std::string::npos) {
         buffers.reserve(GetFileCount(Dir));
     }
 
@@ -179,7 +173,7 @@ void FileManager::LoadAsset(std::string Path, std::string FileName) {
 
         sf::Sprite NewSprite;
         NewSprite.setTexture(textures[textures.size() - 1]);
-        sprites[FileName] = NewSprite;
+        m_sprites[FileName] = NewSprite;
 	}
     else if (FileName.find(".wav") != std::string::npos) {
         sf::SoundBuffer NewBuffer;
@@ -188,7 +182,7 @@ void FileManager::LoadAsset(std::string Path, std::string FileName) {
 
         sf::Sound newSound;
         newSound.setBuffer(buffers[buffers.size() - 1]);
-        sounds[FileName] = newSound;
+        m_sounds[FileName] = newSound;
     }
 }
 
@@ -218,7 +212,7 @@ std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager*
     if (!Reader.parse(inputFile, actualJson))
         return returnVector;
 
-	sprites.clear();
+	m_sprites.clear();
 
 
     //going over the json and reading all the data
@@ -237,7 +231,7 @@ std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager*
 
         LoadAsset(path + "\\Resources\\graphics\\" + spriteName, spriteName);
 		
-        returnVector.push_back(GameObject(SystemManger, sprites[spriteName], name, layer));
+        returnVector.push_back(GameObject(SystemManger, m_sprites[spriteName], name, layer));
         returnVector[returnVector.size() - 1].SetPosition(position);
 		returnVector[returnVector.size() - 1].SetScale(scale);
 		returnVector[returnVector.size() - 1].SetRotation(rotation);
@@ -249,3 +243,10 @@ std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager*
     return returnVector;
 }
 
+sf::Sprite* FileManager::GetSprite(std::string name) {
+	return &m_sprites[name];
+}
+
+sf::Sound* FileManager::GetSound(std::string name) {
+    return &m_sounds[name];
+}

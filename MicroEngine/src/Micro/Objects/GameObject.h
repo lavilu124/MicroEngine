@@ -10,8 +10,6 @@ class MICRO_API GameObject
 public:
 	GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER);
 
-	int GetIndex() const;
-
 	bool IsFacingRight();
 
 	void Flip();
@@ -50,14 +48,10 @@ private:
 	sf::Vector2f m_scale;
 	float m_rotation;
 
-	int m_index = 0;
-
 	sf::Sprite m_objectSprite;
 
 	virtual void OnCollision(GameObject* HitInfo);
 	virtual void OnTrigger(GameObject* HitInfo);
-
-	bool m_isDeleted = false;
 
 	std::string m_name;
 

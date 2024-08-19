@@ -1,6 +1,6 @@
 #pragma once
 #include "../Core.h"
-#include "GameLogic/Scene.h"
+#include "GameLogic/SceneManger.h"
 #include "LightSystem.h"
 #include <vector>
 
@@ -13,7 +13,7 @@ public:
 
 	void Render(sf::RenderWindow& window);
 
-	int CreateGameObject(GameObject& ob);
+	void CreateGameObject(GameObject& ob);
 
 	void DestroyObject(std::string name);
 	void DestroyObject(int index);
@@ -37,11 +37,14 @@ public:
 private:
 	void Start();
 
-private:
-	Scene m_currentScene;
-
 	SystemManager(const SystemManager&) = delete;
 	void operator=(const SystemManager&) = delete;
+
+	int CheckExistingObject(std::string name);
+
+private:
+	SceneManger m_sceneManager;
+	FileManager m_fileManager;
 };
 
 

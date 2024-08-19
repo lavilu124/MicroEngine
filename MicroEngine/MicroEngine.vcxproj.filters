@@ -48,13 +48,16 @@
     <ClInclude Include="src\Micro\FileOperations\FileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Micro\SystemLogic\GameLogic\Scene.h">
+    <ClInclude Include="src\Micro\SystemLogic\GameLogic\SceneManger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Micro\Objects\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Micro\SystemLogic\SystemManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Micro\Objects\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,13 +83,16 @@
     <ClCompile Include="src\Micro\FileOperations\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Micro\SystemLogic\GameLogic\Scene.cpp">
+    <ClCompile Include="src\Micro\SystemLogic\GameLogic\SceneManger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Micro\Objects\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Micro\SystemLogic\SystemManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Micro\Objects\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
