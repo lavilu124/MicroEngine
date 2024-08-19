@@ -10,11 +10,11 @@ c:\github\microengine\bin-int\x64\debug\microengine\camera.obj
 c:\github\microengine\bin-int\x64\debug\microengine\jsoncpp.obj
 c:\github\microengine\bin-int\x64\debug\microengine\filemanager.obj
 c:\github\microengine\bin-int\x64\debug\microengine\application.obj
-c:\github\microengine\bin-int\x64\debug\microengine\microengine.ilk
-c:\github\microengine\bin\x64\debug\microengine\microengine.dll
-c:\github\microengine\bin\x64\debug\microengine\microengine.pdb
 c:\github\microengine\bin\x64\debug\microengine\microengine.lib
 c:\github\microengine\bin\x64\debug\microengine\microengine.exp
+c:\github\microengine\bin\x64\debug\microengine\microengine.dll
+c:\github\microengine\bin-int\x64\debug\microengine\microengine.ilk
+c:\github\microengine\bin\x64\debug\microengine\microengine.pdb
 c:\github\microengine\bin-int\x64\debug\microengine\microengine.vcxproj.filelistabsolute.txt
 c:\github\microengine\bin-int\x64\debug\microengine\microengine.tlog\cl.command.1.tlog
 c:\github\microengine\bin-int\x64\debug\microengine\microengine.tlog\cl.items.tlog

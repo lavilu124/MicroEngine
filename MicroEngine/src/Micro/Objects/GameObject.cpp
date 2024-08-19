@@ -5,7 +5,7 @@
 GameObject::GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, std::string& name, Collision::collisionLayer Layer)
 	: m_objectSprite(ObjectSprite), m_layer(Layer), m_rotation(ObjectSprite.getRotation()), m_position(ObjectSprite.getPosition()), m_scale(ObjectSprite.getScale()), m_name(name), m_systemManager(systemManager)
 {   
-	m_index = m_systemManager->CreateGameObject(*this);
+	m_systemManager->CreateGameObject(*this);
 
 	SetCenter();
 }
@@ -51,14 +51,7 @@ void GameObject::SetCenter() {
 }
 
 void GameObject::Delete() {
-
-    if (m_index != -1) {
-        m_systemManager->DestroyObject(m_index);
-		return;
-    }
-
     m_systemManager->DestroyObject(m_name);
-
 }
 
 void GameObject::OnCollision(GameObject* HitInfo) {}
@@ -197,10 +190,6 @@ void GameObject::SetSprite(const sf::Sprite& Sprite) {
 
 const sf::Sprite& GameObject::GetSprite() const {
     return m_objectSprite;
-}
-
-int GameObject::GetIndex() const {
-    return m_index;
 }
 
 Collision::collisionLayer GameObject::GetLayer() const {

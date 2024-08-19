@@ -4,24 +4,24 @@
 C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(9,41): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
 C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(9,28): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
 C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(13,30): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         with
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         [
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:             T=int
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         ]
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         and
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         [
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:             T=float
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,127): warning C4244:         ]
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         with
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         [
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:             T=int
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         ]
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         and
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         [
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:             T=float
-C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(29,91): warning C4244:         ]
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:         with
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:             T=int
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:         ]
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:         and
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:             T=float
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,127): warning C4244:         ]
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:         with
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:             T=int
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:         ]
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:         and
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:         [
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:             T=float
+C:\github\MicroEngine\SendBox\src\SendBoxApp.cpp(30,91): warning C4244:         ]
   SendBox.vcxproj -> C:\github\MicroEngine\bin\x64\Debug\SendBox\SendBox.exe
   C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\openal32.dll
   C:\github\MicroEngine\dependencies\SFML\SFML-2.6.1\bin\sfml-audio-2.dll

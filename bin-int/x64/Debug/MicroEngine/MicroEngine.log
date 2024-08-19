@@ -1,77 +1,22 @@
-﻿  Application.cpp
-  FileManager.cpp
-C:\github\MicroEngine\MicroEngine\src\Micro\FileOperations\FileManager.cpp(225,23): warning C4018: '<': signed/unsigned mismatch
-  jsoncpp.cpp
+﻿  FileManager.cpp
+C:\github\MicroEngine\MicroEngine\src\Micro\FileOperations\FileManager.cpp(219,23): warning C4018: '<': signed/unsigned mismatch
+  Animation.cpp
+C:\github\MicroEngine\MicroEngine\src\Micro\Objects\Animation.cpp(42,12): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+C:\github\MicroEngine\MicroEngine\src\Micro\Objects\Animation.cpp(47,19): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Camera.cpp
   GameObject.cpp
-  Collision.cpp
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(70,24): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(70,24): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(70,24): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(70,24): warning C4244:             T=float
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(70,24): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(71,28): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(71,28): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(71,28): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(71,28): warning C4244:             T=float
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(71,28): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(73,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(73,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(74,88): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(74,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(138,51): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(138,51): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(138,51): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(138,51): warning C4244:             T=int
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(138,51): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,64): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,64): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,64): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,64): warning C4244:             T=int
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,64): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,51): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,51): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,51): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,51): warning C4244:             T=int
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(139,51): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(140,56): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(140,56): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(140,56): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(140,56): warning C4244:             T=int
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\GameLogic\Collision.cpp(140,56): warning C4244:         ]
-  InputAction.cpp
-  Scene.cpp
-  LightSystem.cpp
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(33,46): warning C4244: 'argument': conversion from 'float' to 'size_t', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(36,42): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(36,32): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(40,32): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(63,38): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(63,32): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,55): warning C4244: 'argument': conversion from 'T' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,55): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,55): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,55): warning C4244:             T=float
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,55): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,41): warning C4244: 'argument': conversion from 'T' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,41): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,41): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,41): warning C4244:             T=float
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(102,41): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(106,38): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(106,31): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\LightSystem.cpp(131,26): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  SceneManger.cpp
   SystemManager.cpp
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,117): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,117): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,117): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,117): warning C4244:             T=unsigned int
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,117): warning C4244:         ]
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,97): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,97): warning C4244:         with
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,97): warning C4244:         [
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,97): warning C4244:             T=unsigned int
-C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(11,97): warning C4244:         ]
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,117): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,117): warning C4244:         with
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,117): warning C4244:         [
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,117): warning C4244:             T=unsigned int
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,117): warning C4244:         ]
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,97): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,97): warning C4244:         with
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,97): warning C4244:         [
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,97): warning C4244:             T=unsigned int
+C:\github\MicroEngine\MicroEngine\src\Micro\SystemLogic\SystemManager.cpp(12,97): warning C4244:         ]
   Generating Code...
      Creating library C:\github\MicroEngine\bin\x64\Debug\MicroEngine\MicroEngine.lib and object C:\github\MicroEngine\bin\x64\Debug\MicroEngine\MicroEngine.exp
   MicroEngine.vcxproj -> C:\github\MicroEngine\bin\x64\Debug\MicroEngine\MicroEngine.dll

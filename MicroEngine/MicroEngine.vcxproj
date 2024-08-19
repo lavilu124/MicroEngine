@@ -166,11 +166,12 @@
     <ClInclude Include="src\Micro\FileOperations\FileManager.h" />
     <ClInclude Include="src\Micro\FileOperations\json\json-forwards.h" />
     <ClInclude Include="src\Micro\FileOperations\json\json.h" />
+    <ClInclude Include="src\Micro\Objects\Animation.h" />
     <ClInclude Include="src\Micro\Objects\Camera.h" />
     <ClInclude Include="src\Micro\Objects\GameObject.h" />
     <ClInclude Include="src\Micro\SystemLogic\GameLogic\Collision.hpp" />
     <ClInclude Include="src\Micro\SystemLogic\GameLogic\InputAction.h" />
-    <ClInclude Include="src\Micro\SystemLogic\GameLogic\Scene.h" />
+    <ClInclude Include="src\Micro\SystemLogic\GameLogic\SceneManger.h" />
     <ClInclude Include="src\Micro\SystemLogic\LightSystem.h" />
     <ClInclude Include="src\Micro\SystemLogic\SystemManager.h" />
   </ItemGroup>
@@ -178,11 +179,12 @@
     <ClCompile Include="src\Micro\Application.cpp" />
     <ClCompile Include="src\Micro\FileOperations\FileManager.cpp" />
     <ClCompile Include="src\Micro\FileOperations\json\jsoncpp.cpp" />
+    <ClCompile Include="src\Micro\Objects\Animation.cpp" />
     <ClCompile Include="src\Micro\Objects\Camera.cpp" />
     <ClCompile Include="src\Micro\Objects\GameObject.cpp" />
     <ClCompile Include="src\Micro\SystemLogic\GameLogic\Collision.cpp" />
     <ClCompile Include="src\Micro\SystemLogic\GameLogic\InputAction.cpp" />
-    <ClCompile Include="src\Micro\SystemLogic\GameLogic\Scene.cpp" />
+    <ClCompile Include="src\Micro\SystemLogic\GameLogic\SceneManger.cpp" />
     <ClCompile Include="src\Micro\SystemLogic\LightSystem.cpp" />
     <ClCompile Include="src\Micro\SystemLogic\SystemManager.cpp" />
   </ItemGroup>
