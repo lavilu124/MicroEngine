@@ -3,58 +3,60 @@
 #include "../SystemLogic/GameLogic/Collision.hpp"
 #include "../Core.h"
 
-class SystemManager;
+namespace Micro {
+	class SystemManager;
 
-class MICRO_API GameObject
-{
-public:
-	GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER);
+	class MICRO_API GameObject
+	{
+	public:
+		GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER);
 
-	bool IsFacingRight();
+		bool IsFacingRight();
 
-	void Flip();
+		void Flip();
 
-	void Delete();
+		void Delete();
 
-	sf::Vector2f GetPosition() const;
-	void SetPosition(sf::Vector2f NewPosition);
+		sf::Vector2f GetPosition() const;
+		void SetPosition(sf::Vector2f NewPosition);
 
-	sf::Vector2f GetScale() const;
-	void SetScale(sf::Vector2f NewScale);
+		sf::Vector2f GetScale() const;
+		void SetScale(sf::Vector2f NewScale);
 
-	float GetRotation() const;
-	void SetRotation(float Rotation);
+		float GetRotation() const;
+		void SetRotation(float Rotation);
 
-	const sf::Sprite& GetSprite() const;
-	void SetSprite(const sf::Sprite& Sprite);
+		const sf::Sprite& GetSprite() const;
+		void SetSprite(const sf::Sprite& Sprite);
 
-	Collision::collisionLayer GetLayer() const;
+		Collision::collisionLayer GetLayer() const;
 
-	virtual void Start();
-	virtual void Update(float DeltaTime);
+		virtual void Start();
+		virtual void Update(float DeltaTime);
 
-	std::string GetName();
+		std::string GetName();
 
-private:
-	void SetCenter();
+	private:
+		void SetCenter();
 
-	void HandlePositionChange(sf::Vector2f NewPosition);
-	void HandleRotationChange(float NewRotation);
-	void HandleScaleChange(sf::Vector2f NewScale);
+		void HandlePositionChange(sf::Vector2f NewPosition);
+		void HandleRotationChange(float NewRotation);
+		void HandleScaleChange(sf::Vector2f NewScale);
 
-private: 
-	Collision::collisionLayer m_layer;
-	sf::Vector2f m_position;
-	sf::Vector2f m_scale;
-	float m_rotation;
+	private:
+		Collision::collisionLayer m_layer;
+		sf::Vector2f m_position;
+		sf::Vector2f m_scale;
+		float m_rotation;
 
-	sf::Sprite m_objectSprite;
+		sf::Sprite m_objectSprite;
 
-	virtual void OnCollision(GameObject* HitInfo);
-	virtual void OnTrigger(GameObject* HitInfo);
+		virtual void OnCollision(GameObject* HitInfo);
+		virtual void OnTrigger(GameObject* HitInfo);
 
-	std::string m_name;
+		std::string m_name;
 
-	SystemManager* m_systemManager;
-};
+		SystemManager* m_systemManager;
+	};
+}
 
