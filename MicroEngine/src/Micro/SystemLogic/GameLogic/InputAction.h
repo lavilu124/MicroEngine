@@ -5,23 +5,24 @@
 #include <variant>
 #include "../../Core.h"
 
-namespace Input {
+namespace Micro {
+    namespace Input {
 
-    using KeyType = std::variant<sf::Keyboard::Key, sf::Joystick::Axis, sf::Mouse::Button>;
+        using KeyType = std::variant<sf::Keyboard::Key, sf::Joystick::Axis, sf::Mouse::Button>;
 
-    enum class MICRO_API inputType {
-        KeyboardKey,
-        ControllerButton,
-        MouseButton
-    };
+        enum class MICRO_API inputType {
+            KeyboardKey,
+            ControllerButton,
+            MouseButton
+        };
 
-    enum class MICRO_API inputPart {
-        Started,
-        Pressed,
-        Released
-    };
+        enum class MICRO_API inputPart {
+            Started,
+            Pressed,
+            Released
+        };
 
-    class MICRO_API InputAction {
+        class MICRO_API InputAction {
         public:
             explicit InputAction(inputType type, KeyType key, std::string name, inputPart part,
                 void (*onInput)(), void(*offInput)() = nullptr);
@@ -44,8 +45,9 @@ namespace Input {
             bool m_isPressed;
             void (*m_onInput)();
             void (*m_offInput)();
-    };
+        };
 
+    }
 }
 
 
