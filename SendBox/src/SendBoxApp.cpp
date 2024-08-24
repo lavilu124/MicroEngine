@@ -20,7 +20,7 @@ public:
 
 	void Run() override{
 
-		int light = m_lightSystem.AddLight(Light::LightType::Directional, 400, 135.f);
+		int light = m_lightSystem.AddLight(Micro::Light::LightType::Directional, 400, 135.f);
 
 		while (m_window.isOpen()) {
 			InputFunc();
@@ -62,9 +62,9 @@ private:
 private:
 
 	sf::RenderWindow m_window;
-	SystemManager m_systemManager;
-	Camera* m_camera;
-	Light::LightSystem m_lightSystem;
+	Micro::SystemManager m_systemManager;
+	Micro::Camera* m_camera;
+	Micro::Light::LightSystem m_lightSystem;
 };
 
 Micro::Application* Micro::CreateApplication() {

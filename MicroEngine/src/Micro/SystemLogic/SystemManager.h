@@ -4,47 +4,43 @@
 #include "LightSystem.h"
 #include <vector>
 
-class MICRO_API SystemManager
-{
-public:
-	SystemManager(sf::RenderWindow& window);
+namespace Micro {
+	class MICRO_API SystemManager
+	{
+	public:
+		SystemManager(sf::RenderWindow& window);
 
-	void Update(Camera* cam);
+		void Update(Camera* cam);
 
-	void Render(sf::RenderWindow& window);
+		void Render(sf::RenderWindow& window);
 
-	void CreateGameObject(GameObject& ob);
+		void CreateGameObject(GameObject& ob);
 
-	void DestroyObject(std::string name);
-	void DestroyObject(int index);
+		void DestroyObject(std::string name);
 
-	bool CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith = Collision::ALL, GameObject* collideInfo = nullptr);
+		bool CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith = Collision::ALL, GameObject* collideInfo = nullptr);
 
-	void RunInput(sf::Event event);
+		void RunInput(sf::Event event);
 
-	void LoadScene(std::string scene);
+		void LoadScene(std::string scene);
 
-	 Camera& GetCamera(); 
+		Camera& GetCamera();
 
-	 int GetObjectByName(const std::string& name);
+		GameObject& GetObjectByName(const std::string& name);
 
-public:
+	public:
 
-	static sf::Clock clock;
-	static sf::Time deltaTimeT;
+		static sf::Clock clock;
+		static sf::Time deltaTimeT;
 
-	static float deltaTime;
-private:
-	void Start();
+		static float deltaTime;
+	private:
+		void Start();
 
-	SystemManager(const SystemManager&) = delete;
-	void operator=(const SystemManager&) = delete;
+		int CheckExistingObject(std::string name);
 
-	int CheckExistingObject(std::string name);
-
-private:
-	SceneManger m_sceneManager;
-	FileManager m_fileManager;
-};
-
-
+	private:
+		SceneManger m_sceneManager;
+		FileManager m_fileManager;
+	};
+}

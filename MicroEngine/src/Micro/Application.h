@@ -2,6 +2,7 @@
 #include "Core.h"
 
 
+
 namespace Micro {
 	class MICRO_API Application
 	{
@@ -13,4 +14,5 @@ namespace Micro {
 
 	Application* CreateApplication();
 }
+
 

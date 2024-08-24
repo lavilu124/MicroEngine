@@ -1,94 +1,96 @@
 #include "SystemManager.h"
 
 
-sf::Clock SystemManager::clock;
-sf::Time SystemManager::deltaTimeT;
+namespace Micro {
+    sf::Clock SystemManager::clock;
+    sf::Time SystemManager::deltaTimeT;
 
 
-float SystemManager::deltaTime = 0;
+    float SystemManager::deltaTime = 0;
 
 
 
-SystemManager::SystemManager(sf::RenderWindow& window) : m_sceneManager(window, window.getSize().x, window.getSize().y){
-    m_fileManager.SetPaths();
-    m_fileManager.LoadInput();
+    SystemManager::SystemManager(sf::RenderWindow& window) : m_sceneManager(window, window.getSize().x, window.getSize().y) {
+        m_fileManager.SetPaths();
+        m_fileManager.LoadInput();
 
-    deltaTime = 0;
-}
-
-void SystemManager::Start() {
-    if (m_sceneManager.objects.empty()) return;
-
-    for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-        (*it).Start();
-}
-
-void SystemManager::Update(Camera* cam) {
-    if (m_sceneManager.objects.empty()) return;
-
-    for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-        (*it).Update(deltaTime);
-
-    deltaTimeT = clock.restart();
-    deltaTime = deltaTimeT.asSeconds();
-
-    cam->Update();
-}
-
-void SystemManager::Render(sf::RenderWindow& window) {
-    for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-        window.draw((*it).GetSprite());
-
-}
-
-int SystemManager::CheckExistingObject(std::string name) {
-    for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
-        if (m_sceneManager.objects[i].GetName() == name) {
-            return i;
-        }
+        deltaTime = 0;
     }
 
-    return -1;
-}
+    void SystemManager::Start() {
+        if (m_sceneManager.objects.empty()) return;
 
-bool SystemManager::CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith, GameObject* collideInfo) {
-    for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
-        if (m_sceneManager.objects[i].GetName().compare(name) && (m_sceneManager.objects[i].GetLayer() == layerToCollideWith || (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i].GetLayer() < 6))) {
-            if (Collision::PixelPerfectCollision(sprite, m_sceneManager.objects[i].GetSprite())) {
-                if (collideInfo != nullptr) {
-                    collideInfo = &m_sceneManager.objects[i];
-                }
+        for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
+            (*it).Start();
+    }
 
-                return true;
+    void SystemManager::Update(Camera* cam) {
+        if (m_sceneManager.objects.empty()) return;
+
+        for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
+            (*it).Update(deltaTime);
+
+        deltaTimeT = clock.restart();
+        deltaTime = deltaTimeT.asSeconds();
+
+        cam->Update(*this);
+    }
+
+    void SystemManager::Render(sf::RenderWindow& window) {
+        for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
+            window.draw((*it).GetSprite());
+
+    }
+
+    int SystemManager::CheckExistingObject(std::string name) {
+        for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
+            if (m_sceneManager.objects[i].GetName() == name) {
+                return i;
             }
         }
+
+        return -1;
     }
-    return false;
-}
 
-void SystemManager::RunInput(sf::Event event) {
-    for (std::map<std::string, Input::InputAction>::iterator Input = m_fileManager.inputs.begin(); Input != m_fileManager.inputs.end(); ++Input)
-        (*Input).second.Active(event);
+    bool SystemManager::CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith, GameObject* collideInfo) {
+        for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
+            if (m_sceneManager.objects[i].GetName().compare(name) && (m_sceneManager.objects[i].GetLayer() == layerToCollideWith || (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i].GetLayer() < 6))) {
+                if (Collision::PixelPerfectCollision(sprite, m_sceneManager.objects[i].GetSprite())) {
+                    if (collideInfo != nullptr) {
+                        collideInfo = &m_sceneManager.objects[i];
+                    }
 
-}
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-void SystemManager::LoadScene(std::string scene) {
-    m_sceneManager.LoadSceneFromFile(scene, this, m_fileManager);
+    void SystemManager::RunInput(sf::Event event) {
+        for (std::map<std::string, Input::InputAction>::iterator Input = m_fileManager.inputs.begin(); Input != m_fileManager.inputs.end(); ++Input)
+            (*Input).second.Active(event);
 
-    Start();
-}
+    }
 
-Camera& SystemManager::GetCamera() { return m_sceneManager.camera; }
+    void SystemManager::LoadScene(std::string scene) {
+        m_sceneManager.LoadSceneFromFile(scene, this, m_fileManager);
 
-void SystemManager::CreateGameObject(GameObject& ob) {
-    if (!CheckExistingObject(ob.GetName()))
-        m_sceneManager.objects.push_back(ob);
-}
+        Start();
+    }
 
-int SystemManager::GetObjectByName(const std::string& name) {
-    return CheckExistingObject(name);
-}
+    Camera& SystemManager::GetCamera() { return m_sceneManager.camera; }
 
-void SystemManager::DestroyObject(std::string name) {
-    m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
+    void SystemManager::CreateGameObject(GameObject& ob) {
+        if (!CheckExistingObject(ob.GetName()))
+            m_sceneManager.objects.push_back(ob);
+    }
+
+    GameObject& SystemManager::GetObjectByName(const std::string& name) {
+        return m_sceneManager.objects[CheckExistingObject(name)];
+    }
+
+    void SystemManager::DestroyObject(std::string name) {
+        m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
+    }
 }
