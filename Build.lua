@@ -15,3 +15,4 @@ group "Core"
 group ""
 
 include "SendBox/Build-App.lua"
+include "Testing/Build-Test.lua"
