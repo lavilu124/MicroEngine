@@ -43,7 +43,7 @@ namespace Micro {
 
             sf::Color m_darkness;
 
-            int AddLight(LightType type, float size, float angle);
+            int AddLight(LightType type, float size, float angle = 0.0f);
             void RemoveLight(int index);
             LightSource* getLight(int index);
 
