@@ -18,6 +18,8 @@ namespace Micro {
 
 		void DestroyObject(std::string name);
 
+		std::vector<GameObject>& GetObjects();
+
 		bool CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith = Collision::ALL, GameObject* collideInfo = nullptr);
 
 		void RunInput(sf::Event event);
