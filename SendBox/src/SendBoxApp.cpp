@@ -20,7 +20,7 @@ public:
 
 	void Run() override{
 
-		int light = m_lightSystem.AddLight(Micro::Light::LightType::Directional, 400, 135.f);
+		int light = m_lightSystem.AddLight(Micro::Light::LightType::Directional, 200, 135);
 
 		while (m_window.isOpen()) {
 			InputFunc();

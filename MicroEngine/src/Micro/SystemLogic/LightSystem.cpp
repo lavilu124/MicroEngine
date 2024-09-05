@@ -20,15 +20,20 @@ namespace Micro {
             return root;
         }
 
-        LightSource::LightSource(LightType type, float size, float angle)
+        LightSource::LightSource(LightType type,int id, float size, float angle)
             : m_type(type) {
             if (type == LightType::Circle) {
                 createCircleLight(size);
             }
             else if (type == LightType::Directional) {
+                
                 createDirectionalLight(size, angle);
             }
+
+			m_id = id;
         }
+
+        int LightSource::GetId() const { return m_id; }
 
         void LightSource::createCircleLight(float diameter) {
             m_circleLight = sf::CircleShape(diameter / 2);
@@ -56,7 +61,7 @@ namespace Micro {
             m_directionalLight.setPoint(0, sf::Vector2f(0, 0));
 
             for (int i = 1; i <= POINT_COUNT + 1; ++i) {
-                float angleDeg = 45.0f + (angle - 45.0f) * (i - 1) / POINT_COUNT;
+                float angleDeg = 45.f + (angle - 45.0f) * (i - 1) / POINT_COUNT;
                 float x = (size / 2) * std::cos(angleDeg * PI / 180);
                 float y = (size / 2) * std::sin(angleDeg * PI / 180);
                 m_directionalLight.setPoint(i, sf::Vector2f(x, y));
@@ -128,17 +133,36 @@ namespace Micro {
         }
 
         int LightSystem::AddLight(LightType type, float size, float angle) {
-            LightSource light(type, size, angle);
+            LightSource light(type, m_currentId, size, angle);
             m_lights.push_back(light);
-            return m_lights.size() - 1;
+			m_currentId++;
+            return m_currentId - 1;
         }
 
-        void LightSystem::RemoveLight(int index) {
-            m_lights.erase(m_lights.cbegin() + index);
+        int LightSystem::GetLightIndex(int id) {
+            for (int i = 0; i < m_lights.size(); i++) {
+                if (m_lights[i].GetId() == id) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        void LightSystem::RemoveLight(int id) {
+            int index = GetLightIndex(id);
+			if (index == -1) 
+				return;
+
+			m_lights.erase(m_lights.cbegin() + index);
             m_lights.shrink_to_fit();
         }
 
-        LightSource* LightSystem::getLight(int index) {
+        LightSource* LightSystem::getLight(int id) {
+            int index = GetLightIndex(id);
+            if (index == -1)
+                return nullptr;
+
             return &m_lights[index];
         }
     }

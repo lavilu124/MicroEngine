@@ -12,7 +12,7 @@ namespace Micro {
 
         class MICRO_API LightSource {
         public:
-            LightSource(LightType type, float size, float angle = 0.0f);
+            LightSource(LightType type, int id, float size, float angle = 0.0f);
 
             void Update();
             sf::Drawable* GetLight();
@@ -20,6 +20,8 @@ namespace Micro {
             sf::Vector2f position;
             sf::Vector2f scale = sf::Vector2f(1, 1);
             float rotation;
+            
+            int GetId() const;
 
         private:
             LightType m_type;
@@ -32,6 +34,8 @@ namespace Micro {
 
             void createCircleLight(float diameter);
             void createDirectionalLight(float size, float angle);
+
+            int m_id;
         };
 
         class MICRO_API LightSystem {
@@ -44,12 +48,16 @@ namespace Micro {
             sf::Color m_darkness;
 
             int AddLight(LightType type, float size, float angle = 0.0f);
-            void RemoveLight(int index);
-            LightSource* getLight(int index);
+            void RemoveLight(int id);
+            LightSource* getLight(int id);
 
+        private:
+			int GetLightIndex(int id);
         private:
             std::vector<LightSource> m_lights;
             sf::RenderTexture m_lightTexture;
+
+            int m_currentId = 0;
         };
     }
 }
