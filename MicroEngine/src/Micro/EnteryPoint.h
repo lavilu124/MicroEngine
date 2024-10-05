@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 #ifdef MC_PLATFORM_WINDOWS
 
@@ -14,6 +15,8 @@ int main() {
 	app->Run();
 
 	delete app;
+
+	std::cin.get();
 
 	return 0;
 }

@@ -90,6 +90,10 @@ namespace Micro {
         return m_sceneManager.objects[CheckExistingObject(name)];
     }
 
+    FileManager& SystemManager::GetFileManager() {
+        return m_fileManager;
+    }
+
     void SystemManager::DestroyObject(std::string name) {
         m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
     }

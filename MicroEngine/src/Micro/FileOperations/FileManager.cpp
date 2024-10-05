@@ -9,8 +9,6 @@
 
 using std::filesystem::directory_iterator;
 
-std::vector <sf::Texture> textures;
-std::vector <sf::SoundBuffer> buffers;
 
 namespace Micro {
     void FileManager::AddInputFunc(std::string name, void(*function)()) {
@@ -110,7 +108,7 @@ namespace Micro {
     }
 
     void FileManager::SetPaths() {
-        std::string Folders[] = { "\\Resources\\m_sounds" }; // "\\Resources\\graphics", 
+        std::string Folders[] = { "\\Resources\\sounds" }; // "\\Resources\\graphics", 
         std::string path = std::filesystem::current_path().string();
 
         std::ofstream CurFile(path);
@@ -129,6 +127,7 @@ namespace Micro {
                 continue;
             }
 
+            m_mainPath = path;
             GetFilesInDir(path + Folders[i]);
         }
     }
@@ -146,53 +145,48 @@ namespace Micro {
     }
 
     void FileManager::GetFilesInDir(std::string Dir) {
-        if (Dir.find("m_sounds") != std::string::npos) {
-            buffers.reserve(GetFileCount(Dir));
-        }
 
         for (const auto& File : directory_iterator(Dir)) {
             std::string pathString{ File.path().u8string() };
 
             std::string fileName = pathString.substr(pathString.find_last_of("\\") + 1, pathString.length() - 1);
-            LoadAsset(pathString, fileName);
+            LoadAsset(fileName);
         }
     }
 
-    void FileManager::LoadAsset(std::string Path, std::string FileName) {
+    void FileManager::LoadAsset(std::string FileName) {
+        if (m_sprites.find(FileName) != m_sprites.end() || m_sounds.find(FileName) != m_sounds.end()) {
+            return; 
+        }
+
         if (FileName.find(".png") != std::string::npos) {
             sf::Texture NewTexture;
-            NewTexture.loadFromFile(Path);
-            textures.push_back(NewTexture);
+            NewTexture.loadFromFile(m_mainPath + "\\Resources\\graphics\\" + FileName);
+            m_textures[FileName] = NewTexture;
 
 
             sf::Sprite NewSprite;
-            NewSprite.setTexture(textures[textures.size() - 1]);
+            NewSprite.setTexture(m_textures[FileName]);
             m_sprites[FileName] = NewSprite;
         }
         else if (FileName.find(".wav") != std::string::npos) {
             sf::SoundBuffer NewBuffer;
-            NewBuffer.loadFromFile(Path);
-            buffers.push_back(NewBuffer);
+            NewBuffer.loadFromFile(m_mainPath + "\\Resources\\sounds\\" + FileName);
+            m_buffers[FileName] =NewBuffer;
 
             sf::Sound newSound;
-            newSound.setBuffer(buffers[buffers.size() - 1]);
+            newSound.setBuffer(m_buffers[FileName]);
             m_sounds[FileName] = newSound;
-        }
+		}
+    }
+
+    std::string FileManager::GetShaderPath(std::string& shadername) {
+        return m_mainPath + "\\Resources\\graphics\\shaders\\" + shadername;
     }
 
     std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager* SystemManger) {
-        std::string path = std::filesystem::current_path().string();
-        while (!std::filesystem::directory_entry{ path + "\\Resources\\Scenes\\" }.exists())
-        {
-            const std::string::size_type pos = path.find_last_of("\\");
-            if (pos != std::string::npos) {
-                path.erase(pos);
-                continue;
-            }
-            break;
-        }
 
-        std::ifstream inputFile(path + "\\Resources\\Scenes\\" + name + ".json");
+        std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".json");
         Json::Value actualJson;
         Json::Reader Reader;
 
@@ -223,7 +217,7 @@ namespace Micro {
             std::string spriteName = currentObject["spriteName"].asString();
             std::string name = currentObject["name"].asString();
 
-            LoadAsset(path + "\\Resources\\graphics\\" + spriteName, spriteName);
+            LoadAsset(spriteName);
 
             returnVector.push_back(GameObject(SystemManger, m_sprites[spriteName], name, layer));
             returnVector[returnVector.size() - 1].SetPosition(position);

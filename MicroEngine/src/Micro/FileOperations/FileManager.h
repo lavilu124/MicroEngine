@@ -14,6 +14,8 @@ namespace Micro {
 
 		void SetPaths();
 
+		std::string GetShaderPath(std::string& shadername);
+
 		std::vector<GameObject> GetObjects(std::string name, SystemManager* SystemManger);
 
 		sf::Sprite* GetSprite(std::string name);
@@ -25,11 +27,16 @@ namespace Micro {
 		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput, std::string OffInput);
 
 		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput);
-		void LoadAsset(std::string Path, std::string FileName);
+		void LoadAsset(std::string FileName);
 
 	private:
 		std::map <std::string, void(*)()> m_functionMap;
 		std::map < std::string, sf::Sprite> m_sprites;
 		std::map < std::string, sf::Sound> m_sounds;
+
+		std::map <std::string, sf::Texture> m_textures;
+		std::map <std::string, sf::SoundBuffer> m_buffers;
+
+		std::string m_mainPath;
 	};
 }

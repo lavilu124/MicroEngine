@@ -30,24 +30,7 @@
 			-1.0,
 			1.0
 		],
-		"spriteName" : "axe.png",
-		"name" : "1"
-	},
-	"object2" : 
-	{
-		"layer" : 0,
-		"position" : 
-		[
-			200.0,
-			200.0
-		],
-		"rotation" : 0.0,
-		"scale" : 
-		[
-			-1.0,
-			1.0
-		],
 		"spriteName" : "run2.png",
-		"name" : "2"
+		"name" : "1"
 	}
 }

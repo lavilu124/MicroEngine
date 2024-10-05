@@ -30,6 +30,8 @@ namespace Micro {
 
 		GameObject& GetObjectByName(const std::string& name);
 
+		FileManager& GetFileManager();
+
 	public:
 
 		static sf::Clock clock;

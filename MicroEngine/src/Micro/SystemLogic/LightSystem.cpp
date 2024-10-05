@@ -6,9 +6,9 @@
 #define POINT_COUNT  30
 #define MAX_DISTANCE  255.f
 
-
 namespace Micro {
     namespace Light {
+
         double sqroot(double square) {
             double root = square / 3, last, diff = 1;
             if (square <= 0) return 0;
@@ -20,17 +20,16 @@ namespace Micro {
             return root;
         }
 
-        LightSource::LightSource(LightType type,int id, float size, float angle)
-            : m_type(type) {
+        LightSource::LightSource(LightType type, int id, sf::Color color, float size, float angle)
+            : m_type(type), m_id(id), m_radius(size / 2) {
             if (type == LightType::Circle) {
                 createCircleLight(size);
             }
             else if (type == LightType::Directional) {
-                
                 createDirectionalLight(size, angle);
             }
 
-			m_id = id;
+            m_color = sf::Glsl::Vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f , 1);
         }
 
         int LightSource::GetId() const { return m_id; }
@@ -39,25 +38,10 @@ namespace Micro {
             m_circleLight = sf::CircleShape(diameter / 2);
             m_circleLight.setPointCount(diameter / 4);
             m_circleLight.setOrigin(diameter / 2, diameter / 2);
-
-            m_gradientImage.create(diameter, diameter);
-
-            for (unsigned y = 0; y < diameter; ++y) {
-                for (unsigned x = 0; x < diameter; ++x) {
-                    float distance = sqroot((x - (diameter / 2)) * (x - (diameter / 2)) + (y - (diameter / 2)) * (y - (diameter / 2)));
-                    float intensity = std::max(0.f, 1.f - distance / (diameter / 2));
-                    sf::Uint8 alpha = static_cast<sf::Uint8>(MAX_DISTANCE * intensity);
-                    m_gradientImage.setPixel(x, y, sf::Color(255, 255, 255, alpha));
-                }
-            }
-
-            m_gradientTexture.loadFromImage(m_gradientImage);
-            m_circleLight.setTexture(&m_gradientTexture);
         }
 
         void LightSource::createDirectionalLight(float size, float angle) {
             m_directionalLight.setPointCount(POINT_COUNT + 2);
-
             m_directionalLight.setPoint(0, sf::Vector2f(0, 0));
 
             for (int i = 1; i <= POINT_COUNT + 1; ++i) {
@@ -66,20 +50,6 @@ namespace Micro {
                 float y = (size / 2) * std::sin(angleDeg * PI / 180);
                 m_directionalLight.setPoint(i, sf::Vector2f(x, y));
             }
-
-            m_gradientImage.create(size, size);
-
-            for (unsigned y = 0; y < size; ++y) {
-                for (unsigned x = 0; x < size; ++x) {
-                    float distance = std::sqrt((x - (size / 2)) * (x - (size / 2)) + (y - m_directionalLight.getPosition().y) * (y - m_directionalLight.getPosition().y));
-                    float intensity = std::max(0.f, 1.f - distance / (size / 2.f));
-                    sf::Uint8 alpha = static_cast<sf::Uint8>(255 * intensity);
-                    m_gradientImage.setPixel(x, y, sf::Color(255, 255, 255, alpha));
-                }
-            }
-
-            m_gradientTexture.loadFromImage(m_gradientImage);
-            m_directionalLight.setTexture(&m_gradientTexture);
         }
 
         void LightSource::Update() {
@@ -105,20 +75,46 @@ namespace Micro {
             return nullptr;
         }
 
-        LightSystem::LightSystem(sf::Vector2f windowSize, sf::Color darkness) : m_darkness(darkness) {
+		void LightSource::SetColor(sf::Color color) {
+            m_color = sf::Glsl::Vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, 1);
+		}
+
+        sf::Glsl::Vec4 LightSource::GetColor() const{
+            return m_color;
+        }
+
+        float LightSource::getRadius() const {
+            return m_radius;
+        }
+
+        LightSystem::LightSystem(sf::Vector2f windowSize, sf::Color darkness, FileManager fileManger)
+            : m_darkness(darkness) {
+            m_windowHeight = windowSize.y;
             m_lightTexture.create(windowSize.x, windowSize.y);
+            m_lightShader.loadFromFile(fileManger.GetShaderPath((std::string)"lightShader.frag"), sf::Shader::Fragment);
         }
 
-        LightSystem::LightSystem(float width, float height, sf::Color darkness) : m_darkness(darkness) {
+        LightSystem::LightSystem(float width, float height, sf::Color darkness, FileManager fileManger)
+            : m_darkness(darkness) {
+			m_windowHeight = height;
             m_lightTexture.create(width, height);
+            m_lightShader.loadFromFile(fileManger.GetShaderPath((std::string)"lightShader.frag"), sf::Shader::Fragment);
         }
 
-        void LightSystem::update() {
+        void LightSystem::update(sf::RenderWindow& window) {
             m_lightTexture.clear(m_darkness);
 
-            for (int i = 0; i < m_lights.size(); i++) {
-                m_lights[i].Update();
-                m_lightTexture.draw(*m_lights[i].GetLight(), sf::BlendAdd);
+            for (auto& light : m_lights) {
+                light.Update();
+
+                // Set shader uniforms for each light
+                m_lightShader.setUniform("windowHeight", m_windowHeight); 
+                m_lightShader.setUniform("lightCenter", light.position);
+                m_lightShader.setUniform("lightRadius", light.getRadius());
+                m_lightShader.setUniform("lightColor", light.GetColor());  // Adjust as needed
+
+                // Draw the light with the shader
+                m_lightTexture.draw(*light.GetLight(), &m_lightShader);
             }
 
             m_lightTexture.display();
@@ -132,10 +128,10 @@ namespace Micro {
             window.draw(lightSprite, sf::BlendMultiply);
         }
 
-        int LightSystem::AddLight(LightType type, float size, float angle) {
-            LightSource light(type, m_currentId, size, angle);
+        int LightSystem::AddLight(LightType type, sf::Color color, float size, float angle) {
+            LightSource light(type, m_currentId, color, size, angle);
             m_lights.push_back(light);
-			m_currentId++;
+            m_currentId++;
             return m_currentId - 1;
         }
 
@@ -145,16 +141,14 @@ namespace Micro {
                     return i;
                 }
             }
-
             return -1;
         }
 
         void LightSystem::RemoveLight(int id) {
             int index = GetLightIndex(id);
-			if (index == -1) 
-				return;
-
-			m_lights.erase(m_lights.cbegin() + index);
+            if (index == -1)
+                return;
+            m_lights.erase(m_lights.cbegin() + index);
             m_lights.shrink_to_fit();
         }
 
@@ -162,7 +156,6 @@ namespace Micro {
             int index = GetLightIndex(id);
             if (index == -1)
                 return nullptr;
-
             return &m_lights[index];
         }
     }
