@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "../Core.h"
+#include "../FileOperations/FileManager.h"
 
 namespace Micro {
     namespace Light {
@@ -12,22 +13,23 @@ namespace Micro {
 
         class MICRO_API LightSource {
         public:
-            LightSource(LightType type, int id, float size, float angle = 0.0f);
+            LightSource(LightType type, int id, sf::Color color, float size, float angle = 0.0f);
 
             void Update();
             sf::Drawable* GetLight();
+            float getRadius() const;  
 
             sf::Vector2f position;
             sf::Vector2f scale = sf::Vector2f(1, 1);
             float rotation;
-            
+
             int GetId() const;
 
+			void SetColor(sf::Color color);
+
+			sf::Glsl::Vec4 GetColor() const;
         private:
             LightType m_type;
-
-            sf::Texture m_gradientTexture;
-            sf::Image m_gradientImage;
 
             sf::CircleShape m_circleLight;
             sf::ConvexShape m_directionalLight;
@@ -36,28 +38,35 @@ namespace Micro {
             void createDirectionalLight(float size, float angle);
 
             int m_id;
+            float m_radius; 
+
+            sf::Glsl::Vec4 m_color;
         };
 
         class MICRO_API LightSystem {
         public:
-            LightSystem(sf::Vector2f windowSize, sf::Color darkness);
-            LightSystem(float width, float height, sf::Color darkness);
-            void update();
+            LightSystem(sf::Vector2f windowSize, sf::Color darkness, FileManager fileManger);
+            LightSystem(float width, float height, sf::Color darkness, FileManager fileManger);
+            void update(sf::RenderWindow& window);
             void draw(sf::RenderWindow& window);
 
             sf::Color m_darkness;
 
-            int AddLight(LightType type, float size, float angle = 0.0f);
+            int AddLight(LightType type, sf::Color color, float size, float angle = 0.0f);
             void RemoveLight(int id);
             LightSource* getLight(int id);
 
         private:
-			int GetLightIndex(int id);
+            int GetLightIndex(int id);
+
         private:
             std::vector<LightSource> m_lights;
             sf::RenderTexture m_lightTexture;
+			float m_windowHeight;
 
             int m_currentId = 0;
+
+            sf::Shader m_lightShader;
         };
     }
 }

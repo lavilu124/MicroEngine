@@ -1,13 +1,12 @@
 #include <Micro.h>
-#include <SFML/Graphics.hpp>
 
 class App : public Micro::Application
 {
 public:
 	App(float windowWidth, float windowHeight, float maxFPS) : 
-		m_lightSystem(windowWidth, windowHeight, sf::Color(50, 50, 50, 150)),
+		m_systemManager(m_window),
   		m_window(sf::VideoMode(windowWidth, windowHeight),"new game",
-			sf::Style::Default) , m_systemManager(m_window){
+			sf::Style::Default) ,m_lightSystem(windowWidth, windowHeight, sf::Color(50, 50, 50, 150), m_systemManager.GetFileManager()) {
 
 
 		m_window.setFramerateLimit(maxFPS);
@@ -20,7 +19,10 @@ public:
 
 	void Run() override{
 
-		int light = m_lightSystem.AddLight(Micro::Light::LightType::Directional, 200, 135);
+		int light = m_lightSystem.AddLight(Micro::Light::LightType::Directional, sf::Color(255, 255, 255, 1), 200, 135);
+		int light2 = m_lightSystem.AddLight(Micro::Light::LightType::Circle, sf::Color(255,255,255,1), 200);
+
+
 
 		while (m_window.isOpen()) {
 			InputFunc();
@@ -49,7 +51,9 @@ private:
 	}
 
 	void Display() {
-		m_lightSystem.update();
+
+
+		m_lightSystem.update(m_window);
 
 		m_window.clear();
 
