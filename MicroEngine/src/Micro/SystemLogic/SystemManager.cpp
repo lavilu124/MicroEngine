@@ -97,4 +97,41 @@ namespace Micro {
     void SystemManager::DestroyObject(std::string name) {
         m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
     }
+
+    int SystemManager::AddLight(Light::LightType type, sf::Color color, float size, float angle) {
+        Light::LightSource light(type, m_currentId, color, size, angle);
+        m_sceneManager.lights.push_back(light);
+        m_currentId++;
+        return m_currentId - 1;
+    }
+
+    void SystemManager::RemoveLight(int id) {
+        int index = GetLightIndex(id);
+        if (index == -1)
+            return;
+
+        m_sceneManager.lights.erase(m_sceneManager.lights.cbegin() + index);
+        m_sceneManager.lights.shrink_to_fit();
+    }
+
+    Light::LightSource* SystemManager::getLight(int id) {
+        int index = GetLightIndex(id);
+        if (index == -1)
+            return nullptr;
+
+        return &m_sceneManager.lights[index];
+    }
+
+    std::vector<Light::LightSource>& SystemManager::getLights() {
+        return m_sceneManager.lights;
+    }
+
+    int SystemManager::GetLightIndex(int id) {
+        for (int i = 0; i < m_sceneManager.lights.size(); i++) {
+            if (m_sceneManager.lights[i].GetId() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

@@ -4,13 +4,18 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <regex>
 #include "json/json.h"
 #include "value.h"
 
 using std::filesystem::directory_iterator;
 
 
+int Micro::FileManager::currentLog = 0;
+std::string Micro::FileManager::m_mainPath = "";
+
 namespace Micro {
+
     void FileManager::AddInputFunc(std::string name, void(*function)()) {
         m_functionMap[name] = function;
     }
@@ -156,7 +161,7 @@ namespace Micro {
 
     void FileManager::LoadAsset(std::string FileName) {
         if (m_sprites.find(FileName) != m_sprites.end() || m_sounds.find(FileName) != m_sounds.end()) {
-            return; 
+            return;
         }
 
         if (FileName.find(".png") != std::string::npos) {
@@ -172,12 +177,12 @@ namespace Micro {
         else if (FileName.find(".wav") != std::string::npos) {
             sf::SoundBuffer NewBuffer;
             NewBuffer.loadFromFile(m_mainPath + "\\Resources\\sounds\\" + FileName);
-            m_buffers[FileName] =NewBuffer;
+            m_buffers[FileName] = NewBuffer;
 
             sf::Sound newSound;
             newSound.setBuffer(m_buffers[FileName]);
             m_sounds[FileName] = newSound;
-		}
+        }
     }
 
     std::string FileManager::GetShaderPath(std::string& shadername) {
@@ -237,5 +242,52 @@ namespace Micro {
 
     sf::Sound* FileManager::GetSound(std::string name) {
         return &m_sounds[name];
+    }
+
+    void FileManager::CreateLog() {
+        std::string logDir = m_mainPath + "\\Logs";
+
+        if (!std::filesystem::exists(logDir)) {
+            return;
+        }
+
+        std::regex logPattern(R"(log(\d+)\.txt)");
+        int maxLogNumber = 0;
+
+        for (const auto& entry : std::filesystem::directory_iterator(logDir)) {
+            std::string fileName = entry.path().filename().string();
+            std::smatch match;
+            if (std::regex_match(fileName, match, logPattern)) {
+                int logNumber = std::stoi(match[1].str());
+                if (logNumber > maxLogNumber) {
+                    maxLogNumber = logNumber;
+                }
+            }
+        }
+
+        currentLog = maxLogNumber + 1;
+        std::string logFileName = logDir + "\\log" + std::to_string(currentLog) + ".txt";
+        std::ofstream logFile(logFileName);
+
+        if (!logFile) {
+            return;
+        }
+
+        logFile.close();
+    }
+
+    void FileManager::Log(std::string msg) {
+
+        std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(currentLog) + ".txt";
+
+        std::ofstream logFile(logFileName);
+
+        if (!logFile) {
+            return;
+        }
+
+        logFile << msg << std::endl;
+
+        logFile.close();
     }
 }

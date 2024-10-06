@@ -5,7 +5,14 @@
 #include "../SystemLogic/GameLogic/InputAction.h"
 #include "..//Objects/GameObject.h"
 #include "../Core.h"
+
 namespace Micro {
+	#ifdef DEBUG
+		#define MC_LOG(x) Micro::FileManager::Log(x)
+	#else
+		#define MC_LOG(x)
+	#endif
+
 	class MICRO_API FileManager
 	{
 	public:
@@ -22,6 +29,9 @@ namespace Micro {
 		sf::Sound* GetSound(std::string name);
 		std::map <std::string, Input::InputAction> inputs;
 
+		static void Log(std::string msg);
+		static void CreateLog();
+
 	private:
 		void GetFilesInDir(std::string Dir);
 		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput, std::string OffInput);
@@ -37,6 +47,7 @@ namespace Micro {
 		std::map <std::string, sf::Texture> m_textures;
 		std::map <std::string, sf::SoundBuffer> m_buffers;
 
-		std::string m_mainPath;
+		static std::string m_mainPath;
+		static int currentLog;
 	};
 }

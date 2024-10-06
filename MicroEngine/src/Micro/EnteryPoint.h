@@ -1,11 +1,12 @@
 #pragma once
-#include <iostream>
+
 
 #ifdef MC_PLATFORM_WINDOWS
 
 extern Micro::Application* Micro::CreateApplication();
 
 int main() {
+
 	auto app = Micro::CreateApplication();
 
 	if (!app) {
@@ -16,7 +17,6 @@ int main() {
 
 	delete app;
 
-	std::cin.get();
 
 	return 0;
 }

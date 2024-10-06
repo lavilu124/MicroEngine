@@ -4,11 +4,15 @@
 namespace Micro {
 	Application::Application(float windowWidth, float windowHeight, float maxFPS) :m_window(sf::VideoMode(windowWidth, windowHeight), "new game",
 		sf::Style::Default), m_systemManager(m_window), m_lightSystem(windowWidth, windowHeight, m_systemManager.GetFileManager(), sf::Color(50, 50, 50, 150)) {
+		#ifdef DEBUG
+			FileManager::CreateLog();
+		#endif
+		
 		m_window.setFramerateLimit(maxFPS);
 
 
 		m_systemManager.LoadScene("DefualtScene");
-
+		 
 		m_camera = &m_systemManager.GetCamera();
 	}
 
@@ -48,7 +52,7 @@ namespace Micro {
 	}
 
 	void Application::Display() {
-		m_lightSystem.update(m_window);
+		m_lightSystem.update(m_window, m_systemManager.getLights());
 
 		m_window.clear();
 
