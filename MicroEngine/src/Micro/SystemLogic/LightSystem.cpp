@@ -29,6 +29,7 @@ namespace Micro {
                 createDirectionalLight(size, angle);
             }
 
+            intensity = color.a / 25.5f;
             m_color = sf::Glsl::Vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f , 1);
         }
 
@@ -101,13 +102,14 @@ namespace Micro {
             m_lightShader.loadFromFile(fileManger.GetShaderPath((std::string)"lightShader.frag"), sf::Shader::Fragment);
         }
 
-        void LightSystem::update(sf::RenderWindow& window) {
+        void LightSystem::update(sf::RenderWindow& window, std::vector<LightSource>& lights) {
             m_lightTexture.clear(m_darkness);
 
-            for (auto& light : m_lights) {
+            for (auto& light : lights) {
                 light.Update();
 
                 // Set shader uniforms for each light
+                m_lightShader.setUniform("lightIntensity", light.intensity);
                 m_lightShader.setUniform("windowHeight", m_windowHeight); 
                 m_lightShader.setUniform("lightCenter", light.position);
                 m_lightShader.setUniform("lightRadius", light.getRadius());
@@ -128,35 +130,5 @@ namespace Micro {
             window.draw(lightSprite, sf::BlendMultiply);
         }
 
-        int LightSystem::AddLight(LightType type, sf::Color color, float size, float angle) {
-            LightSource light(type, m_currentId, color, size, angle);
-            m_lights.push_back(light);
-            m_currentId++;
-            return m_currentId - 1;
-        }
-
-        int LightSystem::GetLightIndex(int id) {
-            for (int i = 0; i < m_lights.size(); i++) {
-                if (m_lights[i].GetId() == id) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        void LightSystem::RemoveLight(int id) {
-            int index = GetLightIndex(id);
-            if (index == -1)
-                return;
-            m_lights.erase(m_lights.cbegin() + index);
-            m_lights.shrink_to_fit();
-        }
-
-        LightSource* LightSystem::getLight(int id) {
-            int index = GetLightIndex(id);
-            if (index == -1)
-                return nullptr;
-            return &m_lights[index];
-        }
     }
 }

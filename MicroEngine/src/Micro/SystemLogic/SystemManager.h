@@ -32,6 +32,12 @@ namespace Micro {
 
 		FileManager& GetFileManager();
 
+		int AddLight(Light::LightType type, sf::Color color, float size, float angle = 0.0f);
+		void RemoveLight(int id);
+		Light::LightSource* getLight(int id);
+
+		std::vector<Light::LightSource>& SystemManager::getLights();
+
 	public:
 
 		static sf::Clock clock;
@@ -46,5 +52,9 @@ namespace Micro {
 	private:
 		SceneManger m_sceneManager;
 		FileManager m_fileManager;
+
+		int m_currentId = 0;
+
+		int GetLightIndex(int id);
 	};
 }

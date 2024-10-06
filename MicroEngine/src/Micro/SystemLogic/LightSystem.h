@@ -28,6 +28,8 @@ namespace Micro {
 			void SetColor(sf::Color color);
 
 			sf::Glsl::Vec4 GetColor() const;
+
+            float intensity;
         private:
             LightType m_type;
 
@@ -47,24 +49,15 @@ namespace Micro {
         public:
             LightSystem(sf::Vector2f windowSize, FileManager fileManger, sf::Color darkness = sf::Color(50, 50, 50, 150));
             LightSystem(float width, float height, FileManager fileManger, sf::Color darkness = sf::Color(50, 50, 50, 150));
-            void update(sf::RenderWindow& window);
+            void update(sf::RenderWindow& window, std::vector<LightSource>& lights);
             void draw(sf::RenderWindow& window);
 
             sf::Color m_darkness;
 
-            int AddLight(LightType type, sf::Color color, float size, float angle = 0.0f);
-            void RemoveLight(int id);
-            LightSource* getLight(int id);
-
         private:
-            int GetLightIndex(int id);
-
-        private:
-            std::vector<LightSource> m_lights;
+            
             sf::RenderTexture m_lightTexture;
 			float m_windowHeight;
-
-            int m_currentId = 0;
 
             sf::Shader m_lightShader;
         };
