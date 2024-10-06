@@ -45,8 +45,8 @@ namespace Micro {
 
         class MICRO_API LightSystem {
         public:
-            LightSystem(sf::Vector2f windowSize, sf::Color darkness, FileManager fileManger);
-            LightSystem(float width, float height, sf::Color darkness, FileManager fileManger);
+            LightSystem(sf::Vector2f windowSize, FileManager fileManger, sf::Color darkness = sf::Color(50, 50, 50, 150));
+            LightSystem(float width, float height, FileManager fileManger, sf::Color darkness = sf::Color(50, 50, 50, 150));
             void update(sf::RenderWindow& window);
             void draw(sf::RenderWindow& window);
 

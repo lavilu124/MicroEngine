@@ -3,24 +3,16 @@
 class App : public Micro::Application
 {
 public:
-	App(float windowWidth, float windowHeight, float maxFPS) : 
-		m_systemManager(m_window),
-  		m_window(sf::VideoMode(windowWidth, windowHeight),"new game",
-			sf::Style::Default) ,m_lightSystem(windowWidth, windowHeight, sf::Color(50, 50, 50, 150), m_systemManager.GetFileManager()) {
+	App(float windowWidth, float windowHeight, float maxFPS) : Micro::Application(windowWidth, windowHeight, maxFPS) {
+	}
 
-
-		m_window.setFramerateLimit(maxFPS);
-
-
-		m_systemManager.LoadScene("Scene1");
-
-		m_camera = &m_systemManager.GetCamera();
+	App(sf::Vector2f windowSize, float maxFPS) : Micro::Application(windowSize, maxFPS) {
 	}
 
 	void Run() override{
 
 		int light = m_lightSystem.AddLight(Micro::Light::LightType::Directional, sf::Color(255, 255, 255, 1), 200, 135);
-		int light2 = m_lightSystem.AddLight(Micro::Light::LightType::Circle, sf::Color(255,255,255,1), 200);
+		int light2 = m_lightSystem.AddLight(Micro::Light::LightType::Circle, sf::Color(255, 255, 251,1), 200);
 
 
 
@@ -29,46 +21,12 @@ public:
 
 			m_systemManager.Update(m_camera);
 
-			m_lightSystem.getLight(light)->position = sf::Vector2f(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y);
-
+			m_lightSystem.getLight(light2)->position = sf::Vector2f(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y);
+			 
 			Display();
 		}
 	}
 
-private:
-	void InputFunc() {
-		sf::Event event;
-		while (m_window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) {
-				m_window.close();
-			}
-			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-				m_window.close();
-			}
-
-			m_systemManager.RunInput(event);
-		}
-	}
-
-	void Display() {
-
-
-		m_lightSystem.update(m_window);
-
-		m_window.clear();
-
-		m_systemManager.Render(m_window);
-
-		m_lightSystem.draw(m_window);
-
-		m_window.display();
-	}
-private:
-
-	sf::RenderWindow m_window;
-	Micro::SystemManager m_systemManager;
-	Micro::Camera* m_camera;
-	Micro::Light::LightSystem m_lightSystem;
 };
 
 Micro::Application* Micro::CreateApplication() {

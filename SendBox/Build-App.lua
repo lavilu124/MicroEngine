@@ -23,6 +23,7 @@ project "SendBox"
    }
 
    prebuildcommands {
+    'del /q "$(OutDir)Micro.dll"',
     'xcopy /y "$(SolutionDir)Binaries\\' .. OutputDir .. '\\Micro\\Micro.dll" "$(OutDir)"'
    }
 

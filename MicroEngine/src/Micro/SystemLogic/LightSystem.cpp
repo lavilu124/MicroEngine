@@ -87,14 +87,14 @@ namespace Micro {
             return m_radius;
         }
 
-        LightSystem::LightSystem(sf::Vector2f windowSize, sf::Color darkness, FileManager fileManger)
+        LightSystem::LightSystem(sf::Vector2f windowSize, FileManager fileManger, sf::Color darkness)
             : m_darkness(darkness) {
             m_windowHeight = windowSize.y;
             m_lightTexture.create(windowSize.x, windowSize.y);
             m_lightShader.loadFromFile(fileManger.GetShaderPath((std::string)"lightShader.frag"), sf::Shader::Fragment);
         }
 
-        LightSystem::LightSystem(float width, float height, sf::Color darkness, FileManager fileManger)
+        LightSystem::LightSystem(float width, float height, FileManager fileManger, sf::Color darkness)
             : m_darkness(darkness) {
 			m_windowHeight = height;
             m_lightTexture.create(width, height);
