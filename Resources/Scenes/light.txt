@@ -1,0 +1,35 @@
+,
+	"lightSource0" : 
+	{
+		"position" : 
+		[
+			200.0,
+			200.0
+		],
+		"angle" : 0.0,
+		"size" : 200.0,
+		"LightType" : 0,
+		"color" : [
+			255.0,
+			255.0,
+			255.0,
+			25.5
+		]
+	},
+	"lightSource1" : 
+	{
+		"position" : 
+		[
+			-200.0,
+			200.0
+		],
+		"angle" : 0.0,
+		"size" : 400.0,
+		"LightType" : 0,
+		"color" : [
+			255.0,
+			255.0,
+			255.0,
+			25.5
+		]
+	}

@@ -11,17 +11,19 @@ public:
 
 	void Run() override{
 
-		int light = m_systemManager.AddLight(Micro::Light::LightType::Directional, sf::Color(255, 255, 255, 1), 200, 135);
-		int light2 = m_systemManager.AddLight(Micro::Light::LightType::Circle, sf::Color(255, 255, 251,25.5), 200);
-		MC_LOG("test");
+		int light1 = m_systemManager.AddLight(Micro::Light::LightType::Circle, sf::Color(255, 255, 255,25.5), 200);
+		int light2 = m_systemManager.AddLight(Micro::Light::LightType::Circle, sf::Color(255, 255, 255, 25.5), 200);
+
+		m_systemManager.getLight(light2)->position = sf::Vector2f(-200.0, -200.0);
+
 
 		while (m_window.isOpen()) {
 			InputFunc();
 
 			m_systemManager.Update(m_camera);
 
-			m_systemManager.getLight(light2)->position = sf::Vector2f(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y);
-			 
+			m_systemManager.getLight(light1)->position = sf::Vector2f(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y);
+
 			Display();
 		}
 	}

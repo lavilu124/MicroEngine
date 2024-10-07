@@ -50,6 +50,7 @@ namespace Micro {
 		int CheckExistingObject(std::string name);
 
 	private:
+
 		SceneManger m_sceneManager;
 		FileManager m_fileManager;
 

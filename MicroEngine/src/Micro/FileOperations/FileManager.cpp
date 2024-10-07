@@ -1,5 +1,7 @@
 #include "FileManager.h"
 #include "..//SystemLogic/GameLogic/Collision.hpp"
+#include "../SystemLogic/LightSystem.h"
+#include "../SystemLogic/SystemManager.h"
 
 #include <fstream>
 #include <sstream>
@@ -189,7 +191,7 @@ namespace Micro {
         return m_mainPath + "\\Resources\\graphics\\shaders\\" + shadername;
     }
 
-    std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager* SystemManger) {
+    std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager* systemManger) {
 
         std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".json");
         Json::Value actualJson;
@@ -207,12 +209,19 @@ namespace Micro {
 
         m_sprites.clear();
 
+		int count = 0;
 
         //going over the json and reading all the data
         for (int i = 0; i < actualJson.size(); i++) {
             std::stringstream ss;
             ss << i;
             Json::Value currentObject = actualJson["object" + ss.str()];
+
+            
+            if (currentObject.isNull()) {
+                count = actualJson.size() - i -1;
+                break;
+            }
 
             //object values
             Collision::collisionLayer layer = static_cast<Collision::collisionLayer>(currentObject["layer"].asInt());
@@ -224,10 +233,31 @@ namespace Micro {
 
             LoadAsset(spriteName);
 
-            returnVector.push_back(GameObject(SystemManger, m_sprites[spriteName], name, layer));
+            returnVector.push_back(GameObject(systemManger, m_sprites[spriteName], name, layer));
             returnVector[returnVector.size() - 1].SetPosition(position);
             returnVector[returnVector.size() - 1].SetScale(scale);
             returnVector[returnVector.size() - 1].SetRotation(rotation);
+        }
+
+        for (int i = 0; i < count; i++) {
+            std::stringstream ss;
+            ss << i;
+            Json::Value currentObject = actualJson["lightSource" + ss.str()];
+
+            if (currentObject.isNull()) {
+                MC_LOG("undfined object in place " + std::to_string(i));
+                continue;
+            }
+
+
+            sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+            float angle = currentObject["angle"].asFloat();
+            float size = currentObject["size"].asFloat();
+            Light::LightType type = static_cast<Light::LightType>(currentObject["LightType"].asInt());
+            sf::Color color = sf::Color(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
+
+            int light = systemManger->AddLight(type, color, size, angle);
+            systemManger->getLight(light)->position = position;
         }
 
         //close the file
@@ -280,7 +310,7 @@ namespace Micro {
 
         std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(currentLog) + ".txt";
 
-        std::ofstream logFile(logFileName);
+        std::ofstream logFile(logFileName, std::ios::app);
 
         if (!logFile) {
             return;
