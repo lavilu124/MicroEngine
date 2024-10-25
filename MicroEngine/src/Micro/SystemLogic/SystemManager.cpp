@@ -1,7 +1,7 @@
 #include "SystemManager.h"
 
 
-namespace Micro {
+namespace Micro{
     sf::Clock SystemManager::clock;
     sf::Time SystemManager::deltaTimeT;
 
@@ -15,6 +15,8 @@ namespace Micro {
         m_fileManager.LoadInput();
 
         deltaTime = 0;
+
+        m_lightSystem.setView(window.getView());
     }
 
     void SystemManager::Start() {
@@ -37,6 +39,7 @@ namespace Micro {
     }
 
     void SystemManager::Render(sf::RenderWindow& window) {
+        m_lightSystem.setView(window.getView());
         for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
             window.draw((*it).GetSprite());
 
@@ -98,37 +101,35 @@ namespace Micro {
         m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
     }
 
-    int SystemManager::AddLight(Light::LightType type, sf::Color color, float size, float angle) {
-        Light::LightSource light(type, m_currentId, color, size, angle);
+    ls::LightSystem* SystemManager::getLightSystem() {
+        return &m_lightSystem;
+    }
+
+    int SystemManager::AddLight(ls::Light* light) {
+		m_lightSystem.addLight(light);
         m_sceneManager.lights.push_back(light);
+
         m_currentId++;
         return m_currentId - 1;
     }
 
     void SystemManager::RemoveLight(int id) {
         int index = GetLightIndex(id);
-        if (index == -1)
-            return;
-
-        m_sceneManager.lights.erase(m_sceneManager.lights.cbegin() + index);
-        m_sceneManager.lights.shrink_to_fit();
+        m_lightSystem.removeLight(m_sceneManager.lights[index]);
+		m_sceneManager.lights.erase(m_sceneManager.lights.begin() + index);
     }
 
-    Light::LightSource* SystemManager::getLight(int id) {
+    ls::Light* SystemManager::getLight(int id) {
         int index = GetLightIndex(id);
         if (index == -1)
             return nullptr;
 
-        return &m_sceneManager.lights[index];
-    }
-
-    std::vector<Light::LightSource>& SystemManager::getLights() {
-        return m_sceneManager.lights;
+        return m_sceneManager.lights[index];
     }
 
     int SystemManager::GetLightIndex(int id) {
         for (int i = 0; i < m_sceneManager.lights.size(); i++) {
-            if (m_sceneManager.lights[i].GetId() == id) {
+            if (m_sceneManager.lights[i]->getId() == id) {
                 return i;
             }
         }

@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "../Core.h"
 
-namespace Micro {
+namespace Micro{
     class MICRO_API Animation {
     public:
         //constructor for animation

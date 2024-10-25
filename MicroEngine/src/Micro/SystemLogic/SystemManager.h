@@ -1,10 +1,10 @@
 #pragma once
 #include "../Core.h"
 #include "GameLogic/SceneManger.h"
-#include "LightSystem.h"
+#include "Light/include/LightSystem/LightSystem.hpp"
 #include <vector>
 
-namespace Micro {
+namespace Micro{
 	class MICRO_API SystemManager
 	{
 	public:
@@ -32,11 +32,11 @@ namespace Micro {
 
 		FileManager& GetFileManager();
 
-		int AddLight(Light::LightType type, sf::Color color, float size, float angle = 0.0f);
+		int AddLight(ls::Light* light);
 		void RemoveLight(int id);
-		Light::LightSource* getLight(int id);
+		ls::Light* getLight(int index);
 
-		std::vector<Light::LightSource>& SystemManager::getLights();
+		ls::LightSystem* getLightSystem();
 
 	public:
 
@@ -50,6 +50,8 @@ namespace Micro {
 		int CheckExistingObject(std::string name);
 
 	private:
+
+		ls::LightSystem m_lightSystem;
 
 		SceneManger m_sceneManager;
 		FileManager m_fileManager;

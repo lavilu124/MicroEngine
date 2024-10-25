@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "../SystemLogic/SystemManager.h"
 
-namespace Micro {
+namespace Micro{
 	Camera::Camera(const sf::Vector2f WinodwSize) : m_windowSize(WinodwSize) {
 		zoom = 1;
 

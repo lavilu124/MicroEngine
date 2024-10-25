@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "../Core.h"
 
-namespace Micro {
+namespace Micro{
 	class MICRO_API Camera
 	{
 	public:

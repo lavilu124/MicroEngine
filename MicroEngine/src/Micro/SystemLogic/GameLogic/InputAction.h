@@ -5,7 +5,7 @@
 #include <variant>
 #include "../../Core.h"
 
-namespace Micro {
+namespace Micro{
     namespace Input {
 
         using KeyType = std::variant<sf::Keyboard::Key, sf::Joystick::Axis, sf::Mouse::Button>;

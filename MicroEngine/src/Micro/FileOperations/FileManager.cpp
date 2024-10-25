@@ -1,6 +1,6 @@
 #include "FileManager.h"
 #include "..//SystemLogic/GameLogic/Collision.hpp"
-#include "../SystemLogic/LightSystem.h"
+//#include "../SystemLogic/LightSystem.h"
 #include "../SystemLogic/SystemManager.h"
 
 #include <fstream>
@@ -16,7 +16,7 @@ using std::filesystem::directory_iterator;
 int Micro::FileManager::currentLog = 0;
 std::string Micro::FileManager::m_mainPath = "";
 
-namespace Micro {
+namespace Micro{
 
     void FileManager::AddInputFunc(std::string name, void(*function)()) {
         m_functionMap[name] = function;
@@ -250,14 +250,14 @@ namespace Micro {
             }
 
 
-            sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+            /*sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
             float angle = currentObject["angle"].asFloat();
             float size = currentObject["size"].asFloat();
             Light::LightType type = static_cast<Light::LightType>(currentObject["LightType"].asInt());
             sf::Color color = sf::Color(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
 
             int light = systemManger->AddLight(type, color, size, angle);
-            systemManger->getLight(light)->position = position;
+            systemManger->getLight(light)->position = position;*/
         }
 
         //close the file
@@ -307,6 +307,9 @@ namespace Micro {
     }
 
     void FileManager::Log(std::string msg) {
+		if (currentLog == 0) 
+			CreateLog();
+		
 
         std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(currentLog) + ".txt";
 

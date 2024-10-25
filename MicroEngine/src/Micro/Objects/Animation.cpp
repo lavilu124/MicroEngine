@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-namespace Micro {
+namespace Micro{
     //set all animation values in constructor
     Animation::Animation(std::vector<sf::Sprite>& AnimationVector, float Speed) {
         this->AnimationVector = AnimationVector;

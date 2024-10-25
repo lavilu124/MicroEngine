@@ -1,6 +1,6 @@
 #include "SceneManger.h"
 
-namespace Micro {
+namespace Micro{
 	SceneManger::SceneManger(sf::RenderWindow& window, float width, float height) : camera(width, height) {
 		camera.SetCam(window);
 	}

@@ -3,7 +3,7 @@
 #include "../SystemLogic/GameLogic/Collision.hpp"
 #include "../Core.h"
 
-namespace Micro {
+namespace Micro{
 	class SystemManager;
 
 	class MICRO_API GameObject

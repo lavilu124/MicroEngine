@@ -1,5 +1,0 @@
-object in place 0
-object in place 1
-object in place 2
-light in place 0
-light in place 1

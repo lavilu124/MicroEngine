@@ -1,9 +1,10 @@
 #pragma once
 #include "../../Objects/Camera.h"
-#include "../LightSystem.h"
+#include "../../FileOperations/FileManager.h"
+#include "../Light/include/LightSystem/LightSystem.hpp"
 
 
-namespace Micro {
+namespace Micro{
 	class MICRO_API SceneManger
 	{
 	public:
@@ -16,7 +17,7 @@ namespace Micro {
 	public:
 		Camera camera;
 		std::vector<GameObject> objects;
-		std::vector <Light::LightSource> lights;
+		std::vector <ls::Light*> lights;
 
 	private:
 		std::string name;
