@@ -35,7 +35,7 @@ namespace ls
     class MICRO_API Light
     {
         public:
-            Light(const sf::Vector2f& p, const sf::Color& c, int id=0);
+            Light(const sf::Vector2f& p, const sf::Color& c, int id=-1);
             virtual ~Light();
 
             virtual void render(const sf::IntRect& screen, sf::RenderTarget& target, sf::Shader* shader, const sf::RenderStates &states=sf::RenderStates::Default) = 0;
@@ -73,6 +73,8 @@ namespace ls
             void setSystem(LightSystem* ls);
             LightSystem* getSystem() const;
 			int getId() const;
+
+            void assignID(int id);
 
         protected:
             static const char LAS_PARAM_CENTER[];
