@@ -4,7 +4,7 @@
 
 
 
-namespace Micro {
+namespace Micro{
 	class MICRO_API Application
 	{
 	public:
@@ -22,7 +22,6 @@ namespace Micro {
 		sf::RenderWindow m_window;
 		Micro::SystemManager m_systemManager;
 		Micro::Camera* m_camera;
-		Micro::Light::LightSystem m_lightSystem;
 	};
 
 	Application* CreateApplication();

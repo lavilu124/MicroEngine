@@ -6,7 +6,7 @@
 #include "..//Objects/GameObject.h"
 #include "../Core.h"
 
-namespace Micro {
+namespace Micro{
 	#ifdef DEBUG
 		#define MC_LOG(x) Micro::FileManager::Log(x)
 	#else
@@ -30,7 +30,6 @@ namespace Micro {
 		std::map <std::string, Input::InputAction> inputs;
 
 		static void Log(std::string msg);
-		static void CreateLog();
 
 	private:
 		void GetFilesInDir(std::string Dir);
@@ -40,6 +39,9 @@ namespace Micro {
 		void LoadAsset(std::string FileName);
 
 	private:
+
+		static void CreateLog();
+
 		std::map <std::string, void(*)()> m_functionMap;
 		std::map < std::string, sf::Sprite> m_sprites;
 		std::map < std::string, sf::Sound> m_sounds;

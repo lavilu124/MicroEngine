@@ -3,7 +3,7 @@
 #include <array>
 #include "Collision.hpp"
 
-namespace Micro {
+namespace Micro{
     namespace Collision
     {
         sf::Vector2i pixelPositionObject1;

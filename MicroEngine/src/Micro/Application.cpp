@@ -1,12 +1,9 @@
 #include "Application.h"
 #include <SFML/Graphics.hpp>
 
-namespace Micro {
+namespace Micro{
 	Application::Application(float windowWidth, float windowHeight, float maxFPS) :m_window(sf::VideoMode(windowWidth, windowHeight), "new game",
-		sf::Style::Default), m_systemManager(m_window), m_lightSystem(windowWidth, windowHeight, m_systemManager.GetFileManager(), sf::Color(50, 50, 50, 150)) {
-		#ifdef DEBUG
-			FileManager::CreateLog();
-		#endif
+		sf::Style::Default), m_systemManager(m_window) {
 		
 		m_window.setFramerateLimit(maxFPS);
 
@@ -17,7 +14,7 @@ namespace Micro {
 	}
 
 	Application::Application(sf::Vector2f windowSize, float maxFPS) :m_window(sf::VideoMode(windowSize.x, windowSize.y), "new game",
-		sf::Style::Default), m_systemManager(m_window), m_lightSystem(windowSize, m_systemManager.GetFileManager(), sf::Color(50, 50, 50, 150)){
+		sf::Style::Default), m_systemManager(m_window){
 		m_window.setFramerateLimit(maxFPS);
 
 
@@ -52,13 +49,14 @@ namespace Micro {
 	}
 
 	void Application::Display() {
-		m_lightSystem.update(m_window, m_systemManager.getLights());
+		m_systemManager.getLightSystem()->update();
+		m_systemManager.getLightSystem()->render(m_window.getView(), m_window);
 
-		m_window.clear();
+		m_window.clear(sf::Color(60, 60, 60));
 
 		m_systemManager.Render(m_window);
 
-		m_lightSystem.draw(m_window);
+		m_systemManager.getLightSystem()->draw(m_window.getView(), m_window);
 
 		m_window.display();
 	}

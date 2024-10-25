@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "..//SystemLogic//SystemManager.h"
 
-namespace Micro {
+namespace Micro{
     GameObject::GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, std::string& name, Collision::collisionLayer Layer)
         : m_objectSprite(ObjectSprite), m_layer(Layer), m_rotation(ObjectSprite.getRotation()), m_position(ObjectSprite.getPosition()), m_scale(ObjectSprite.getScale()), m_name(name), m_systemManager(systemManager)
     {

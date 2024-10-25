@@ -1,6 +1,6 @@
 #include "InputAction.h"
 
-namespace Micro {
+namespace Micro{
     namespace Input {
 
         InputAction::InputAction(inputType type, KeyType key, std::string name, inputPart part,
