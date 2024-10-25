@@ -108,6 +108,7 @@ namespace Micro{
     int SystemManager::AddLight(ls::Light* light) {
 		m_lightSystem.addLight(light);
         m_sceneManager.lights.push_back(light);
+        light->assignID(m_currentId);
 
         m_currentId++;
         return m_currentId - 1;

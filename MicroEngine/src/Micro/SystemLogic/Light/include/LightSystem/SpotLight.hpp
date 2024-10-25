@@ -40,7 +40,7 @@ namespace ls
     class MICRO_API SpotLight : public Light
     {
         public:
-            SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, int id=0);
+            SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, int id=-1);
             SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, int id, float da, float sa, float i, float b, float lf);
             virtual ~SpotLight();
 

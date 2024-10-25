@@ -35,7 +35,7 @@ namespace ls
     class MICRO_API FlashLight : public SpotLight
     {
         public:
-            FlashLight(const sf::Vector2f& p, float r, float l, const sf::Color& c, int id=0);
+            FlashLight(const sf::Vector2f& p, float r, float l, const sf::Color& c, int id=-1);
             FlashLight(const sf::Vector2f& p, float r, float l, const sf::Color& c, int id, float da, float sa, float i, float b, float lf);
 
             virtual void preRender(sf::Shader* shader) override;

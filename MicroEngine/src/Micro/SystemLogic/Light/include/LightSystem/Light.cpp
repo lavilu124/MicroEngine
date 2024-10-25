@@ -135,6 +135,12 @@ namespace ls
         return id;
     }
 
+    void Light::assignID(int id) {
+        if (this->id == -1) {
+			this->id = id;
+        }
+    }
+
     void Light::setActive(bool a)
     {
         if(a) _setAttribute(ACTIVE);
