@@ -40,6 +40,17 @@ namespace ls
     ///this class is not meant to be inherited
     class ShadowSystem;
 
+    enum lightType
+    {
+        Spot,
+		Flash
+    };
+
+    struct LightValue {
+		SpotLight* spot = nullptr;
+		FlashLight* flash = nullptr;
+	};
+
     class MICRO_API LightSystem
     {
         public:

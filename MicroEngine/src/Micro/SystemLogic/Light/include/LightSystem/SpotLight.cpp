@@ -38,11 +38,11 @@ namespace ls
     {
     }
 
-    SpotLight::SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, int id) : SpotLight(p,r,c, id,0.0f,360.0f,1.0f,0.0f,1.0f)
+    SpotLight::SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, std::string name, int id) : SpotLight(p,r,c, name, id,0.0f,360.0f,1.0f,0.0f,1.0f)
     {
     }
 
-    SpotLight::SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, int id, float da, float sa, float i, float b, float lf) : Light(p,c, id),
+    SpotLight::SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, std::string name, int id, float da, float sa, float i, float b, float lf) : Light(p,c,name, id),
         _radius(r), _directionAngle(DMUtils::maths::degToRad(da)), _spreadAngle(sa), _bleed(b), _linearity(lf), _resizeWhenIncrease(false)
     {
         setSpreadAngle(sa);

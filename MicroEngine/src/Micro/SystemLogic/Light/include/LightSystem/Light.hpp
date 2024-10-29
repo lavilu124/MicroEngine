@@ -35,7 +35,7 @@ namespace ls
     class MICRO_API Light
     {
         public:
-            Light(const sf::Vector2f& p, const sf::Color& c, int id=-1);
+            Light(const sf::Vector2f& p, const sf::Color& c, std::string name, int id=-1);
             virtual ~Light();
 
             virtual void render(const sf::IntRect& screen, sf::RenderTarget& target, sf::Shader* shader, const sf::RenderStates &states=sf::RenderStates::Default) = 0;
@@ -76,6 +76,8 @@ namespace ls
 
             void assignID(int id);
 
+			std::string GetName() const;
+
         protected:
             static const char LAS_PARAM_CENTER[];
             static const char LAS_PARAM_RADIUS[];
@@ -110,6 +112,8 @@ namespace ls
             char _attributes;//do not allow user to modify it directly, use the set/unset functions
             LightSystem* _system;
             int id = 0;
+
+            std::string m_name;
     };
 }
 }

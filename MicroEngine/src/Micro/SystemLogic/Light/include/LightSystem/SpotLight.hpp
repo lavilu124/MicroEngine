@@ -40,8 +40,8 @@ namespace ls
     class MICRO_API SpotLight : public Light
     {
         public:
-            SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, int id=-1);
-            SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, int id, float da, float sa, float i, float b, float lf);
+            SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, std::string name, int id=-1);
+            SpotLight(const sf::Vector2f& p, float r, const sf::Color& c, std::string name, int id, float da, float sa, float i, float b, float lf);
             virtual ~SpotLight();
 
             virtual void preRender(sf::Shader* shader) override;

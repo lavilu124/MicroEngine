@@ -11,24 +11,13 @@ public:
 	}
 
 	void Run() override{
-		m_systemManager.getLightSystem()->setAmbiantLight(sf::Color(20, 20, 20));
-
-		Micro::ls::SpotLight light(sf::Vector2f(0, 0), 0, sf::Color::White);
-		light.setRadius(200);
-		light.setSpreadAngle(360);
-		light.setColor(sf::Color::Yellow);
-		light.setActive(true);
-		int light1 = m_systemManager.AddLight(&light);
+		m_systemManager.getLightSystem()->setAmbiantLight(sf::Color(50, 40, 50));
 
 		
-		Micro::ls::FlashLight lantern2(sf::Vector2f(-200, -200), 0, 0, sf::Color::White);
-		lantern2.setRadius(200); 
-		lantern2.setSpreadAngle(35); 
-		lantern2.setColor(sf::Color::Yellow); 
-		lantern2.setActive(true);
-		lantern2.setDirectionAngle(90);
-		int light2 = m_systemManager.AddLight(&lantern2);
-
+		int light2 = m_systemManager.AddLight(Micro::ls::Flash, sf::Vector2f(-200, -200), 200, sf::Color::Yellow, "lan", 0);
+		m_systemManager.getLight(light2).flash->setActive(true);
+		m_systemManager.getLight(light2).flash->setSpreadAngle(35);
+		m_systemManager.getLight(light2).flash->setDirectionAngle(90);
 
 		while (m_window.isOpen()) {
 			InputFunc();
@@ -41,12 +30,11 @@ public:
 			int mouseXRelativeToCenter = mousePositionWindow.x - windowSize.x / 2;
 			int mouseYRelativeToCenter = mousePositionWindow.y - windowSize.y / 2;
 
-			m_systemManager.getLight(light2)->setPosition(sf::Vector2f(mouseXRelativeToCenter, mouseYRelativeToCenter));
+			m_systemManager.getLight(light2).flash->setPosition(sf::Vector2f(mouseXRelativeToCenter, mouseYRelativeToCenter));
 
 			Display();
 		}
 	}
-
 };
 
 Micro::Application* Micro::CreateApplication() {

@@ -1,6 +1,6 @@
 #include "FileManager.h"
 #include "..//SystemLogic/GameLogic/Collision.hpp"
-//#include "../SystemLogic/LightSystem.h"
+#include "../SystemLogic/Light/include/LightSystem/LightSystem.hpp"
 #include "../SystemLogic/SystemManager.h"
 
 #include <fstream>
@@ -250,14 +250,24 @@ namespace Micro{
             }
 
 
-            /*sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
-            float angle = currentObject["angle"].asFloat();
-            float size = currentObject["size"].asFloat();
-            Light::LightType type = static_cast<Light::LightType>(currentObject["LightType"].asInt());
+            int type = currentObject["LightType"].asInt();
+			std::string name = currentObject["name"].asString();
+            sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
             sf::Color color = sf::Color(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
+            float angle = currentObject["angle"].asFloat();
+            float radius = currentObject["radius"].asFloat();
 
-            int light = systemManger->AddLight(type, color, size, angle);
-            systemManger->getLight(light)->position = position;*/
+			switch (type) {
+			case 0: //spot light
+                systemManger->AddLight(ls::Spot, position, radius, color, name);
+				break;
+			case 1: //flash light
+                systemManger->AddLight(ls::Flash, position, radius, color, name, currentObject["length"].asFloat());
+				break;
+			default:
+				MC_LOG("unknown light type in " + name);
+				break;
+			} 
         }
 
         //close the file

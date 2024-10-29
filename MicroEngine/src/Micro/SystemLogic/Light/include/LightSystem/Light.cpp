@@ -33,7 +33,7 @@ namespace ls
     const char Light::LAS_PARAM_BLEED[] = "bleed";
     const char Light::LAS_PARAM_LINEARITY[] = "linearFactor";
 
-	Light::Light(const sf::Vector2f& p, const sf::Color& c, int id) : _aabb(), _position(sf::Vector2f(p.x, p.y * -1)), _color(c), _renderTexture(nullptr), _shadowTexture(nullptr), _attributes(Light::ACTIVE), _system(nullptr), id(id)
+	Light::Light(const sf::Vector2f& p, const sf::Color& c, std::string name, int id) : _aabb(), _position(sf::Vector2f(p.x, p.y * -1)), _color(c), _renderTexture(nullptr), _shadowTexture(nullptr), _attributes(Light::ACTIVE), _system(nullptr), m_name(name), id(id)
     {
     }
 
@@ -133,6 +133,10 @@ namespace ls
 
     int Light::getId() const {
         return id;
+    }
+
+    std::string Light::GetName() const {
+		return m_name;
     }
 
     void Light::assignID(int id) {

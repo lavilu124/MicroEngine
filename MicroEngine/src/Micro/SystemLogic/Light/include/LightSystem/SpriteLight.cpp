@@ -30,7 +30,7 @@ namespace Micro
 namespace ls
 {
 
-    SpriteLight::SpriteLight(const sf::Vector2f& p, const sf::Color& c, float a, const sf::Sprite& spr, int id) : Light(p,c, id), _angle(DMUtils::maths::degToRad(a))
+    SpriteLight::SpriteLight(const sf::Vector2f& p, const sf::Color& c, float a, const sf::Sprite& spr, std::string name, int id) : Light(p,c, name, id), _angle(DMUtils::maths::degToRad(a))
     {
         _sprite = spr;
         preRender(nullptr);
