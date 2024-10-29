@@ -49,12 +49,14 @@ namespace Micro{
 	}
 
 	void Application::Display() {
+
 		m_systemManager.getLightSystem()->update();
 		m_systemManager.getLightSystem()->render(m_window.getView(), m_window);
 
 		m_window.clear(sf::Color(60, 60, 60));
 
 		m_systemManager.Render(m_window);
+
 
 		m_systemManager.getLightSystem()->draw(m_window.getView(), m_window);
 

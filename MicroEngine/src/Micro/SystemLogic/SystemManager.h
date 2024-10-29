@@ -32,9 +32,10 @@ namespace Micro{
 
 		FileManager& GetFileManager();
 
-		int AddLight(ls::Light* light);
+		int AddLight(ls::lightType type, const sf::Vector2f& p, float r, const sf::Color& c, std::string name, float l = 0);
 		void RemoveLight(int id);
-		ls::Light* getLight(int index);
+		ls::LightValue getLight(int index);
+		ls::LightValue getLight(std::string name);
 
 		ls::LightSystem* getLightSystem();
 
@@ -57,7 +58,5 @@ namespace Micro{
 		FileManager m_fileManager;
 
 		int m_currentId = 0;
-
-		int GetLightIndex(int id);
 	};
 }

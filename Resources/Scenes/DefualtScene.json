@@ -49,5 +49,23 @@
 		],
 		"spriteName" : "run2.png",
 		"name" : "2"
+	},
+	"lightSource0" : 
+	{
+		"LightType": 0,
+		"name": "light1",
+		"position" : 
+		[
+			200.0,
+			200.0
+		],
+		"color" : [
+			255.0,
+			0.0,
+			0.0,
+			25.5
+		],
+		"angle" : 0.0,
+		"radius" : 200.0
 	}
 }

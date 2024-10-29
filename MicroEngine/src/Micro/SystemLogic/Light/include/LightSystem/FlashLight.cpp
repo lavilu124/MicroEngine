@@ -30,11 +30,11 @@ namespace Micro
 namespace ls
 {
 
-    FlashLight::FlashLight(const sf::Vector2f& p, float r, float l, const sf::Color& c, int id) : FlashLight(p,r,l,c, id,0.0f,2.0f*M_PIf,1.0f,0.0f,1.0f)
+    FlashLight::FlashLight(const sf::Vector2f& p, float r, float l, const sf::Color& c, std::string name, int id) : FlashLight(p,r,l,c, name, id,0.0f,2.0f*M_PIf,1.0f,0.0f,1.0f)
     {
     }
 
-    FlashLight::FlashLight(const sf::Vector2f& p, float r, float l, const sf::Color& c, int id, float da, float sa, float i, float b, float lf) : SpotLight(p,r,c, id,da,sa,i,b,lf), _length(l)
+    FlashLight::FlashLight(const sf::Vector2f& p, float r, float l, const sf::Color& c, std::string name, int id, float da, float sa, float i, float b, float lf) : SpotLight(p,r,c,name,id,da,sa,i,b,lf), _length(l)
     {
         computeAABB();
     }

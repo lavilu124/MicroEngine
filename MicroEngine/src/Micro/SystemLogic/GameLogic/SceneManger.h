@@ -17,7 +17,8 @@ namespace Micro{
 	public:
 		Camera camera;
 		std::vector<GameObject> objects;
-		std::vector<Micro::ls::Light*> lights;
+		std::vector<ls::FlashLight> flashLights;
+		std::vector<ls::SpotLight> spotLights;
 
 	private:
 		std::string name;
