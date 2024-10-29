@@ -291,7 +291,7 @@ namespace Micro{
             return;
         }
 
-        std::regex logPattern(R"(log(\d+)\.txt)");
+        std::regex logPattern(R"(log(\d+)\.log)");
         int maxLogNumber = 0;
 
         for (const auto& entry : std::filesystem::directory_iterator(logDir)) {
@@ -306,7 +306,7 @@ namespace Micro{
         }
 
         currentLog = maxLogNumber + 1;
-        std::string logFileName = logDir + "\\log" + std::to_string(currentLog) + ".txt";
+        std::string logFileName = logDir + "\\log" + std::to_string(currentLog) + ".log";
         std::ofstream logFile(logFileName);
 
         if (!logFile) {
@@ -321,7 +321,7 @@ namespace Micro{
 			CreateLog();
 		
 
-        std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(currentLog) + ".txt";
+        std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(currentLog) + ".log";
 
         std::ofstream logFile(logFileName, std::ios::app);
 
