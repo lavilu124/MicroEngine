@@ -1,0 +1,14 @@
+C:\github\SceneEditor\Walnut\Walnut\Platform\GUI\Walnut\ApplicationGUI.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\ApplicationGUI.obj
+C:\github\SceneEditor\Walnut\Walnut\Platform\GUI\Walnut\ImGui\ImGuiBuild.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\ImGuiBuild.obj
+C:\github\SceneEditor\Walnut\Walnut\Platform\GUI\Walnut\ImGui\ImGuiTheme.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\ImGuiTheme.obj
+C:\github\SceneEditor\Walnut\Walnut\Platform\GUI\Walnut\Image.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\Image.obj
+C:\github\SceneEditor\Walnut\Walnut\Platform\GUI\Walnut\Input\Input.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\Input.obj
+C:\github\SceneEditor\Walnut\Walnut\Platform\GUI\Walnut\UI\Console.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\Console.obj
+C:\github\SceneEditor\Walnut\Walnut\Platform\GUI\Walnut\UI\UI.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\UI.obj
+C:\github\SceneEditor\Walnut\Walnut\Source\Walnut\Core\Log.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\Log.obj
+C:\github\SceneEditor\Walnut\Walnut\Source\Walnut\Random.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\Random.obj
+C:\github\SceneEditor\Walnut\Walnut\Source\Walnut\Serialization\BufferStream.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\BufferStream.obj
+C:\github\SceneEditor\Walnut\Walnut\Source\Walnut\Serialization\FileStream.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\FileStream.obj
+C:\github\SceneEditor\Walnut\Walnut\Source\Walnut\Serialization\StreamReader.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\StreamReader.obj
+C:\github\SceneEditor\Walnut\Walnut\Source\Walnut\Serialization\StreamWriter.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\StreamWriter.obj
+C:\github\SceneEditor\Walnut\Walnut\Source\Walnut\Utils\StringUtils.cpp;C:\github\SceneEditor\bin-int\Dist-windows-x86_64\Walnut\StringUtils.obj
