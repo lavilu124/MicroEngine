@@ -24,15 +24,15 @@ project "SendBox"
 
    prebuildcommands {
     'del /q "$(OutDir)Micro.dll"',
-    'xcopy /y "$(SolutionDir)Binaries\\' .. OutputDir .. '\\Micro\\Micro.dll" "$(OutDir)"'
+    'xcopy /y "$(SolutionDir)Binaries\\' .. outputdir .. '\\Micro\\Micro.dll" "$(OutDir)"'
    }
 
    postbuildcommands {
     'xcopy /y "$(SolutionDir)dependencies\\SFML\\SFML-2.6.1\\bin\\*.dll" "$(OutDir)"'
    }
 
-   targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+   targetdir ("../Binaries/" .. outputdir .. "/%{prj.name}")
+   objdir ("../Binaries/Intermediates/" .. outputdir .. "/%{prj.name}")
 
    filter "system:windows"
        systemversion "latest"

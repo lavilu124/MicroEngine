@@ -1,0 +1,7 @@
+C:\github\MicroEngine\SceneEditor\src\WalnutApp.cpp;C:\github\MicroEngine\bin-int\windows-x86_64\Release\SceneEditor\WalnutApp.obj
+C:\github\MicroEngine\SceneEditor\src\json\jsoncpp.cpp;C:\github\MicroEngine\bin-int\windows-x86_64\Release\SceneEditor\jsoncpp.obj
+C:\github\MicroEngine\SceneEditor\src\objects\GameObject.cpp;C:\github\MicroEngine\bin-int\windows-x86_64\Release\SceneEditor\GameObject.obj
+C:\github\MicroEngine\SceneEditor\src\objects\LightObject.cpp;C:\github\MicroEngine\bin-int\windows-x86_64\Release\SceneEditor\LightObject.obj
+C:\github\MicroEngine\SceneEditor\src\objects\Object.cpp;C:\github\MicroEngine\bin-int\windows-x86_64\Release\SceneEditor\Object.obj
+C:\github\MicroEngine\SceneEditor\src\objects\Objects.cpp;C:\github\MicroEngine\bin-int\windows-x86_64\Release\SceneEditor\Objects.obj
+C:\github\MicroEngine\SceneEditor\src\objects\UiObject.cpp;C:\github\MicroEngine\bin-int\windows-x86_64\Release\SceneEditor\UiObject.obj
