@@ -5,7 +5,7 @@ class App : public Micro::Application
 {
 public:
 	App(float windowWidth, float windowHeight, float maxFPS) : Micro::Application(windowWidth, windowHeight, maxFPS) {
-		m_systemManager.LoadScene("scene");
+		//m_systemManager.LoadScene("de");
 	}
 
 	App(sf::Vector2f windowSize, float maxFPS) : Micro::Application(windowSize, maxFPS) {
@@ -19,6 +19,9 @@ public:
 		m_systemManager.getLight(light2).flash->setActive(true);
 		m_systemManager.getLight(light2).flash->setSpreadAngle(35);
 		m_systemManager.getLight(light2).flash->setDirectionAngle(90);
+
+
+
 
 		while (m_window.isOpen()) {
 			InputFunc();

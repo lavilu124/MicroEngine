@@ -8,10 +8,13 @@ workspace "Micro Engine"
    filter "system:windows"
       buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
 
-OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
+outputdir  = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
 
-group "Core"
+group "Engine-Core"
 	include "MicroEngine/Build-Core.lua"
 group ""
 
+
+include "Build-Walnut-External.lua"
+include "SceneEditor/Build-Walnut-App.lua"
 include "SendBox/Build-App.lua"
