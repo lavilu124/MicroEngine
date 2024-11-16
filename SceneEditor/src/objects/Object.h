@@ -1,17 +1,13 @@
 #pragma once
 #include <string>
-
-struct vector2f {
-	vector2f(float x, float y) : x(x), y(y) {}
-	float x,y;
-};
+#include "Walnut/UI/UI.h"
 
 class Object
 {
 public:
-	Object(std::string name, vector2f position = vector2f(0,0), float rotation = 0);
+	Object(std::string name, ImVec2 position = ImVec2(0,0), float rotation = 0);
 
-	vector2f position;
+	ImVec2 position;
 	float rotation;
 	std::string name;
 };

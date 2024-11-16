@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include <filesystem>
 
-GameObject::GameObject(std::string name, std::string imagePath, vector2f position, vector2f scale, float rotation, int layer) : Object(name, position ,rotation), layer(layer), scale(scale){
+GameObject::GameObject(std::string name, std::string imagePath, ImVec2 position, ImVec2 scale, float rotation, int layer) : Object(name, position ,rotation), layer(layer), scale(scale){
 	SetPath(imagePath);
 }
 
