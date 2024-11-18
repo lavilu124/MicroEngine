@@ -34,10 +34,10 @@ namespace Micro{
 
 		int AddLight(ls::lightType type, const sf::Vector2f& p, float r, const sf::Color& c, std::string name, float l = 0);
 		void RemoveLight(int id);
-		ls::LightValue getLight(int index);
-		ls::LightValue getLight(std::string name);
+		ls::LightValue GetLight(int index);
+		ls::LightValue GetLight(std::string name);
 
-		ls::LightSystem* getLightSystem();
+		ls::LightSystem* GetLightSystem();
 
 	public:
 
