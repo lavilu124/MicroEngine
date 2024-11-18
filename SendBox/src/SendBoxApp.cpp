@@ -6,6 +6,7 @@ class App : public Micro::Application
 public:
 	App(float windowWidth, float windowHeight, float maxFPS) : Micro::Application(windowWidth, windowHeight, maxFPS) {
 		//m_systemManager.LoadScene("de");
+
 	}
 
 	App(sf::Vector2f windowSize, float maxFPS) : Micro::Application(windowSize, maxFPS) {
