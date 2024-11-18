@@ -106,7 +106,7 @@ namespace Micro{
         m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
     }
 
-    ls::LightSystem* SystemManager::getLightSystem() {
+    ls::LightSystem* SystemManager::GetLightSystem() {
         return &m_lightSystem;
     }
 
@@ -143,7 +143,7 @@ namespace Micro{
         }
 	}
 
-    ls::LightValue SystemManager::getLight(std::string name) {
+    ls::LightValue SystemManager::GetLight(std::string name) {
         int index = -1;
         for (int i = 0; i < m_sceneManager.flashLights.size(); i++) {
             if (m_sceneManager.flashLights[i].GetName() == name) {
@@ -160,7 +160,7 @@ namespace Micro{
         return { nullptr,nullptr };
     }
 
-    ls::LightValue SystemManager::getLight(int id) {
+    ls::LightValue SystemManager::GetLight(int id) {
         for (int i = 0; i < m_sceneManager.flashLights.size(); i++) {
             if (m_sceneManager.flashLights[i].getId() == id) {
                 return { nullptr,&m_sceneManager.flashLights[i] };
