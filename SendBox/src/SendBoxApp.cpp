@@ -4,22 +4,22 @@
 class App : public Micro::Application
 {
 public:
-	App(float windowWidth, float windowHeight, float maxFPS) : Micro::Application(windowWidth, windowHeight, maxFPS) {
+	App(const float windowWidth, const float windowHeight, const float maxFPS) : Micro::Application(windowWidth, windowHeight, maxFPS) {
 		//m_systemManager.LoadScene("de");
 
 	}
 
-	App(sf::Vector2f windowSize, float maxFPS) : Micro::Application(windowSize, maxFPS) {
+	App(const sf::Vector2f windowSize, float maxFPS) : Micro::Application(windowSize, maxFPS) {
 	}
 
 	void Run() override{
-		m_systemManager.getLightSystem()->setAmbiantLight(sf::Color(50, 40, 50));
+		m_systemManager.GetLightSystem()->setAmbiantLight(sf::Color(50, 40, 50));
 
 		
 		int light2 = m_systemManager.AddLight(Micro::ls::Flash, sf::Vector2f(-200, -200), 200, sf::Color::Yellow, "lan", 0);
-		m_systemManager.getLight(light2).flash->setActive(true);
-		m_systemManager.getLight(light2).flash->setSpreadAngle(35);
-		m_systemManager.getLight(light2).flash->setDirectionAngle(90);
+		m_systemManager.GetLight(light2).flash->setActive(true);
+		m_systemManager.GetLight(light2).flash->setSpreadAngle(35);
+		m_systemManager.GetLight(light2).flash->setDirectionAngle(90);
 
 
 
@@ -35,7 +35,7 @@ public:
 			int mouseXRelativeToCenter = mousePositionWindow.x - windowSize.x / 2;
 			int mouseYRelativeToCenter = mousePositionWindow.y - windowSize.y / 2;
 
-			m_systemManager.getLight(light2).flash->setPosition(sf::Vector2f(mouseXRelativeToCenter, mouseYRelativeToCenter));
+			m_systemManager.GetLight(light2).flash->setPosition(sf::Vector2f(mouseXRelativeToCenter, mouseYRelativeToCenter));
 
 			Display();
 		}
