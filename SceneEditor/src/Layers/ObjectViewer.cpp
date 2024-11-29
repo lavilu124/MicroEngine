@@ -152,6 +152,7 @@ void ObjectViewer::DisplayLightObject() {
 		Light->color.Value.x = colorValues[0];
 		Light->color.Value.y = colorValues[1];
 		Light->color.Value.z = colorValues[2];
+		Light->UpdateVal();
 	}
 	ImGui::Unindent();
 
@@ -160,6 +161,7 @@ void ObjectViewer::DisplayLightObject() {
 	if (ImGui::InputFloat("##Intensity", &Light->color.Value.w))
 	{
 		Light->color.Value.w = fmodf(Light->color.Value.w, 255.0f);
+		Light->UpdateVal();
 	}
 	ImGui::Unindent();
 
@@ -179,6 +181,7 @@ void ObjectViewer::DisplayLightObject() {
 	if (ImGui::InputFloat("##Radius", &Light->radius))
 	{
 		Light->radius = fmodf(Light->radius, 1000000000000000000);
+		Light->UpdateVal();
 	}
 	ImGui::Unindent();
 }

@@ -11,12 +11,12 @@ void SceneContent::OnUIRender()
 	Window();
 }
 
-std::vector<GameObject> SceneContent::GetGameObjects() const
+std::vector<GameObject>& SceneContent::GetGameObjects() 
 {
 	return m_gameObjects;
 }
 
-std::vector<LightObject> SceneContent::GetLights() const
+std::vector<LightObject>& SceneContent::GetLights() 
 {
 	return m_lightObjects;
 }
@@ -41,14 +41,14 @@ void SceneContent::Window()
 	ImGui::Separator();
 
 
-	if (ImGui::Button("Create Light", ImVec2(ImGui::GetWindowSize().x, 30))) {
+	/*if (ImGui::Button("Create Light", ImVec2(ImGui::GetWindowSize().x, 30))) {
 
 		LightObject newLight("New Light");
 		m_lightObjects.push_back(newLight);
 
 
 		m_newLightIndex = m_lightObjects.size() - 1;
-	}
+	}*/
 
 	if (ImGui::Button("Create GameObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
 		GameObject newGameObject("New Object", "");

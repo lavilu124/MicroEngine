@@ -1076,7 +1076,7 @@ namespace Walnut {
 		err = vkQueueSubmit(g_Queue, 1, &end_info, fence);
 		check_vk_result(err);
 
-		err = vkWaitForFences(g_Device, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT);
+													err = vkWaitForFences(g_Device, 1, &fence, VK_TRUE, DEFAULT_FENCE_TIMEOUT);
 		check_vk_result(err);
 
 		vkDestroyFence(g_Device, fence, nullptr);

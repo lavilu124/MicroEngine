@@ -15,20 +15,20 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	Walnut::ApplicationSpecification spec;
 	spec.Name = "Micro Engine";
 	spec.CustomTitlebar = true;
-
+	
 
 	Walnut::Application* app = new Walnut::Application(spec);
 
-	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(ProjectDirectory(""));
+	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(R"(C:\github\MicroEngine\Resources)");
 	app->PushLayer(dir);
 
-	std::shared_ptr<ObjectViewer> viewer =  std::make_shared<ObjectViewer>(ObjectViewer(dir));
+	std::shared_ptr<ObjectViewer> viewer =  std::make_shared<ObjectViewer>(dir);
 	app->PushLayer(viewer);
 
-	std::shared_ptr<SceneContent> sceneContent = std::make_shared<SceneContent>(SceneContent(viewer));
+	std::shared_ptr<SceneContent> sceneContent = std::make_shared<SceneContent>(viewer);
 	app->PushLayer(sceneContent);
 
-	std::shared_ptr<SceneViewer> sceneViewer = std::make_shared<SceneViewer>(SceneViewer(sceneContent));
+	std::shared_ptr<SceneViewer> sceneViewer = std::make_shared<SceneViewer>(sceneContent);
 	app->PushLayer(sceneViewer);
 
 	std::shared_ptr<Saves> saves = std::make_shared<Saves>(Saves(sceneContent));

@@ -6,5 +6,7 @@
 
 
 //-------------------------Entery Point-------------------------
-#include "Micro/EnteryPoint.h"
+#ifndef ENGINE
+#include "Micro/EnteryPoint.h" 
+#endif
 //--------------------------------------------------------------

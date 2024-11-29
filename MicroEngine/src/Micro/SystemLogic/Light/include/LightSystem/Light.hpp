@@ -78,6 +78,8 @@ namespace ls
 
 			std::string GetName() const;
 
+			sf::Sprite getSprite() const;
+
         protected:
             static const char LAS_PARAM_CENTER[];
             static const char LAS_PARAM_RADIUS[];

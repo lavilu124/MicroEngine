@@ -124,6 +124,11 @@ namespace ls
         debugRender(screenView,target,LightSystem::DebugFlags::DEFAULT);
     }
 
+    sf::Sprite LightSystem::getSprite() const
+    {
+        return _sprite;
+    }
+
     void LightSystem::debugRender(const sf::View& screenView, sf::RenderTarget& target, int flags)
     {
         sf::IntRect screen = DMUtils::sfml::getViewInWorldAABB(screenView);
