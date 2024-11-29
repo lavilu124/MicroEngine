@@ -115,6 +115,8 @@ namespace ls
 
             void setView(const sf::View& view);//reallocates the texture
 
+			sf::Sprite getSprite() const;
+
         protected:
             static const sf::RenderStates _multiplyState;
             static const sf::RenderStates _addState;

@@ -139,6 +139,11 @@ namespace ls
 		return m_name;
     }
 
+	sf::Sprite Light::getSprite() const
+	{
+		return _sprite;
+	}	
+
     void Light::assignID(int id) {
         if (this->id == -1) {
 			this->id = id;

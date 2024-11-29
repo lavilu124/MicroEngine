@@ -8,8 +8,8 @@ public:
 
 	virtual void OnUIRender() override;
 
-	std::vector<GameObject> GetGameObjects() const;
-	std::vector<LightObject> GetLights() const;
+	std::vector<GameObject>& GetGameObjects() ;
+	std::vector<LightObject>& GetLights() ;
 
 private:
 	void Window();

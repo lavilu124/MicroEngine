@@ -15,13 +15,10 @@ public:
 	void Run() override{
 		m_systemManager.GetLightSystem()->setAmbiantLight(sf::Color(50, 40, 50));
 
-		
-		int light2 = m_systemManager.AddLight(Micro::ls::Flash, sf::Vector2f(-200, -200), 200, sf::Color::Yellow, "lan", 0);
+		const int light2 = m_systemManager.AddLight(Micro::ls::Flash, sf::Vector2f(-200, -200), 200, sf::Color::Yellow, "lan", 0);
 		m_systemManager.GetLight(light2).flash->setActive(true);
 		m_systemManager.GetLight(light2).flash->setSpreadAngle(35);
 		m_systemManager.GetLight(light2).flash->setDirectionAngle(90);
-
-
 
 
 		while (m_window.isOpen()) {
@@ -40,6 +37,8 @@ public:
 			Display();
 		}
 	}
+
+
 };
 
 Micro::Application* Micro::CreateApplication() {
