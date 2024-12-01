@@ -20,8 +20,12 @@ void ProjectDirectory::OnUIRender()
 void ProjectDirectory::SetCurrentPath(const std::string& path)
 {
 	m_currentPath = path;
+
+
 	m_images.clear();
     m_folders.clear();
+
+
     for (const auto& entry : std::filesystem::directory_iterator(m_currentPath)) {
         if (entry.is_directory())
         {
@@ -51,6 +55,7 @@ void ProjectDirectory::Window()
     ImGui::SameLine();
     ImGui::TextWrapped(m_currentPath.c_str());
 
+
     if (true) {
         int columnIndex = 0;
         const float thumbnailSize = 100.0f;
@@ -59,7 +64,8 @@ void ProjectDirectory::Window()
         float windowWidth = ImGui::GetContentRegionAvail().x;
         const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
 
-        for (const auto& folderPath : m_folders) { // Assuming m_folders is a std::vector<std::filesystem::path>
+        for (int i = 0; i < m_folders.size(); i++) {
+            const auto& folderPath = m_folders[i];
             if (columnIndex >= imagesPerRow) {
                 columnIndex = 0;
                 ImGui::NewLine();
@@ -72,7 +78,7 @@ void ProjectDirectory::Window()
                 ImGui::SetCursorPosX(boxPadding);
 
                 // Render folder icon as a button
-                ImGui::Image(folderIcon->GetDescriptorSet(), ImVec2(thumbnailSize, thumbnailSize/1.25)); // Use the folder icon
+                ImGui::Image(folderIcon->GetDescriptorSet(), ImVec2(thumbnailSize, thumbnailSize/1.25)); 
 
                 if (ImGui::IsItemHovered()) {
                     ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -89,7 +95,7 @@ void ProjectDirectory::Window()
                 ImGui::PopStyleVar();
                 ImGui::PopStyleColor();
             }
-            ImGui::EndChild();
+            ImGui::EndChild(); //check
             ImGui::SameLine();
             columnIndex++;
         }
