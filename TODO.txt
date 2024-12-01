@@ -1,0 +1,9 @@
+render light
+finish rotation
+add photos to file types
+run current scene
+input system
+animation system
+ui = text/buttons (in game)
+change values in scene view
+luncher with project viewer
