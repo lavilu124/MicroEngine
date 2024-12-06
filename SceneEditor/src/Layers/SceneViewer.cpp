@@ -1,6 +1,8 @@
 ﻿#include "SceneViewer.h"
 #include <filesystem>
 
+
+#define HEADERHEIGHT 25
 SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent) : m_sceneContent(sceneContent)
 {
 	ls.setView(view);
@@ -11,7 +13,7 @@ void SceneViewer::OnUIRender()
 	Window();
 }
 
-ImageData extractImageData(const sf::Sprite& sprite) {
+ImageData SceneViewer::ExtractImageData(const sf::Sprite& sprite) const {
 
 	if (!sprite.getTexture()) {
 		return {0, 0, nullptr};
@@ -21,7 +23,7 @@ ImageData extractImageData(const sf::Sprite& sprite) {
 
 	return { image.getSize().x ,image.getSize().y, image.getPixelsPtr()};
 }
-void SceneViewer::setImage(LightObject& light)
+void SceneViewer::SetImage(LightObject& light)
 {
 	if (light.counter == 1)
 	{
@@ -31,7 +33,7 @@ void SceneViewer::setImage(LightObject& light)
 		spotLight.setSpreadAngle(35);
 		spotLight.setDirectionAngle(90);
 		ls.addLight(&spotLight);
-		ImageData imageData = extractImageData(spotLight.getSprite());
+		ImageData imageData = ExtractImageData(spotLight.getSprite());
 		light.image = std::make_shared<Walnut::Image>(imageData.width, imageData.height, Walnut::ImageFormat::RGBA, imageData.data);
 		return;
 	}
@@ -39,7 +41,7 @@ void SceneViewer::setImage(LightObject& light)
 	light.counter++;
 }
 
-void RenderPlayButton(const ImVec2& contentRegion) {
+void SceneViewer::RenderPlayButton(const ImVec2& contentRegion) {
 	// Constants
 	constexpr float buttonWidth = 25.0f;
 	constexpr float buttonHeight = 25.0f;
@@ -65,7 +67,7 @@ void RenderPlayButton(const ImVec2& contentRegion) {
 	style.WindowBorderSize = 0.0f; // No Border
 
 	// Begin child window for the button
-	ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight));
+	ImGui::BeginChild("##header", ImVec2(contentRegion.x, HEADERHEIGHT));
 	{
 		// Position cursor for the button
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + buttonPos.x);
@@ -112,64 +114,85 @@ void SceneViewer::Window()
 		IM_COL32(0, 0, 0, 255) // Black
 	);
 
-	RenderGameObjects();
-	//RenderLights();
+
+	ImGui::BeginChild("#scene", ImVec2(contentRegion.x,contentRegion.y-HEADERHEIGHT));
+	{
+		ImGui::GetWindowDrawList()->AddRectFilled(
+			ImGui::GetCursorScreenPos(),
+			ImVec2(ImGui::GetCursorScreenPos().x + contentRegion.x, ImGui::GetCursorScreenPos().y + contentRegion.y),
+			IM_COL32(0, 0, 0, 255) // Black
+		);
+
+		RenderGameObjects();
+		//RenderLights();
+	}
+	ImGui::EndChild();
 
 	ImGui::End();
 }
 
-void ImageRotated(ImTextureID user_texture_id, const ImVec2& size, int angle, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col)
+void SceneViewer::ImageRotated(ImTextureID user_texture_id, const ImVec2& size, float angle, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col) const
 {
-	IM_ASSERT(angle % 90 == 0);
-	ImVec2 _uv0, _uv1, _uv2, _uv3;
-	switch (angle % 360)
+	// Convert angle to radians for trigonometric functions
+	float angleRad = angle * (3.14159f / 180.0f);
+
+	// Calculate the new bounding box to account for rotation
+	ImVec2 rotatedSize = size;
+	if (angle != 0.0f && fmod(angle, 90.0f) != 0.0f) // Use fmod for floating-point modulo
 	{
-	case 0:
-		ImGui::Image(user_texture_id, size, uv0, uv1, tint_col, border_col);
-		return;
-	case 180:
-		ImGui::Image(user_texture_id, size, uv1, uv0, tint_col, border_col);
-		return;
-	case 90:
-		_uv3 = uv0;
-		_uv1 = uv1;
-		_uv0 = ImVec2(uv1.x, uv0.y);
-		_uv2 = ImVec2(uv0.x, uv1.y);
-		break;
-	case 270:
-		_uv1 = uv0;
-		_uv3 = uv1;
-		_uv0 = ImVec2(uv0.x, uv1.y);
-		_uv2 = ImVec2(uv1.x, uv0.y);
-		break;
+		float newSizeX = size.x * std::abs(std::cos(angleRad)) + size.y * std::abs(std::sin(angleRad));
+		float newSizeY = size.x * std::abs(std::sin(angleRad)) + size.y * std::abs(std::cos(angleRad));
+		rotatedSize = ImVec2(std::max(newSizeX, newSizeY), std::max(newSizeX, newSizeY)); // Ensure bounding box can fully contain the rotated image
 	}
+
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	if (window->SkipItems)
 		return;
-	ImVec2 _size(size.y, size.x);
-	ImRect bb(window->DC.CursorPos, ImVec2(window->DC.CursorPos.x + _size.x, window->DC.CursorPos.y + _size.y));
+
+	ImRect bb(window->DC.CursorPos, ImVec2(window->DC.CursorPos.x + rotatedSize.x, window->DC.CursorPos.y + rotatedSize.y));
 	if (border_col.w > 0.0f)
 		bb.Max = ImVec2(bb.Max.x + 2, bb.Max.y + 2);
 	ImGui::ItemSize(bb);
 	if (!ImGui::ItemAdd(bb, 0))
 		return;
+
+	// Define UV coordinates for the original image (no need to rotate these)
+	ImVec2 _uv0 = uv0;
+	ImVec2 _uv1 = ImVec2(uv1.x, uv0.y);
+	ImVec2 _uv2 = uv1;
+	ImVec2 _uv3 = ImVec2(uv0.x, uv1.y);
+
+	// Calculate vertex positions for the rotated image
+	ImVec2 center = ImVec2(size.x / 2, size.y / 2);
+	ImVec2 x0, x1, x2, x3;
+
+	// Rotate points around the center (using original UVs as if they were positions for simplicity)
+	x0 = ImVec2(center.x + (uv0.x - 0.5f) * size.x * std::cos(angleRad) - (uv0.y - 0.5f) * size.y * std::sin(angleRad),
+		center.y + (uv0.x - 0.5f) * size.x * std::sin(angleRad) + (uv0.y - 0.5f) * size.y * std::cos(angleRad));
+	x1 = ImVec2(center.x + (uv1.x - 0.5f) * size.x * std::cos(angleRad) - (uv1.y - 0.5f) * size.y * std::sin(angleRad),
+		center.y + (uv1.x - 0.5f) * size.x * std::sin(angleRad) + (uv1.y - 0.5f) * size.y * std::cos(angleRad));
+	x2 = ImVec2(center.x + (_uv2.x - 0.5f) * size.x * std::cos(angleRad) - (_uv2.y - 0.5f) * size.y * std::sin(angleRad),
+		center.y + (_uv2.x - 0.5f) * size.x * std::sin(angleRad) + (_uv2.y - 0.5f) * size.y * std::cos(angleRad));
+	x3 = ImVec2(center.x + (_uv3.x - 0.5f) * size.x * std::cos(angleRad) - (_uv3.y - 0.5f) * size.y * std::sin(angleRad),
+		center.y + (_uv3.x - 0.5f) * size.x * std::sin(angleRad) + (_uv3.y - 0.5f) * size.y * std::cos(angleRad));
+
+	// Adjust vertex positions based on the window's cursor position and potential border
+	ImVec2 offset = (border_col.w > 0.0f) ? ImVec2(1, 1) : ImVec2(0, 0);
+	x0 = ImVec2(bb.Min.x + (x0.x - center.x) + center.x * (rotatedSize.x / size.x) + offset.x, bb.Min.y + (x0.y - center.y) + center.y * (rotatedSize.y / size.y) + offset.y);
+	x1 = ImVec2(bb.Min.x + (x1.x - center.x) + center.x * (rotatedSize.x / size.x) + offset.x, bb.Min.y + (x1.y - center.y) + center.y * (rotatedSize.y / size.y) + offset.y);
+	x2 = ImVec2(bb.Min.x + (x2.x - center.x) + center.x * (rotatedSize.x / size.x) + offset.x, bb.Min.y + (x2.y - center.y) + center.y * (rotatedSize.y / size.y) + offset.y);
+	x3 = ImVec2(bb.Min.x + (x3.x - center.x) + center.x * (rotatedSize.x / size.x) + offset.x, bb.Min.y + (x3.y - center.y) + center.y * (rotatedSize.y / size.y) + offset.y);
+
 	if (border_col.w > 0.0f)
 	{
 		window->DrawList->AddRect(bb.Min, bb.Max, ImGui::GetColorU32(border_col), 0.0f);
-		ImVec2 x0 = ImVec2(bb.Min.x + 1, bb.Min.y + 1);
-		ImVec2 x2 = ImVec2(bb.Max.x - 1, bb.Max.y - 1);;
-		ImVec2 x1 = ImVec2(x2.x, x0.y);
-		ImVec2 x3 = ImVec2(x0.x, x2.y);
 		window->DrawList->AddImageQuad(user_texture_id, x0, x1, x2, x3, _uv0, _uv1, _uv2, _uv3, ImGui::GetColorU32(tint_col));
 	}
 	else
 	{
-		ImVec2 x1 = ImVec2(bb.Max.x, bb.Min.y);
-		ImVec2 x3 = ImVec2(bb.Min.x, bb.Max.y);
-		window->DrawList->AddImageQuad(user_texture_id, bb.Min, x1, bb.Max, x3, _uv0, _uv1, _uv2, _uv3, ImGui::GetColorU32(tint_col));
+		window->DrawList->AddImageQuad(user_texture_id, x0, x1, x2, x3, _uv0, _uv1, _uv2, _uv3, ImGui::GetColorU32(tint_col));
 	}
 }
-
 void SceneViewer::RenderGameObjects() const
 {
 	ImVec2 contentRegion = ImGui::GetContentRegionAvail();
@@ -177,7 +200,7 @@ void SceneViewer::RenderGameObjects() const
 		if (gameObject.sprite) {
 			ImVec2 position(
 				gameObject.position.x + contentRegion.x / 2 - (float)gameObject.sprite->GetWidth() / 2,
-				gameObject.position.y + contentRegion.y / 2 - (float)gameObject.sprite->GetHeight() / 2 + 25
+				gameObject.position.y + contentRegion.y / 2 - (float)gameObject.sprite->GetHeight() / 2 - HEADERHEIGHT
 			);
 
 			
@@ -213,7 +236,7 @@ void SceneViewer::RenderLights()
 				ImGui::Image(light.image->GetDescriptorSet(), { (float)light.image->GetWidth(), (float)light.image->GetHeight() });
 				break;
 			}
-			setImage(light);
+			SetImage(light);
 		}
 	}
 }

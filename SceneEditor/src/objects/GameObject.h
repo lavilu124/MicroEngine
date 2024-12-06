@@ -12,6 +12,8 @@ public:
 	std::shared_ptr<Walnut::Image> sprite;
 
 	void SetPath(std::string newPath);
+
+	std::string GetPath() const;
 private:
 	std::string path;
 };

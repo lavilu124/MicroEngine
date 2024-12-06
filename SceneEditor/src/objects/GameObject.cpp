@@ -21,3 +21,8 @@ void GameObject::SetPath(std::string newPath) {
 	sprite = std::make_shared<Walnut::Image>(newPath);	
 	
 }
+
+std::string GameObject::GetPath() const
+{
+	return path;
+}

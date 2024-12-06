@@ -21,10 +21,15 @@ private:
 	void RenderGameObjects() const;
 	void RenderLights();
 
-	void setImage(LightObject& light);
+	void SetImage(LightObject& light);
 
-	void test();
+	void RenderPlayButton(const ImVec2& contentRegion);
 
+	void SceneViewer::ImageRotated(ImTextureID user_texture_id, const ImVec2& size, float angle, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col) const;
+
+	ImageData ExtractImageData(const sf::Sprite& sprite) const;
+
+	void SceneViewer::RenderObject(GameObject& object) const;
 private:
 	std::shared_ptr<SceneContent> m_sceneContent;
 	Micro::ls::LightSystem ls;

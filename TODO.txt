@@ -7,3 +7,4 @@ animation system
 ui = text/buttons (in game)
 change values in scene view
 luncher with project viewer
+fix lights bug on no gpu pc
