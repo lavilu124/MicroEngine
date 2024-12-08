@@ -4,7 +4,7 @@ project "Micro"
    cppdialect "C++17"
    staticruntime "off"
 
-   files { "src/**.h", "src/**.cpp" }
+   files { "src/**.h", "src/**.cpp", "src/**.hpp" }
 
    includedirs
    {
