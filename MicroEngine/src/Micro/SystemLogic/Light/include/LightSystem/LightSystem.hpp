@@ -116,8 +116,10 @@ namespace ls
             void setView(const sf::View& view);//reallocates the texture
 
 			sf::Sprite getSprite() const;
+    private:
+        void LightSystem::applyAttenuation(sf::Image& image, const sf::Vector2f& center, float radius, const sf::Color& color, float bleed, float linearFactor);
 
-        protected:
+    protected:
             static const sf::RenderStates _multiplyState;
             static const sf::RenderStates _addState;
             static const sf::RenderStates _subtractState;
