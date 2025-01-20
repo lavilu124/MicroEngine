@@ -7,7 +7,7 @@ namespace sfu{
     /**
      * PI constant.
      */
-    extern const float PI;
+    MICRO_API extern const float PI;
 }
 
 #endif
