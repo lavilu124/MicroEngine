@@ -1,6 +1,5 @@
 #include "FileManager.h"
 #include "..//SystemLogic/GameLogic/Collision.hpp"
-#include "../SystemLogic/Light/include/LightSystem/LightSystem.hpp"
 #include "../SystemLogic/SystemManager.h"
 
 #include <fstream>
@@ -257,7 +256,7 @@ namespace Micro{
             float angle = currentObject["angle"].asFloat();
             float radius = currentObject["radius"].asFloat();
 
-			switch (type) {
+			/*switch (type) {
 			case 0: //spot light
                 systemManger->AddLight(ls::Spot, position, radius, color, name);
 				break;
@@ -267,7 +266,7 @@ namespace Micro{
 			default:
 				MC_LOG("unknown light type in " + name);
 				break;
-			} 
+			} */
         }
 
         //close the file

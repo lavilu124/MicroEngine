@@ -16,7 +16,7 @@ namespace Micro{
 
         deltaTime = 0;
 
-        m_lightSystem.setView(window.getView());
+        //m_lightSystem.setView(window.getView());
     }
 
     void SystemManager::Start() {
@@ -39,7 +39,7 @@ namespace Micro{
     }
 
     void SystemManager::Render(sf::RenderWindow& window) {
-        m_lightSystem.setView(window.getView());
+        //m_lightSystem.setView(window.getView());
         for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
             window.draw((*it).GetSprite());
 
@@ -106,11 +106,11 @@ namespace Micro{
         m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
     }
 
-    ls::LightSystem* SystemManager::GetLightSystem() {
+    /*ls::LightSystem* SystemManager::GetLightSystem() {
         return &m_lightSystem;
-    }
+    }*/
 
-    int SystemManager::AddLight(ls::lightType type, const sf::Vector2f& p, float r, const sf::Color& c, std::string name, float l) {
+    /*int SystemManager::AddLight(ls::lightType type, const sf::Vector2f& p, float r, const sf::Color& c, std::string name, float l) {
         if (type == ls::Spot) {
             m_sceneManager.spotLights.push_back(ls::SpotLight(p, r, c, name));
             m_sceneManager.spotLights[m_sceneManager.spotLights.size() - 1].assignID(m_currentId);
@@ -174,6 +174,6 @@ namespace Micro{
         }
 
         return { nullptr,nullptr };
-    }
+    }*/
 
 }

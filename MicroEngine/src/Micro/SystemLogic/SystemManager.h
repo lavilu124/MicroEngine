@@ -1,7 +1,7 @@
 #pragma once
 #include "../Core.h"
 #include "GameLogic/SceneManger.h"
-#include "Light/include/LightSystem/LightSystem.hpp"
+//#include "Light/include/LightSystem/LightSystem.hpp"
 #include <vector>
 
 namespace Micro{
@@ -32,12 +32,12 @@ namespace Micro{
 
 		FileManager& GetFileManager();
 
-		int AddLight(ls::lightType type, const sf::Vector2f& p, float r, const sf::Color& c, std::string name, float l = 0);
+		/*int AddLight(ls::lightType type, const sf::Vector2f& p, float r, const sf::Color& c, std::string name, float l = 0);
 		void RemoveLight(int id);
 		ls::LightValue GetLight(int index);
 		ls::LightValue GetLight(std::string name);
 
-		ls::LightSystem* GetLightSystem();
+		ls::LightSystem* GetLightSystem();*/
 
 	public:
 
@@ -52,7 +52,7 @@ namespace Micro{
 
 	private:
 
-		ls::LightSystem m_lightSystem;
+		//ls::LightSystem m_lightSystem;
 
 		SceneManger m_sceneManager;
 		FileManager m_fileManager;

@@ -50,15 +50,15 @@ namespace Micro{
 
 	void Application::Display() {
 
-		m_systemManager.GetLightSystem()->update();
-		m_systemManager.GetLightSystem()->render(m_window.getView(), m_window);
+		/*m_systemManager.GetLightSystem()->update();
+		m_systemManager.GetLightSystem()->render(m_window.getView(), m_window);*/
 
 		m_window.clear(sf::Color(60, 60, 60));
 
 		m_systemManager.Render(m_window);
 		
 
-		m_systemManager.GetLightSystem()->draw(m_window.getView(), m_window);
+		//m_systemManager.GetLightSystem()->draw(m_window.getView(), m_window);
 
 		m_window.display();
 	}
