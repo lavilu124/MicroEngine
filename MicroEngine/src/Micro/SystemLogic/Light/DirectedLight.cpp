@@ -6,7 +6,7 @@
 #include "geometry/Line.hpp"
 #include "graphics/VertexArray.hpp"
 
-namespace candle{
+namespace Micro{
     void DirectedLight::draw(sf::RenderTarget& t, sf::RenderStates st) const{
         st.transform *= Transformable::getTransform();
         if(st.blendMode == sf::BlendAlpha){ // the default

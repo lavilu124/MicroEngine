@@ -16,7 +16,7 @@
 
 #include "../../core.h"
 
-namespace candle{
+namespace Micro{
     /**
      * @typedef Edge
      * @brief Typedef with mere semantic purposes.

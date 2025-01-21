@@ -11,7 +11,7 @@
 #include "geometry/Vector2.hpp"
 #include "geometry/Line.hpp"
 
-namespace candle{
+namespace Micro{
     int RadialLight::s_instanceCount = 0;
     const float BASE_RADIUS = 400.0f;
     bool l_texturesReady(false);

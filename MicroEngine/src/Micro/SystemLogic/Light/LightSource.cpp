@@ -7,7 +7,7 @@
 #include "geometry/Vector2.hpp"
 #include "graphics/VertexArray.hpp"
 
-namespace candle{
+namespace Micro{
     LightSource::LightSource()
         : m_color(sf::Color::White)
         , m_fade(true)

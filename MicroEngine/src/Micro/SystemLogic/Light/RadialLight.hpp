@@ -11,7 +11,7 @@
 
 #include "../../core.h"
 
-namespace candle{
+namespace Micro{
     /**
      * @brief LightSource that emits light from a single point
      * @details

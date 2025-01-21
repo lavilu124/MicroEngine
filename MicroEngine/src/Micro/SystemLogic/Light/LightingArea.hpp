@@ -16,7 +16,7 @@
 #include "geometry/Line.hpp"
 #include "LightSource.hpp"
 
-namespace candle{
+namespace Micro{
     /**
      * @brief Object to manage ambient light and fog.
      * @details
