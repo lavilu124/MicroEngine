@@ -2,7 +2,7 @@
 #include "graphics/VertexArray.hpp"
 
 
-namespace candle{
+namespace Micro{
     
     sf::BlendMode l_substractAlpha(
         sf::BlendMode::Factor::Zero,              // color src
