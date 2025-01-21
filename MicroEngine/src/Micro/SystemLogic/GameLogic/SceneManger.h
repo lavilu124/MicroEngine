@@ -1,7 +1,7 @@
 #pragma once
 #include "../../Objects/Camera.h"
 #include "../../FileOperations/FileManager.h"
-#include "../Light/include/LightSystem/LightSystem.hpp"
+
 
 
 namespace Micro{
@@ -17,8 +17,8 @@ namespace Micro{
 	public:
 		Camera camera;
 		std::vector<GameObject> objects;
-		std::vector<ls::FlashLight> flashLights;
-		std::vector<ls::SpotLight> spotLights;
+		//std::vector<ls::FlashLight> flashLights;
+		//std::vector<ls::SpotLight> spotLights;
 
 	private:
 		std::string name;
