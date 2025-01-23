@@ -1,36 +1,61 @@
-#include <SFML/Graphics.hpp>
-#include "LightInclude.h"
+#include <Micro.h>
+#include <LightInclude.h>
 
-int main() {
+class App : public Micro::Application
+{
+public:
+	App(const float windowWidth, const float windowHeight, const float maxFPS) : Micro::Application(windowWidth, windowHeight, maxFPS) {
+		
 
-	sf::RenderWindow w(sf::VideoMode(1920, 1080), "app");
-
-	Micro::RadialLight light;
-	light.setRange(150);
-	light.setColor(sf::Color::Blue);
-
-
-	Micro::EdgeVector edges;
-	edges.emplace_back(sf::Vector2f(200.f, 100.f),
-		sf::Vector2f(200.f, 300.f));
-
-
-	while (w.isOpen()) {
-		sf::Event e;
-		while (w.pollEvent(e)) {
-			if (e.type == sf::Event::Closed) {
-				w.close();
-			}
-			else if (e.type == sf::Event::MouseMoved) {
-				sf::Vector2f mp(sf::Mouse::getPosition(w));
-				light.setPosition(mp);
-				light.castLight(edges.begin(), edges.end());
-			}
-		}
-
-		w.clear();
-		w.draw(light);
-		w.display();
 	}
-	return 0;
+
+	App(const sf::Vector2f windowSize, float maxFPS) : Micro::Application(windowSize, maxFPS) {
+	}
+
+	void Run() override {
+		
+
+		sfu::LightId light = m_systemManager.AddLight(sfu::lightType::radial);
+		m_systemManager.GetLight<sfu::lightType::radial>(light)->setRange(150);
+		m_systemManager.GetLight<sfu::lightType::radial>(light)->setColor(sf::Color::Blue);
+
+
+
+		Micro::EdgeVector edges;
+		edges.emplace_back(sf::Vector2f(0.f, 0.f),
+			sf::Vector2f(0.f, 300.f));
+
+
+		while (m_window.isOpen()) {
+			sf::Event e;
+			while (m_window.pollEvent(e)) {
+				if (e.type == sf::Event::Closed) {
+					m_window.close();
+				}
+				else if (e.type == sf::Event::MouseMoved) {
+					sf::Vector2i mousePositionWindow = sf::Mouse::getPosition(m_window);
+					sf::Vector2u windowSize = m_window.getSize();
+
+					int mouseXRelativeToCenter = mousePositionWindow.x - windowSize.x / 2;
+					int mouseYRelativeToCenter = mousePositionWindow.y - windowSize.y / 2;
+					m_systemManager.GetLight<sfu::lightType::radial>(light)->setPosition(mouseXRelativeToCenter, mouseYRelativeToCenter);
+					m_systemManager.GetLight<sfu::lightType::radial>(light)->castLight(edges.begin(), edges.end());
+				}
+			}
+
+			m_systemManager.Update(m_camera);
+
+			m_window.clear();
+			m_window.draw(*m_systemManager.GetLight<sfu::lightType::radial>(light));
+			m_window.display();
+
+			//Display();
+		}
+	}
+
+
+};
+
+Micro::Application* Micro::CreateApplication() {
+	return new App(960, 540, 144);
 }

@@ -63,6 +63,8 @@ namespace Micro{
          * @brief Draw the object to a target
          */
         virtual void draw(sf::RenderTarget& t, sf::RenderStates st) const = 0;
+
+        
   
     protected:
         sf::Color m_color;
@@ -70,6 +72,7 @@ namespace Micro{
         float m_range;
         float m_intensity; // only for fog
         bool m_fade;
+        int m_id = 0;
 
 #ifdef CANDLE_DEBUG        
         sf::VertexArray m_debug;
@@ -81,7 +84,7 @@ namespace Micro{
         /**
          * @brief Constructor
          */
-        LightSource();
+        LightSource(int id = 0);
         
          /**
          * @brief Set the light intensity.
@@ -103,6 +106,8 @@ namespace Micro{
          * @see setIntensity
          */
         float getIntensity() const;
+
+        int getID() const;
         
         /**
          * @brief Set the light color.

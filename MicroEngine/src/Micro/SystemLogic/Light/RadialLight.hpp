@@ -43,7 +43,7 @@ namespace Micro{
         /**
          * @brief Constructor
          */
-        RadialLight();
+        RadialLight(int id = 0);
 
         /**
          * @brief Destructor

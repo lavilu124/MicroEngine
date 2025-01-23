@@ -41,7 +41,8 @@ namespace Micro{
         }
     }
 
-    DirectedLight::DirectedLight(){
+    DirectedLight::DirectedLight(int id){
+        m_id = id;
         m_polygon.setPrimitiveType(sf::Quads);
         m_polygon.resize(2);
         setBeamWidth(10.f);

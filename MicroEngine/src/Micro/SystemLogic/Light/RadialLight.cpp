@@ -57,8 +57,8 @@ namespace Micro{
         return x;
     }
 
-    RadialLight::RadialLight()
-        : LightSource()
+    RadialLight::RadialLight(int id)
+        : LightSource(id)
         {
         if(!l_texturesReady){
             // The first time we create a RadialLight, we must create the textures

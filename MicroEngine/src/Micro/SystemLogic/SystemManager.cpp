@@ -102,7 +102,53 @@ namespace Micro{
         return m_fileManager;
     }
 
-    void SystemManager::DestroyObject(std::string name) {
+    sfu::LightId SystemManager::AddLight(sfu::lightType type)
+    {
+	    switch (type)
+	    {
+		    case sfu::lightType::directed:
+		    	m_sceneManager.lights.push_back(std::make_shared<DirectedLight>(DirectedLight(m_currentLightId)));
+	    		break;
+	    case sfu::radial:
+                m_sceneManager.lights.push_back(std::make_shared<RadialLight>(RadialLight(m_currentLightId)));
+                break;
+	    }
+        
+        return { m_currentLightId++, type };
+    }
+
+    void SystemManager::RemoveLight(sfu::LightId id) 
+    {
+        for (int i = 0; i < m_sceneManager.lights.size(); i++)
+        {
+            if (m_sceneManager.lights[i]->getID() == id.id)
+                m_sceneManager.lights.erase(m_sceneManager.lights.begin() + i);
+        }
+    }
+
+	void SystemManager::AddEdge(sf::Vector2f a, sf::Vector2f b)
+	{
+        m_sceneManager.edges.emplace_back(a, b);
+	}
+
+	void SystemManager::RemoveEdge(sf::Vector2f a, sf::Vector2f b)
+	{
+        for (int i=0; i < m_sceneManager.edges.size(); i++)
+        {
+	        if (a == m_sceneManager.edges[i].m_origin 
+                && b == m_sceneManager.edges[i].m_direction)
+	        {
+                m_sceneManager.edges.erase(m_sceneManager.edges.begin() + i);
+	        }
+        }
+	}
+
+	EdgeVector SystemManager::GetEdges()
+	{
+        return m_sceneManager.edges;
+	}
+
+	void SystemManager::DestroyObject(std::string name) {
         m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
     }
 
@@ -175,5 +221,5 @@ namespace Micro{
 
         return { nullptr,nullptr };
     }*/
-
 }
+

@@ -8,8 +8,8 @@
 #include "graphics/VertexArray.hpp"
 
 namespace Micro{
-    LightSource::LightSource()
-        : m_color(sf::Color::White)
+    LightSource::LightSource(int id)
+        : m_color(sf::Color::White), m_id(id)
         , m_fade(true)
 #ifdef CANDLE_DEBUG
         , m_debug(sf::Lines, 0)
@@ -24,7 +24,12 @@ namespace Micro{
     float LightSource::getIntensity() const{
         return (float)m_color.a/255.f;
     }
-    
+
+    int LightSource::getID() const
+    {
+        return m_id;
+    }
+
     void LightSource::setColor(const sf::Color& c){
         m_color = {c.r, c.g, c.b, m_color.a};
         resetColor();
