@@ -1,4 +1,6 @@
 #include "SceneManger.h"
+#include <iostream>
+
 
 namespace Micro{
 	SceneManger::SceneManger(sf::RenderWindow& window, float width, float height) : camera(width, height) {
@@ -9,11 +11,12 @@ namespace Micro{
 		camera.SetCam(window);
 	}
 
+
+
 	void SceneManger::LoadSceneFromFile(std::string Scene, SystemManager* systemManager, FileManager& fileManager) {
 		objects.clear();
-		//spotLights.clear();
-		//flashLights.clear();
 		lights.clear();
 		objects = fileManager.GetObjects(Scene, systemManager);
 	}
+
 }

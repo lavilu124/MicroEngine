@@ -44,8 +44,6 @@ namespace Micro{
 		void AddEdge(sf::Vector2f a, sf::Vector2f b);
 		void RemoveEdge(sf::Vector2f a, sf::Vector2f b);
 
-		EdgeVector GetEdges();
-
 		/*
 		
 		ls::LightValue GetLight(int index);
