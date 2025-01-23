@@ -1,4 +1,5 @@
 #include "SystemManager.h"
+#include "iostream"
 
 
 namespace Micro{
@@ -29,6 +30,12 @@ namespace Micro{
     void SystemManager::Update(Camera* cam) {
         if (m_sceneManager.objects.empty()) return;
 
+        for (auto light :m_sceneManager.lights)
+        {
+            light->castLight(m_sceneManager.edges.begin(), m_sceneManager.edges.end());
+        }
+		
+
         for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
             (*it).Update(deltaTime);
 
@@ -43,6 +50,11 @@ namespace Micro{
         for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
             window.draw((*it).GetSprite());
 
+
+        for (auto light : m_sceneManager.lights)
+        {
+            window.draw(*light);
+        }
     }
 
     int SystemManager::CheckExistingObject(std::string name) {
@@ -141,11 +153,6 @@ namespace Micro{
                 m_sceneManager.edges.erase(m_sceneManager.edges.begin() + i);
 	        }
         }
-	}
-
-	EdgeVector SystemManager::GetEdges()
-	{
-        return m_sceneManager.edges;
 	}
 
 	void SystemManager::DestroyObject(std::string name) {

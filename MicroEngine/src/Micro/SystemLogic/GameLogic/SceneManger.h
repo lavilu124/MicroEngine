@@ -4,6 +4,7 @@
 #include "../../../lightInclude.h"
 
 
+
 namespace Micro{
 	class MICRO_API SceneManger
 	{
@@ -12,7 +13,6 @@ namespace Micro{
 		SceneManger(sf::RenderWindow& window, sf::Vector2f windowSize);
 
 		void LoadSceneFromFile(std::string Scene, SystemManager* systemManager, FileManager& fileManager);
-
 
 	public:
 		Camera camera;

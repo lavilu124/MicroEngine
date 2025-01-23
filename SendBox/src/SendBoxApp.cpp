@@ -1,3 +1,4 @@
+#include <iostream>
 #include <Micro.h>
 #include <LightInclude.h>
 
@@ -13,16 +14,13 @@ public:
 	}
 
 	void Run() override {
-		
-
 		sfu::LightId light = m_systemManager.AddLight(sfu::lightType::radial);
 		m_systemManager.GetLight<sfu::lightType::radial>(light)->setRange(150);
 		m_systemManager.GetLight<sfu::lightType::radial>(light)->setColor(sf::Color::Blue);
 
 
 
-		Micro::EdgeVector edges;
-		edges.emplace_back(sf::Vector2f(0.f, 0.f),
+		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
 			sf::Vector2f(0.f, 300.f));
 
 
@@ -39,17 +37,12 @@ public:
 					int mouseXRelativeToCenter = mousePositionWindow.x - windowSize.x / 2;
 					int mouseYRelativeToCenter = mousePositionWindow.y - windowSize.y / 2;
 					m_systemManager.GetLight<sfu::lightType::radial>(light)->setPosition(mouseXRelativeToCenter, mouseYRelativeToCenter);
-					m_systemManager.GetLight<sfu::lightType::radial>(light)->castLight(edges.begin(), edges.end());
 				}
 			}
 
 			m_systemManager.Update(m_camera);
 
-			m_window.clear();
-			m_window.draw(*m_systemManager.GetLight<sfu::lightType::radial>(light));
-			m_window.display();
-
-			//Display();
+			Display();
 		}
 	}
 
