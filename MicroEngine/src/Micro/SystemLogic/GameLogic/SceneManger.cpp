@@ -13,6 +13,7 @@ namespace Micro{
 		objects.clear();
 		//spotLights.clear();
 		//flashLights.clear();
+		lights.clear();
 		objects = fileManager.GetObjects(Scene, systemManager);
 	}
 }
