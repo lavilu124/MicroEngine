@@ -14,6 +14,9 @@ public:
 	}
 
 	void Run() override {
+
+		m_systemManager.SetDarkness(75);
+
 		sfu::LightId light = m_systemManager.AddLight(sfu::lightType::radial);
 		m_systemManager.GetLight<sfu::lightType::radial>(light)->setRange(150);
 		m_systemManager.GetLight<sfu::lightType::radial>(light)->setColor(sf::Color::Blue);

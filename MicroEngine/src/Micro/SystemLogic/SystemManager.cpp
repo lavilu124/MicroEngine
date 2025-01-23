@@ -1,5 +1,4 @@
 #include "SystemManager.h"
-#include "iostream"
 
 
 namespace Micro{
@@ -11,13 +10,23 @@ namespace Micro{
 
 
 
-    SystemManager::SystemManager(sf::RenderWindow& window) : m_sceneManager(window, window.getSize().x, window.getSize().y) {
+    SystemManager::SystemManager(sf::RenderWindow& window)
+	: m_sceneManager(window, window.getSize().x, window.getSize().y), m_lighting(LightingArea::FOG, { ((float) window.getSize().x)/-2, ((float) window.getSize().y)/-2 }, { ((float)window.getSize().x), ((float)window.getSize().y) }){
+
+		
+        m_windowSize = sf::Vector2f(window.getSize().x , window.getSize().y);
+
+        SetDarkness(0);
+
+		m_lighting.setAreaTexture(&m_drakness);
+		m_lighting.scale(960 / m_drakness.getSize().x, 540 / m_drakness.getSize().y);
+        m_lighting.clear();
+
+
         m_fileManager.SetPaths();
         m_fileManager.LoadInput();
 
         deltaTime = 0;
-
-        //m_lightSystem.setView(window.getView());
     }
 
     void SystemManager::Start() {
@@ -43,6 +52,15 @@ namespace Micro{
         deltaTime = deltaTimeT.asSeconds();
 
         cam->Update(*this);
+
+        m_lighting.clear();
+
+		for (auto light : m_sceneManager.lights)
+		{
+			m_lighting.draw(*light);
+		}
+
+        m_lighting.display();
     }
 
     void SystemManager::Render(sf::RenderWindow& window) {
@@ -50,11 +68,12 @@ namespace Micro{
         for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
             window.draw((*it).GetSprite());
 
+        window.draw(m_lighting);
 
-        for (auto light : m_sceneManager.lights)
-        {
-            window.draw(*light);
-        }
+		for (auto light : m_sceneManager.lights)
+		{
+			window.draw(*light);
+		}
     }
 
     int SystemManager::CheckExistingObject(std::string name) {
@@ -153,6 +172,21 @@ namespace Micro{
                 m_sceneManager.edges.erase(m_sceneManager.edges.begin() + i);
 	        }
         }
+	}
+
+	void SystemManager::SetDarkness(int precent)
+	{
+		std::vector<sf::Uint8> pixels(m_windowSize.x * m_windowSize.y * 4);
+
+		for (size_t i = 0; i < pixels.size(); i += 4) {
+			pixels[i] = 0;
+			pixels[i + 1] = 0;
+			pixels[i + 2] = 0;
+            pixels[i + 3] = static_cast<sf::Uint8>(255 * (precent / 100.0f));
+		}
+
+        m_drakness.create(m_windowSize.x , m_windowSize.y);
+        m_drakness.update(pixels.data());
 	}
 
 	void SystemManager::DestroyObject(std::string name) {

@@ -44,6 +44,8 @@ namespace Micro{
 		void AddEdge(sf::Vector2f a, sf::Vector2f b);
 		void RemoveEdge(sf::Vector2f a, sf::Vector2f b);
 
+		void SetDarkness(int precent);
+
 		/*
 		
 		ls::LightValue GetLight(int index);
@@ -68,7 +70,13 @@ namespace Micro{
 		SceneManger m_sceneManager;
 		FileManager m_fileManager;
 
+		LightingArea m_lighting;
+		sf::Texture m_drakness;
+
+
 		int m_currentLightId = 0;
+
+		sf::Vector2f m_windowSize;
 	};
 
 	
