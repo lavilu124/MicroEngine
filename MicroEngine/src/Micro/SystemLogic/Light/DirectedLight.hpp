@@ -32,7 +32,7 @@ namespace Micro{
         void draw(sf::RenderTarget& t, sf::RenderStates st) const override;
         void resetColor() override;
     public:
-        DirectedLight(int id = 0);
+        DirectedLight(const std::string& name, int id = 0);
         
         void castLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) override;
         

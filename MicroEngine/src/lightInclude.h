@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Micro/SystemLogic/Light/Constants.hpp"
 #include "Micro/SystemLogic/Light/geometry/Polygon.hpp"
 #include "Micro/SystemLogic/Light/graphics/VertexArray.hpp"
 #include "Micro/SystemLogic/Light/LightSource.hpp"
