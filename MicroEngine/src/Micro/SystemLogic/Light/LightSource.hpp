@@ -64,7 +64,7 @@ namespace Micro{
          */
         virtual void draw(sf::RenderTarget& t, sf::RenderStates st) const = 0;
 
-        
+        std::string m_name;
   
     protected:
         sf::Color m_color;
@@ -84,7 +84,10 @@ namespace Micro{
         /**
          * @brief Constructor
          */
-        LightSource(int id = 0);
+        LightSource(const std::string& name, int id = 0);
+
+
+        std::string getName() const;
         
          /**
          * @brief Set the light intensity.

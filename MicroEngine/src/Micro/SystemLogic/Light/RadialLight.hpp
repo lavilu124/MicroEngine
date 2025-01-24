@@ -43,7 +43,7 @@ namespace Micro{
         /**
          * @brief Constructor
          */
-        RadialLight(int id = 0);
+        RadialLight(const std::string& name, int id = 0);
 
         /**
          * @brief Destructor

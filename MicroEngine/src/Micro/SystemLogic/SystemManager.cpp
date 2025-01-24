@@ -133,15 +133,15 @@ namespace Micro{
         return m_fileManager;
     }
 
-    sfu::LightId SystemManager::AddLight(sfu::lightType type)
+    sfu::LightId SystemManager::AddLight(sfu::lightType type, const std::string& name)
     {
 	    switch (type)
 	    {
 		    case sfu::lightType::directed:
-		    	m_sceneManager.lights.push_back(std::make_shared<DirectedLight>(DirectedLight(m_currentLightId)));
+		    	m_sceneManager.lights.push_back(std::make_shared<DirectedLight>(DirectedLight(name, m_currentLightId)));
 	    		break;
 	    case sfu::radial:
-                m_sceneManager.lights.push_back(std::make_shared<RadialLight>(RadialLight(m_currentLightId)));
+                m_sceneManager.lights.push_back(std::make_shared<RadialLight>(RadialLight(name, m_currentLightId)));
                 break;
 	    }
         

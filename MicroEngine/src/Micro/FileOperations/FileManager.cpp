@@ -9,6 +9,8 @@
 #include "json/json.h"
 #include "value.h"
 
+#include "../../lightInclude.h"
+
 using std::filesystem::directory_iterator;
 
 
@@ -190,7 +192,7 @@ namespace Micro{
         return m_mainPath + "\\Resources\\graphics\\shaders\\" + shadername;
     }
 
-    std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager* systemManger) {
+    std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager* systemManager) {
 
         std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".json");
         Json::Value actualJson;
@@ -232,7 +234,7 @@ namespace Micro{
 
             LoadAsset(spriteName);
 
-            returnVector.push_back(GameObject(systemManger, m_sprites[spriteName], name, layer));
+            returnVector.push_back(GameObject(systemManager, m_sprites[spriteName], name, layer));
             returnVector[returnVector.size() - 1].SetPosition(position);
             returnVector[returnVector.size() - 1].SetScale(scale);
             returnVector[returnVector.size() - 1].SetRotation(rotation);
@@ -253,20 +255,26 @@ namespace Micro{
 			std::string name = currentObject["name"].asString();
             sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
             sf::Color color = sf::Color(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
-            float angle = currentObject["angle"].asFloat();
             float radius = currentObject["radius"].asFloat();
+            sfu::LightId light;
 
-			/*switch (type) {
-			case 0: //spot light
-                systemManger->AddLight(ls::Spot, position, radius, color, name);
+			switch (type) {
+			case 0: //Radial light
+                light = systemManager->AddLight(sfu::radial, name);
+                systemManager->GetLight<sfu::lightType::radial>(light)->setRange(radius);
+                systemManager->GetLight<sfu::lightType::radial>(light)->setColor(color);
+                systemManager->GetLight<sfu::lightType::radial>(light)->setPosition(position);
 				break;
-			case 1: //flash light
-                systemManger->AddLight(ls::Flash, position, radius, color, name, currentObject["length"].asFloat());
+			case 1: //Directional light
+                light = systemManager->AddLight(sfu::directed, name);
+                systemManager->GetLight<sfu::lightType::directed>(light)->setRange(radius);
+                systemManager->GetLight<sfu::lightType::directed>(light)->setColor(color);
+				systemManager->GetLight<sfu::lightType::directed>(light)->setRotation(currentObject["angle"].asFloat());
 				break;
 			default:
 				MC_LOG("unknown light type in " + name);
 				break;
-			} */
+			} 
         }
 
         //close the file

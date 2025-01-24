@@ -35,11 +35,16 @@ namespace Micro{
 
 		FileManager& GetFileManager();
 
-		sfu::LightId AddLight(sfu::lightType type);
+		sfu::LightId AddLight(sfu::lightType type, const std::string& name);
+
+
 		void RemoveLight(sfu::LightId id);
 
 		template <sfu::lightType T>
 		auto GetLight(sfu::LightId Id);
+
+		template <sfu::lightType T>
+		auto GetLight(const std::string& name);
 
 		void AddEdge(sf::Vector2f a, sf::Vector2f b);
 		void RemoveEdge(sf::Vector2f a, sf::Vector2f b);
@@ -87,6 +92,21 @@ namespace Micro{
 		for (int i = 0; i < m_sceneManager.lights.size(); i++)
 		{
 			if (m_sceneManager.lights[i]->getID() == Id.id)
+			{
+				if constexpr (T == sfu::lightType::radial)
+					return static_cast<RadialLight*>(m_sceneManager.lights[i].get());
+				if constexpr (T == sfu::lightType::directed)
+					return static_cast<DirectedLight*>(m_sceneManager.lights[i].get());
+			}
+		}
+	}
+
+	template<sfu::lightType T>
+	auto SystemManager::GetLight(const std::string& name)
+	{
+		for (int i = 0; i < m_sceneManager.lights.size(); i++)
+		{
+			if (m_sceneManager.lights[i]->getName() == name)
 			{
 				if constexpr (T == sfu::lightType::radial)
 					return static_cast<RadialLight*>(m_sceneManager.lights[i].get());

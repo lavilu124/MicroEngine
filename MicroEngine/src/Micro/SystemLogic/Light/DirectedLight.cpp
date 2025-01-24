@@ -41,7 +41,7 @@ namespace Micro{
         }
     }
 
-    DirectedLight::DirectedLight(int id){
+    DirectedLight::DirectedLight(const std::string& name, int id) : LightSource(name, id){
         m_id = id;
         m_polygon.setPrimitiveType(sf::Quads);
         m_polygon.resize(2);

@@ -8,9 +8,9 @@
 #include "graphics/VertexArray.hpp"
 
 namespace Micro{
-    LightSource::LightSource(int id)
+    LightSource::LightSource(const std::string& name, int id)
         : m_color(sf::Color::White), m_id(id)
-        , m_fade(true)
+		, m_fade(true), m_name(name)
 #ifdef CANDLE_DEBUG
         , m_debug(sf::Lines, 0)
 #endif
@@ -57,4 +57,8 @@ namespace Micro{
         return m_range;
     }
     
+
+	std::string LightSource::getName() const {
+        return m_name;
+    }
 }
