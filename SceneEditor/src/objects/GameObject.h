@@ -14,5 +14,7 @@ public:
 	void SetPath(std::string newPath);
 private:
 	std::string path;
+
+	static int counter;
 };
 

@@ -2,13 +2,8 @@
 #include "Walnut/EntryPoint.h"
 #include "Walnut/UI/UI.h"
 
-#include "json/json.h"
-#include "include/json/value.h"
-#include <fstream>
-
 #include "Layers/SceneViewer.h"
 #include "Layers/Saves.h"
-
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
@@ -19,7 +14,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 
 	Walnut::Application* app = new Walnut::Application(spec);
 
-	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(R"(C:\github\MicroEngine\Resources)");
+	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(R"(D:\github\MicroEngine\Resources)");
 	app->PushLayer(dir);
 
 	std::shared_ptr<ObjectViewer> viewer =  std::make_shared<ObjectViewer>(dir);

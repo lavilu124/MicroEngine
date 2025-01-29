@@ -40,16 +40,6 @@ void SceneContent::Window()
 
 	ImGui::Separator();
 
-
-	/*if (ImGui::Button("Create Light", ImVec2(ImGui::GetWindowSize().x, 30))) {
-
-		LightObject newLight("New Light");
-		m_lightObjects.push_back(newLight);
-
-
-		m_newLightIndex = m_lightObjects.size() - 1;
-	}*/
-
 	if (ImGui::Button("Create GameObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
 		GameObject newGameObject("New Object", "");
 		m_gameObjects.push_back(newGameObject);

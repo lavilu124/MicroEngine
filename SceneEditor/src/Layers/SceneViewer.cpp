@@ -3,40 +3,12 @@
 
 SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent) : m_sceneContent(sceneContent)
 {
-	ls.setView(view);
+	//ls.setView(view);
 }
 
 void SceneViewer::OnUIRender()
 {
 	Window();
-}
-
-ImageData extractImageData(const sf::Sprite& sprite) {
-
-	if (!sprite.getTexture()) {
-		return {0, 0, nullptr};
-	}
-
-	sf::Image image = sprite.getTexture()->copyToImage();
-
-	return { image.getSize().x ,image.getSize().y, image.getPixelsPtr()};
-}
-void SceneViewer::setImage(LightObject& light)
-{
-	if (light.counter == 1)
-	{
-		sf::Color color = sf::Color(light.color.Value.x * 255, light.color.Value.y * 255, light.color.Value.z * 255, light.color.Value.w * 255);
-		Micro::ls::SpotLight spotLight = Micro::ls::SpotLight(sf::Vector2f(0, 0), light.radius, color, light.name, 0);
-		spotLight.setActive(true);
-		spotLight.setSpreadAngle(35);
-		spotLight.setDirectionAngle(90);
-		ls.addLight(&spotLight);
-		ImageData imageData = extractImageData(spotLight.getSprite());
-		light.image = std::make_shared<Walnut::Image>(imageData.width, imageData.height, Walnut::ImageFormat::RGBA, imageData.data);
-		return;
-	}
-
-	light.counter++;
 }
 
 void RenderPlayButton(const ImVec2& contentRegion) {
@@ -118,57 +90,71 @@ void SceneViewer::Window()
 	ImGui::End();
 }
 
-void ImageRotated(ImTextureID user_texture_id, const ImVec2& size, int angle, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col)
+void ImageRotated(ImTextureID user_texture_id, const ImVec2& size, float angle, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col)
 {
-	IM_ASSERT(angle % 90 == 0);
-	ImVec2 _uv0, _uv1, _uv2, _uv3;
-	switch (angle % 360)
-	{
-	case 0:
-		ImGui::Image(user_texture_id, size, uv0, uv1, tint_col, border_col);
-		return;
-	case 180:
-		ImGui::Image(user_texture_id, size, uv1, uv0, tint_col, border_col);
-		return;
-	case 90:
-		_uv3 = uv0;
-		_uv1 = uv1;
-		_uv0 = ImVec2(uv1.x, uv0.y);
-		_uv2 = ImVec2(uv0.x, uv1.y);
-		break;
-	case 270:
-		_uv1 = uv0;
-		_uv3 = uv1;
-		_uv0 = ImVec2(uv0.x, uv1.y);
-		_uv2 = ImVec2(uv1.x, uv0.y);
-		break;
-	}
+	// Convert angle to radians
+	angle = angle * (3.14159265359f / 180);
+
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	if (window->SkipItems)
 		return;
-	ImVec2 _size(size.y, size.x);
-	ImRect bb(window->DC.CursorPos, ImVec2(window->DC.CursorPos.x + _size.x, window->DC.CursorPos.y + _size.y));
-	if (border_col.w > 0.0f)
-		bb.Max = ImVec2(bb.Max.x + 2, bb.Max.y + 2);
-	ImGui::ItemSize(bb);
-	if (!ImGui::ItemAdd(bb, 0))
-		return;
+
+	ImDrawList* draw_list = window->DrawList;
+
+	ImVec2 pos = window->DC.CursorPos; 
+	ImVec2 center = ImVec2(pos.x + size.x * 0.5f, pos.y + size.y * 0.5f); 
+
+	// Precompute sine and cosine of the angle
+	float cos_a = cosf(angle);
+	float sin_a = sinf(angle);
+
+	// Calculate rotated corners (relative to center)
+	ImVec2 corners[4] = {
+		ImVec2(-size.x * 0.5f, -size.y * 0.5f),
+		ImVec2(+size.x * 0.5f, -size.y * 0.5f),
+		ImVec2(+size.x * 0.5f, +size.y * 0.5f),
+		ImVec2(-size.x * 0.5f, +size.y * 0.5f),
+	};
+
+	ImVec2 rotated[4];
+	for (int i = 0; i < 4; ++i)
+	{
+		rotated[i].x = center.x + (corners[i].x * cos_a - corners[i].y * sin_a);
+		rotated[i].y = center.y + (corners[i].x * sin_a + corners[i].y * cos_a);
+	}
+
+	// Now, calculate the UV coordinates for each corner
+	ImVec2 uvCorners[4] = {
+		ImVec2(uv0.x, uv0.y),
+		ImVec2(uv1.x, uv0.y),
+		ImVec2(uv1.x, uv1.y),
+		ImVec2(uv0.x, uv1.y),
+	};
+
+	// Draw the image with rotation (using the rotated corners)
+	draw_list->AddImageQuad(
+		user_texture_id,
+		rotated[0], rotated[1], rotated[2], rotated[3],
+		uvCorners[0], uvCorners[1], uvCorners[2], uvCorners[3],
+		ImGui::GetColorU32(tint_col)
+	);
+
+	// Optionally draw the border if the color is non-transparent
 	if (border_col.w > 0.0f)
 	{
-		window->DrawList->AddRect(bb.Min, bb.Max, ImGui::GetColorU32(border_col), 0.0f);
-		ImVec2 x0 = ImVec2(bb.Min.x + 1, bb.Min.y + 1);
-		ImVec2 x2 = ImVec2(bb.Max.x - 1, bb.Max.y - 1);;
-		ImVec2 x1 = ImVec2(x2.x, x0.y);
-		ImVec2 x3 = ImVec2(x0.x, x2.y);
-		window->DrawList->AddImageQuad(user_texture_id, x0, x1, x2, x3, _uv0, _uv1, _uv2, _uv3, ImGui::GetColorU32(tint_col));
+		draw_list->AddQuad(
+			rotated[0], rotated[1], rotated[2], rotated[3],
+			ImGui::GetColorU32(border_col),
+			1.0f
+		);
 	}
-	else
-	{
-		ImVec2 x1 = ImVec2(bb.Max.x, bb.Min.y);
-		ImVec2 x3 = ImVec2(bb.Min.x, bb.Max.y);
-		window->DrawList->AddImageQuad(user_texture_id, bb.Min, x1, bb.Max, x3, _uv0, _uv1, _uv2, _uv3, ImGui::GetColorU32(tint_col));
-	}
+
+	// Advance the cursor position
+	ImGui::Dummy(size); // Adds spacing so ImGui layout doesn't overlap
 }
+
+
+
 
 void SceneViewer::RenderGameObjects() const
 {
@@ -181,14 +167,11 @@ void SceneViewer::RenderGameObjects() const
 			);
 
 			
-			int rotation = round(gameObject.rotation / 90.0f) * 90;
-
-			
 			ImGui::SetCursorPos(position);
 			ImageRotated(
 				gameObject.sprite->GetDescriptorSet(),
 				ImVec2(gameObject.scale.x * (float)gameObject.sprite->GetWidth(), gameObject.scale.y * (float)gameObject.sprite->GetHeight()),
-				rotation,
+				gameObject.rotation,
 				ImVec2(0, 0), 
 				ImVec2(1, 1), 
 				ImVec4(1, 1, 1, 1), 
@@ -213,7 +196,7 @@ void SceneViewer::RenderLights()
 				ImGui::Image(light.image->GetDescriptorSet(), { (float)light.image->GetWidth(), (float)light.image->GetHeight() });
 				break;
 			}
-			setImage(light);
+			//setImage(light);
 		}
 	}
 }
