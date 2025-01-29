@@ -1,4 +1,5 @@
 ﻿#include "ObjectViewer.h"
+#include <iostream>
 
 ObjectViewer::ObjectViewer(std::shared_ptr<ProjectDirectory> projectDirectory) : m_ProjectDirectory(projectDirectory)
 {
@@ -79,22 +80,16 @@ void ObjectViewer::DisplayGameObject() {
 
 	/*ImGui::Text("Path:");*/
 	ImGui::Indent();
-	//static char pathBuffer[256] = "";
-	//if (ImGui::InputText("##Path", pathBuffer, sizeof(pathBuffer)))
-	//{
-	//	// If user manually edits the path
-	//	GameOj->SetPath(m_ProjectDirectory->GetSelectedPath());
-	//}
 
-	if (m_ProjectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+
+	if (ImGui::IsItemHovered() && m_ProjectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left) ) {
 		// If user drops the path by clicking
 		/*strcpy_s(pathBuffer, sizeof(pathBuffer), m_ProjectDirectory->GetSelectedPath().c_str());*/
 		GameOj->SetPath(m_ProjectDirectory->GetSelectedPath());
-		m_ProjectDirectory->GetSelectedPath() = "";
-	}else
-	{
-		m_ProjectDirectory->ClearSelectedPath();
+		std::cout << "object viewer line 88" << "and the selceted path is: " << m_ProjectDirectory->GetSelectedPath() << std::endl;
+		
 	}
+	m_ProjectDirectory->ClearSelectedPath();
 
 	// Visual indicator for drag-and-drop
 	if (ImGui::IsItemHovered()) {

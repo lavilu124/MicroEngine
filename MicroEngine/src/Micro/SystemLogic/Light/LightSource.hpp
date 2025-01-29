@@ -1,10 +1,3 @@
-/**
- * @file
- * @author Miguel Mejía Jiménez
- * @copyright MIT License
- * @brief This file contains the LightingSource class and some convenient
- * typedefs.
- */
 #ifndef __CANDLE_LIGHTSOURCE_HPP__
 #define __CANDLE_LIGHTSOURCE_HPP__
 

@@ -3,7 +3,7 @@
 ProjectDirectory::ProjectDirectory(const std::string& path)
 {
     SetCurrentPath(path);
-    folderIcon = std::make_shared<Walnut::Image>("C:/github/MicroEngine/SceneEditor/folderIcon.png");
+    folderIcon = std::make_shared<Walnut::Image>("D:/github/MicroEngine/SceneEditor/folderIcon.png");
 }
 
 ProjectDirectory::~ProjectDirectory()
@@ -14,7 +14,6 @@ ProjectDirectory::~ProjectDirectory()
 void ProjectDirectory::OnUIRender()
 {
 	Window();
-
 }
 
 void ProjectDirectory::SetCurrentPath(const std::string& path)
@@ -55,6 +54,9 @@ void ProjectDirectory::Window()
     ImGui::SameLine();
     ImGui::TextWrapped(m_currentPath.c_str());
 
+    if (m_selectedPath != "") {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+    }
 
     if (true) {
         int columnIndex = 0;
@@ -146,5 +148,6 @@ void ProjectDirectory::ClearSelectedPath()
 {
 	if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
 		m_selectedPath = "";
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
 	}
 }
