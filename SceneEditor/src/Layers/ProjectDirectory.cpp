@@ -3,7 +3,7 @@
 ProjectDirectory::ProjectDirectory(const std::string& path)
 {
     SetCurrentPath(path);
-    folderIcon = std::make_shared<Walnut::Image>("D:/github/MicroEngine/SceneEditor/folderIcon.png");
+    folderIcon = std::make_shared<Walnut::Image>("C:/github/MicroEngine/SceneEditor/folderIcon.png");
 }
 
 ProjectDirectory::~ProjectDirectory()

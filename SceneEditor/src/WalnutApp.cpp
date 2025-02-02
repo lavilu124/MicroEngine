@@ -14,7 +14,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 
 	Walnut::Application* app = new Walnut::Application(spec);
 
-	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(R"(D:\github\MicroEngine\Resources)");
+	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(R"(C:\github\MicroEngine\Resources)");
 	app->PushLayer(dir);
 
 	std::shared_ptr<ObjectViewer> viewer =  std::make_shared<ObjectViewer>(dir);
