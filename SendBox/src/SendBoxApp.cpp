@@ -5,12 +5,12 @@
 class App : public Micro::Application
 {
 public:
-	App(const float windowWidth, const float windowHeight, const float maxFPS) : Micro::Application(windowWidth, windowHeight, maxFPS) {
+	App(const float windowWidth, const float windowHeight, const float maxFPS, std::string scene) : Micro::Application(windowWidth, windowHeight, maxFPS, scene) {
 		
 
 	}
 
-	App(const sf::Vector2f windowSize, float maxFPS) : Micro::Application(windowSize, maxFPS) {
+	App(const sf::Vector2f windowSize, float maxFPS, std::string scene) : Micro::Application(windowSize, maxFPS, scene) {
 	}
 
 	void Run() override {
@@ -52,6 +52,6 @@ public:
 
 };
 
-Micro::Application* Micro::CreateApplication() {
-	return new App(960, 540, 144);
+Micro::Application* Micro::CreateApplication(std::string scene) {
+	return new App(960, 540, 144, scene);
 }
