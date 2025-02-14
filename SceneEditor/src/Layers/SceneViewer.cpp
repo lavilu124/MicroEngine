@@ -61,7 +61,7 @@ void RenderPlayButton(const ImVec2& contentRegion) {
 				command = command.substr(0, command.find_last_of('\\'));
 			}
 			command += executableRelativePath;
-			system(command.c_str());
+			system((std::string(command) + "DefualtScene").c_str());
 		}
 
 		// Revert style changes
@@ -85,7 +85,7 @@ void SceneViewer::Window()
 	);
 
 	RenderGameObjects();
-	//RenderLights();
+	RenderLights();
 
 	ImGui::End();
 }
@@ -153,9 +153,6 @@ void ImageRotated(ImTextureID user_texture_id, const ImVec2& size, float angle, 
 	ImGui::Dummy(size); // Adds spacing so ImGui layout doesn't overlap
 }
 
-
-
-
 void SceneViewer::RenderGameObjects() const
 {
 	ImVec2 contentRegion = ImGui::GetContentRegionAvail();
@@ -183,20 +180,15 @@ void SceneViewer::RenderGameObjects() const
 
 void SceneViewer::RenderLights()
 {
+	int size = m_sceneContent->GetLights().size();
+
 	ImVec2 contentRegion = ImGui::GetContentRegionAvail();
 	for (auto& light : m_sceneContent->GetLights()) {
 		ImGui::SetCursorPos(ImVec2(
-			light.position.x + contentRegion.x / 2 - (float)light.radius, 
-			light.position.y + contentRegion.y / 2 - (float)light.radius
+			light.position.x + contentRegion.x / 2 - light.radius, 
+			light.position.y + contentRegion.y / 2 - light.radius
 		));
-		if (light.type == 0)
-		{
-			if (light.image != nullptr)
-			{
-				ImGui::Image(light.image->GetDescriptorSet(), { (float)light.image->GetWidth(), (float)light.image->GetHeight() });
-				break;
-			}
-			//setImage(light);
-		}
+
+
 	}
 }

@@ -7,13 +7,16 @@
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
+	//spec if the app
 	Walnut::ApplicationSpecification spec;
 	spec.Name = "Micro Engine";
 	spec.CustomTitlebar = true;
 	
-
+	//the app
 	Walnut::Application* app = new Walnut::Application(spec);
 
+
+	//add the layers (sub-windows) 
 	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(R"(C:\github\MicroEngine\Resources)");
 	app->PushLayer(dir);
 
@@ -29,7 +32,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	std::shared_ptr<Saves> saves = std::make_shared<Saves>(Saves(sceneContent));
 	app->PushLayer(saves);
 
-
+	//menus
 	app->SetMenubarCallback([app, saves]()
 	{
 		if (ImGui::BeginMenu("File"))
@@ -49,5 +52,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 			ImGui::EndMenu();
 		}
 	});
+
+
 	return app;
 }

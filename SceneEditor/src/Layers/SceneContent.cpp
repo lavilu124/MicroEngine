@@ -47,6 +47,13 @@ void SceneContent::Window()
 		m_NewGameObIndex = m_gameObjects.size() - 1;
 	}
 
+	if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30)))
+	{
+		LightObject newLightObject("New light");
+		m_lightObjects.push_back(newLightObject);
+
+		m_newLightIndex = m_lightObjects.size() - 1;
+	}
 
 	ImGui::End();
 }

@@ -14,13 +14,9 @@ private:
 	void RenderGameObjects() const;
 	void RenderLights();
 
-	//void setImage(LightObject& light);
-
 	void test();
 
 private:
 	std::shared_ptr<SceneContent> m_sceneContent;
-	//Micro::ls::LightSystem ls;
 
-	sf::View view;
 };

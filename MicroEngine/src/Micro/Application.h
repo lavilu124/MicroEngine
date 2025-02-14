@@ -8,8 +8,8 @@ namespace Micro{
 	class MICRO_API Application
 	{
 	public:
-		Application(float windowWidth, float windowHeight, float maxFPS);
-		Application(sf::Vector2f windowSize, float maxFps);
+		Application(float windowWidth, float windowHeight, float maxFPS, std::string scene = "");
+		Application(sf::Vector2f windowSize, float maxFps, std::string scene = " ");
 
 		virtual ~Application();
 		virtual void Run();
@@ -24,7 +24,7 @@ namespace Micro{
 		Micro::Camera* m_camera;
 	};
 
-	Application* CreateApplication();
+	Application* CreateApplication(std::string scene);
 }
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include <lightInclude.h>
 
 
 
@@ -13,5 +14,6 @@ public:
 	float radius;
 	std::shared_ptr<Walnut::Image> image = nullptr;
 	int counter = 0;
+	//sf::RenderTexture renderTexture;
 };
 

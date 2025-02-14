@@ -3,11 +3,11 @@
 
 #ifdef MC_PLATFORM_WINDOWS
 
-extern Micro::Application* Micro::CreateApplication();
+extern Micro::Application* Micro::CreateApplication(std::string scene);
 
 int main() {
 
-	auto app = Micro::CreateApplication();
+	auto app = Micro::CreateApplication("");
 
 	if (!app) {
 		return -1;
