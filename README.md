@@ -27,7 +27,6 @@ The tools used to create this project
 |json library| stores all scenes in a json file |
 |premake(the cherno project template)| (https://github.com/TheCherno/ProjectTemplate) Build system|
 |TheCherno| [Youtuber](https://www.youtube.com/@TheCherno) (helped me learn a lot of c++) |
-|new 2000h sprite engine| took inspraiton for the readme file (the new version not the old one)|
 
 ## Feature List
 Here is a list of the features that exist in this game engine, and the features i plan to add: 
@@ -37,11 +36,11 @@ Here is a list of the features that exist in this game engine, and the features 
 | **Scene Creation** | ✔️ |
 | **pixel perfect Collision Detection** | ✔️ |
 | **Animations** | ✔️ |
-| **Lighting (no shadows)** | ✔️ |
+| **Lighting** | ✔️ |
 | **assets Manager** | ✔️ |
-| **Ui Enigne** | ❌ |
+| **Ui Enigne (in porgress)** | ✔️  |
 | **project setup** | ❌ |
-| **logging system** | ❌ |
+| **logging system** | ✔️ |
 
 ## How to build
 - ❗ to create and build copy the repository go to Scripts and the run setup depending on your system
