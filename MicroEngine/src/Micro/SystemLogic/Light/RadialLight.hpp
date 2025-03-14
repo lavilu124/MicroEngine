@@ -1,9 +1,3 @@
-/**
- * @file
- * @author Miguel Mejía Jiménez
- * @copyright MIT License
- * @brief This file contains the RadialLight class.
- */
 #ifndef __CANDLE_RADIAL_LIGHT_HPP__
 #define __CANDLE_RADIAL_LIGHT_HPP__
 

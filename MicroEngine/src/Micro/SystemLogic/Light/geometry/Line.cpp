@@ -1,5 +1,3 @@
-#include <limits>
-
 #include "Line.hpp"
 #include "Vector2.hpp"
 

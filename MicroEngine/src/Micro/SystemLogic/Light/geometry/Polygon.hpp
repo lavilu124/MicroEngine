@@ -1,14 +1,7 @@
-/**
- * @file
- * @author Miguel Mejía Jiménez
- * @copyright MIT License
- * @brief This file contains the auxiliary Polygon class.
- */
 #ifndef __SFML_UTIL_GEOMETRY_POLYGON_HPP__
 #define __SFML_UTIL_GEOMETRY_POLYGON_HPP__
 
 #include <vector>
-#include <array>
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>

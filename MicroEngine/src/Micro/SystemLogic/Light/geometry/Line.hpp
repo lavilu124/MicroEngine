@@ -1,9 +1,4 @@
-/**
- * @file
- * @author Miguel Mejía Jiménez
- * @copyright MIT License
- * @brief This file contains the Line struct and main raycast algorithm.
- */
+
 #ifndef __SFML_UTIL_GEOMETRY_LINE_HPP__
 #define __SFML_UTIL_GEOMETRY_LINE_HPP__
 

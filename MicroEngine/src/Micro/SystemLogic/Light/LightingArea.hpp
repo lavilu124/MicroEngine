@@ -1,9 +1,3 @@
-/**
- * @file
- * @author Miguel Mejía Jiménez
- * @copyright MIT License
- * @brief This file contains the LightingArea class.
- */
 #ifndef __CANDLE_LIGHTING_HPP__
 #define __CANDLE_LIGHTING_HPP__
 

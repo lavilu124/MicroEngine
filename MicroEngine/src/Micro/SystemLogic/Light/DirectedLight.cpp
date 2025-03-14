@@ -13,11 +13,6 @@ namespace Micro{
             st.blendMode = sf::BlendAdd;
         }
         t.draw(m_polygon, st);
-#ifdef CANDLE_DEBUG
-        sf::RenderStates deb_s;
-        deb_s.transform = st.transform;
-        t.draw(m_debug, deb_s);
-#endif
     }
 
     void DirectedLight::resetColor(){

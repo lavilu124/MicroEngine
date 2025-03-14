@@ -1,13 +1,17 @@
 #pragma once
 
-
+#include "FileOperations/FileManager.h"
 #ifdef MC_PLATFORM_WINDOWS
 
 extern Micro::Application* Micro::CreateApplication(std::string scene);
 
-int main() {
-
-	auto app = Micro::CreateApplication("");
+int main(int argc, char** argv) {
+	char* scene = ""; 
+	if (argc > 1)
+	{
+		scene = argv[1];
+	}
+	auto app = Micro::CreateApplication(scene);
 
 	if (!app) {
 		return -1;
