@@ -16,7 +16,7 @@ void RenderPlayButton(const ImVec2& contentRegion) {
 	constexpr float buttonWidth = 25.0f;
 	constexpr float buttonHeight = 25.0f;
 	constexpr char playButtonPath[] = "\\play.png";
-	constexpr char executableRelativePath[] = "\\binaries\\windows-x86_64\\debug\\sendbox\\sendbox.exe";
+	constexpr char executableRelativePath[] = "\\binaries\\windows-x86_64\\debug\\sendbox\\sendbox.exe Scene1";
 
 	// Calculate button position for horizontal centering
 	ImVec2 buttonPos = ImVec2(
@@ -61,7 +61,8 @@ void RenderPlayButton(const ImVec2& contentRegion) {
 				command = command.substr(0, command.find_last_of('\\'));
 			}
 			command += executableRelativePath;
-			system((std::string(command) + "DefualtScene").c_str());
+
+			system(command.c_str());
 		}
 
 		// Revert style changes

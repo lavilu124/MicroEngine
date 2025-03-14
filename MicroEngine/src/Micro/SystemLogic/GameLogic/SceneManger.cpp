@@ -1,5 +1,4 @@
 #include "SceneManger.h"
-#include <iostream>
 
 
 namespace Micro{

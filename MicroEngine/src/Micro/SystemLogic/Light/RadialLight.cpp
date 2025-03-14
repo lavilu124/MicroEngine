@@ -1,7 +1,3 @@
-#ifdef CANDLE_DEBUG
-#include <iostream>
-#endif
-
 #include <memory>
 #include "RadialLight.hpp"
 
