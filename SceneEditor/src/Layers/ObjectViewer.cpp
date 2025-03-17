@@ -1,5 +1,4 @@
 ﻿#include "ObjectViewer.h"
-#include <iostream>
 
 ObjectViewer::ObjectViewer(std::shared_ptr<ProjectDirectory> projectDirectory) : m_ProjectDirectory(projectDirectory)
 {
@@ -86,8 +85,6 @@ void ObjectViewer::DisplayGameObject() {
 		// If user drops the path by clicking
 		/*strcpy_s(pathBuffer, sizeof(pathBuffer), m_ProjectDirectory->GetSelectedPath().c_str());*/
 		GameOj->SetPath(m_ProjectDirectory->GetSelectedPath());
-		std::cout << "object viewer line 88" << "and the selceted path is: " << m_ProjectDirectory->GetSelectedPath() << std::endl;
-		
 	}
 	m_ProjectDirectory->ClearSelectedPath();
 
@@ -99,8 +96,14 @@ void ObjectViewer::DisplayGameObject() {
 
 	ImGui::Text("Sprite:");
 	ImGui::Indent();
-	if (GameOj->sprite)
-		ImGui::Image(GameOj->sprite->GetDescriptorSet(), { (float)GameOj->sprite->GetWidth(), (float)GameOj->sprite->GetHeight() });
+	try {
+		if (GameOj->sprite)
+			ImGui::Image(GameOj->sprite->GetDescriptorSet(), { (float)GameOj->sprite->GetWidth(), (float)GameOj->sprite->GetHeight() });
+	}
+	catch (std::exception) {
+
+	}
+	
 	ImGui::Unindent();
 }
 
@@ -155,7 +158,7 @@ void ObjectViewer::DisplayLightObject() {
 	ImGui::Indent();
 	if (ImGui::InputFloat("##Intensity", &Light->color.Value.w))
 	{
-		Light->color.Value.w = fmodf(Light->color.Value.w, 255.0f);
+		Light->color.Value.w = fmodf(Light->color.Value.w, 1.0f);
 		Light->UpdateVal();
 	}
 	ImGui::Unindent();

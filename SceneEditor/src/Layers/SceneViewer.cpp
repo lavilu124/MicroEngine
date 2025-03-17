@@ -4,6 +4,8 @@
 SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent) : m_sceneContent(sceneContent)
 {
 	//ls.setView(view);
+	renderTexture.create(512, 512);
+	renderTexture.clear(sf::Color::Transparent);
 }
 
 void SceneViewer::OnUIRender()
@@ -181,15 +183,57 @@ void SceneViewer::RenderGameObjects() const
 
 void SceneViewer::RenderLights()
 {
-	int size = m_sceneContent->GetLights().size();
 
 	ImVec2 contentRegion = ImGui::GetContentRegionAvail();
 	for (auto& light : m_sceneContent->GetLights()) {
 		ImGui::SetCursorPos(ImVec2(
-			light.position.x + contentRegion.x / 2 - light.radius, 
-			light.position.y + contentRegion.y / 2 - light.radius
+			light.position.x + contentRegion.x / 2 , 
+			light.position.y + contentRegion.y / 2
 		));
 
+		if (light.image == nullptr) {
+			Micro::RadialLight* lightVal = new Micro::RadialLight("", 0);
+			lightVal->setRange(light.radius);
+			lightVal->setColor(sf::Color::White);
+			lightVal->setPosition(520 / 2, 520 / 2);
 
+			renderTexture.draw(*lightVal);
+			renderTexture.display();
+
+			const sf::Texture& lightTexture = renderTexture.getTexture();
+			lightTexture.copyToImage().saveToFile("test.png");
+			light.image = std::make_shared<Walnut::Image>("D:\\github\\MicroEngine\\SceneEditor\\test.png");
+			renderTexture.clear(sf::Color::Transparent);
+
+			delete lightVal;
+		}
+
+		if (!light.isUpdated()) {
+			Micro::RadialLight* lightVal = new Micro::RadialLight("", 0);
+			lightVal->setRange(light.radius);
+
+			int r = static_cast<int>(light.color.Value.x * 255.0f);
+			int g = static_cast<int>(light.color.Value.y * 255.0f);
+			int b = static_cast<int>(light.color.Value.z * 255.0f);
+			lightVal->setColor(sf::Color(r,g,b));
+			lightVal->setIntensity(light.color.Value.w);
+			lightVal->setPosition(520 / 2, 520 / 2);
+
+			renderTexture.draw(*lightVal);
+			renderTexture.display();
+
+			const sf::Texture& lightTexture = renderTexture.getTexture();
+			lightTexture.copyToImage().saveToFile("test.png");
+			light.image = std::make_shared<Walnut::Image>("D:\\github\\MicroEngine\\SceneEditor\\test.png");
+			renderTexture.clear(sf::Color::Transparent);
+
+			delete lightVal;
+			light.Updating();
+		}
+
+		ImGui::Image(
+			light.image->GetDescriptorSet(),
+			ImVec2(512, 512)
+		);
 	}
 }

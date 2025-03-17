@@ -9,7 +9,7 @@ public:
 	ImVec2 scale;
 	int layer;
 	std::string spritename;
-	std::shared_ptr<Walnut::Image> sprite;
+	std::shared_ptr<Walnut::Image> sprite = nullptr;
 
 	void SetPath(std::string newPath);
 private:

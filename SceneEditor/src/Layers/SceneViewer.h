@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "SceneContent.h"
 #include <Micro.h>
+#include <lightInclude.h>
+
 class SceneViewer : public Walnut::Layer
 {
 public:
@@ -18,5 +20,6 @@ private:
 
 private:
 	std::shared_ptr<SceneContent> m_sceneContent;
+	sf::RenderTexture renderTexture;
 
 };

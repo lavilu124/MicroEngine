@@ -1,0 +1,9 @@
+add a delete object button in the scene editor
+add easy movement of object in the viewer
+add ui elements(text and buttons)
+finish lighting
+adding custom objects scripts in the scene editor
+
+maybe:
+multiplayer and/or multiscreen(local multiplayer)
+physics
