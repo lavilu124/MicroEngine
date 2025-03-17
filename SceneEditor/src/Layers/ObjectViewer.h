@@ -28,6 +28,7 @@ private:
 
 private:
 	Object* currentObject = nullptr;
+	std::string currentObjectName = "";
 	currentObjectType m_CurrentObjectType;
 	std::shared_ptr<ProjectDirectory> m_ProjectDirectory;
 };

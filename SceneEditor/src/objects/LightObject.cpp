@@ -7,6 +7,16 @@ LightObject::LightObject(std::string name, ImVec2 position, float rotation, int 
 void LightObject::UpdateVal()
 {
 	image = nullptr;
-	counter = 0;
+	Updated = false;
+}
+
+void LightObject::Updating()
+{
+	Updated = true;
+}
+
+bool LightObject::isUpdated()
+{
+	return Updated;
 }
 

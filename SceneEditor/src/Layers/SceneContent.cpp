@@ -11,12 +11,12 @@ void SceneContent::OnUIRender()
 	Window();
 }
 
-std::vector<GameObject>& SceneContent::GetGameObjects() 
+std::vector<GameObject>& SceneContent::GetGameObjects()
 {
 	return m_gameObjects;
 }
 
-std::vector<LightObject>& SceneContent::GetLights() 
+std::vector<LightObject>& SceneContent::GetLights()
 {
 	return m_lightObjects;
 }
@@ -41,18 +41,19 @@ void SceneContent::Window()
 	ImGui::Separator();
 
 	if (ImGui::Button("Create GameObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
-		GameObject newGameObject("New Object", "");
+		GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
 		m_gameObjects.push_back(newGameObject);
-
 		m_NewGameObIndex = m_gameObjects.size() - 1;
+		if (!isCurrentObjectLight && m_viewer->GetObject() != nullptr)
+			m_viewer->SetObject(&m_gameObjects[indexOfCurrentOb], currentObjectType::game);
 	}
 
-	if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30)))
-	{
-		LightObject newLightObject("New light");
+	if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
+		LightObject newLightObject("Light " + std::to_string(m_lightObjects.size() + 1));
 		m_lightObjects.push_back(newLightObject);
-
 		m_newLightIndex = m_lightObjects.size() - 1;
+		if (isCurrentObjectLight && m_viewer->GetObject() != nullptr)
+			m_viewer->SetObject(&m_gameObjects[indexOfCurrentOb], currentObjectType::light);
 	}
 
 	ImGui::End();
@@ -72,11 +73,15 @@ void SceneContent::RenderObjectList()
 	for (int i = 0; i < m_gameObjects.size(); i++) {
 		if (ImGui::Button(m_gameObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
+			indexOfCurrentOb = i;
+			isCurrentObjectLight = false;
 		}
 	}
 
 	if (m_NewGameObIndex > -1) {
-		static char GameObNameInput[256] = "New GameObject";
+		static char GameObNameInput[256] = "";
+		snprintf(GameObNameInput, sizeof(GameObNameInput), "Object %d", m_NewGameObIndex + 1);
+
 		ImGui::InputText("##Enter GameObject Name", GameObNameInput, IM_ARRAYSIZE(GameObNameInput));
 		if (ImGui::Button("Cancel")) {
 			m_gameObjects.erase(m_gameObjects.begin() + m_NewGameObIndex);
@@ -104,13 +109,17 @@ void SceneContent::RenderLightList()
 	for (int i = 0; i < m_lightObjects.size(); i++) {
 		if (ImGui::Button(m_lightObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_lightObjects[i], currentObjectType::light);
+			indexOfCurrentOb = i;
+			isCurrentObjectLight = true;
 		}
 	}
 
 	ImGui::Unindent();
 
 	if (m_newLightIndex > -1) {
-		static char lightNameInput[256] = "New Light";
+		static char lightNameInput[256] = "";
+		snprintf(lightNameInput, sizeof(lightNameInput), "Light %d", m_newLightIndex + 1);
+
 		ImGui::InputText("##Enter Light Name", lightNameInput, IM_ARRAYSIZE(lightNameInput));
 		if (ImGui::Button("Cancel")) {
 			m_lightObjects.erase(m_lightObjects.begin() + m_newLightIndex);

@@ -24,5 +24,8 @@ private:
 	int m_newLightIndex = -1;
 	int m_NewGameObIndex = -1;
 
+	int indexOfCurrentOb = -1;
+	bool isCurrentObjectLight = false;
+
 	std::shared_ptr<ObjectViewer> m_viewer;
 };
