@@ -14,7 +14,7 @@ class ObjectViewer : public Walnut::Layer
 public:
 	ObjectViewer(std::shared_ptr<ProjectDirectory> projectDirectory);
 
-	virtual void OnUIRender() override;
+	void OnUIRender() override;
 
 	void SetObject(Object* newObject, currentObjectType type);
 

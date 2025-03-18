@@ -1,11 +1,20 @@
 ﻿#include "SceneViewer.h"
 #include <filesystem>
 
+#include <iostream>
+
 SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent) : m_sceneContent(sceneContent)
 {
-	//ls.setView(view);
+}
+
+void SceneViewer::OnAttach()
+{
 	renderTexture.create(512, 512);
 	renderTexture.clear(sf::Color::Transparent);
+
+	char playButtonPath[] = "\\play.png";
+	std::string playImagePath = std::filesystem::current_path().string() + playButtonPath;
+	m_playButtonImage = std::make_shared<Walnut::Image>(playImagePath.c_str());
 }
 
 void SceneViewer::OnUIRender()
@@ -13,11 +22,11 @@ void SceneViewer::OnUIRender()
 	Window();
 }
 
-void RenderPlayButton(const ImVec2& contentRegion) {
+void SceneViewer::RenderPlayButton(const ImVec2& contentRegion) {
 	// Constants
 	constexpr float buttonWidth = 25.0f;
 	constexpr float buttonHeight = 25.0f;
-	constexpr char playButtonPath[] = "\\play.png";
+	
 	constexpr char executableRelativePath[] = "\\binaries\\windows-x86_64\\debug\\sendbox\\sendbox.exe Scene1";
 
 	// Calculate button position for horizontal centering
@@ -25,10 +34,8 @@ void RenderPlayButton(const ImVec2& contentRegion) {
 		(contentRegion.x - buttonWidth) / 2.0f,
 		0.0f // Vertical positioning, adjust as needed for additional content
 	);
-
-	// Path to play button image
-	std::string playImagePath = std::filesystem::current_path().string() + playButtonPath;
-	std::shared_ptr<Walnut::Image> playButtonImage = std::make_shared<Walnut::Image>(playImagePath.c_str());
+	
+	
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	ImVec4 originalBgColor = style.Colors[ImGuiCol_ChildBg];
@@ -50,7 +57,7 @@ void RenderPlayButton(const ImVec2& contentRegion) {
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
 
 		// Render the button (as an image)
-		ImGui::Image(playButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight));
+		ImGui::Image(m_playButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight));
 
 		// Check for hover and click events
 		if (ImGui::IsItemHovered()) {
@@ -201,8 +208,11 @@ void SceneViewer::RenderLights()
 			renderTexture.display();
 
 			const sf::Texture& lightTexture = renderTexture.getTexture();
-			lightTexture.copyToImage().saveToFile("test.png");
-			light.image = std::make_shared<Walnut::Image>("D:\\github\\MicroEngine\\SceneEditor\\test.png");
+
+			lightTexture.copyToImage().saveToFile("temp.png");
+			light.image = std::make_shared<Walnut::Image>("C:\\github\\MicroEngine\\SceneEditor\\temp.png");
+			std::remove("temp.png");
+
 			renderTexture.clear(sf::Color::Transparent);
 
 			delete lightVal;
@@ -223,10 +233,12 @@ void SceneViewer::RenderLights()
 			renderTexture.display();
 
 			const sf::Texture& lightTexture = renderTexture.getTexture();
-			lightTexture.copyToImage().saveToFile("test.png");
-			light.image = std::make_shared<Walnut::Image>("D:\\github\\MicroEngine\\SceneEditor\\test.png");
-			renderTexture.clear(sf::Color::Transparent);
 
+			lightTexture.copyToImage().saveToFile("temp.png");
+			light.image = std::make_shared<Walnut::Image>("C:\\github\\MicroEngine\\SceneEditor\\temp.png");
+			std::remove("temp.png");
+			
+			renderTexture.clear(sf::Color::Transparent);
 			delete lightVal;
 			light.Updating();
 		}

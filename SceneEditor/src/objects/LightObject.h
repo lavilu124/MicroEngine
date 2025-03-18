@@ -13,9 +13,10 @@ public:
 	void Updating();
 	bool isUpdated();
 
-	int type;
+	int type = 0;
 	ImColor color;
 	float radius;
+	float angle;
 	
 	std::shared_ptr<Walnut::Image> image = nullptr;
 
