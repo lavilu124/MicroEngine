@@ -6,7 +6,7 @@ class SceneContent : public Walnut::Layer
 public:
 	SceneContent(const std::shared_ptr<ObjectViewer>& viewer);
 
-	virtual void OnUIRender() override;
+	void OnUIRender() override;
 
 	std::vector<GameObject>& GetGameObjects() ;
 	std::vector<LightObject>& GetLights() ;

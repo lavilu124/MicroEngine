@@ -8,7 +8,10 @@ public:
 
 	~ProjectDirectory();
 
-	virtual void OnUIRender() override;
+	void OnUIRender() override;
+
+	void OnAttach() override;
+
 
 	std::string GetSelectedPath() const;
 

@@ -2,8 +2,14 @@
 
 ProjectDirectory::ProjectDirectory(const std::string& path)
 {
-    SetCurrentPath(path);
-    folderIcon = std::make_shared<Walnut::Image>("D:/github/MicroEngine/SceneEditor/folderIcon.png");
+    m_currentPath = path;
+    
+}
+
+void ProjectDirectory::OnAttach()
+{
+    SetCurrentPath(m_currentPath);
+    folderIcon = std::make_shared<Walnut::Image>("C:/github/MicroEngine/SceneEditor/folderIcon.png");
 }
 
 ProjectDirectory::~ProjectDirectory()
@@ -18,8 +24,7 @@ void ProjectDirectory::OnUIRender()
 
 void ProjectDirectory::SetCurrentPath(const std::string& path)
 {
-	m_currentPath = path;
-
+    m_currentPath = path;
 
 	m_images.clear();
     m_folders.clear();

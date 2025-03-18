@@ -8,7 +8,9 @@ class SceneViewer : public Walnut::Layer
 public:
 	SceneViewer(std::shared_ptr<SceneContent> sceneContent);
 
-	virtual void OnUIRender() override;
+	void OnUIRender() override;
+
+	void OnAttach() override;
 
 private:
 	void Window();
@@ -18,8 +20,12 @@ private:
 
 	void test();
 
+	void RenderPlayButton(const ImVec2& contentRegion);
+
 private:
 	std::shared_ptr<SceneContent> m_sceneContent;
 	sf::RenderTexture renderTexture;
+
+	std::shared_ptr<Walnut::Image> m_playButtonImage;
 
 };
