@@ -64,12 +64,11 @@ void SceneContent::RenderObjectList()
 	ImVec2 windowSize = ImGui::GetWindowSize();
 	if (windowSize.x > 300) windowSize.x = 300;
 	if (m_gameObjects.size() != 0) {
-		ImGui::Unindent();
 		ImGui::Separator();
 		ImGui::Text("Game Objects:");
-		ImGui::Indent();
 	}
 
+	ImGui::Indent();
 	for (int i = 0; i < m_gameObjects.size(); i++) {
 		if (ImGui::Button(m_gameObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
@@ -77,6 +76,7 @@ void SceneContent::RenderObjectList()
 			isCurrentObjectLight = false;
 		}
 	}
+	ImGui::Unindent();
 
 	if (m_NewGameObIndex > -1) {
 		static char GameObNameInput[256] = "";
@@ -100,12 +100,11 @@ void SceneContent::RenderLightList()
 	ImVec2 windowSize = ImGui::GetWindowSize();
 	if (windowSize.x > 300) windowSize.x = 300;
 	if (m_lightObjects.size() != 0) {
-		ImGui::Unindent();
 		ImGui::Separator();
 		ImGui::Text("Light Objects:");
-		ImGui::Indent();
 	}
 
+	ImGui::Indent();
 	for (int i = 0; i < m_lightObjects.size(); i++) {
 		if (ImGui::Button(m_lightObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_lightObjects[i], currentObjectType::light);
@@ -113,7 +112,6 @@ void SceneContent::RenderLightList()
 			isCurrentObjectLight = true;
 		}
 	}
-
 	ImGui::Unindent();
 
 	if (m_newLightIndex > -1) {
