@@ -167,12 +167,25 @@ void ObjectViewer::DisplayLightObject() {
 	ImGui::Indent();
 	if (ImGui::RadioButton("Spot", Light->type == 0)) {
 		Light->type = 0;
+		Light->UpdateVal();
 	}
 	ImGui::SameLine();
 	if (ImGui::RadioButton("Flash", Light->type == 1)) {
 		Light->type = 1;
+		Light->UpdateVal();
 	}
 	ImGui::Unindent();
+
+	/*if (Light->type == 0)
+	{
+		ImGui::Text("Angle");
+		ImGui::Indent();
+		if (ImGui::InputFloat("##Angle"))
+		{
+			
+		}
+		ImGui::Unindent();
+	}*/
 
 	ImGui::Text("Radius");
 	ImGui::Indent();
