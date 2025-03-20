@@ -5,6 +5,8 @@
 #include "Layers/SceneViewer.h"
 #include "Layers/Saves.h"
 
+#include <filesystem>
+
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
 	//spec if the app
@@ -15,9 +17,13 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	//the app
 	Walnut::Application* app = new Walnut::Application(spec);
 
+	std::string path = std::filesystem::current_path().string();
+	if (path.find("SceneEditor") != std::string::npos)
+		path = path.substr(0, path.find_last_of('\\'));
+	path += "\\Resources";
 
 	//add the layers (sub-windows) 
-	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(R"(C:\github\MicroEngine\Resources)");
+	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(path);
 	app->PushLayer(dir);
 
 	std::shared_ptr<ObjectViewer> viewer =  std::make_shared<ObjectViewer>(dir);

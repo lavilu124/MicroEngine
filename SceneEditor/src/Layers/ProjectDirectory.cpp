@@ -1,4 +1,5 @@
 #include "ProjectDirectory.h"
+#include <filesystem>
 
 ProjectDirectory::ProjectDirectory(const std::string& path)
 {
@@ -9,7 +10,7 @@ ProjectDirectory::ProjectDirectory(const std::string& path)
 void ProjectDirectory::OnAttach()
 {
     SetCurrentPath(m_currentPath);
-    folderIcon = std::make_shared<Walnut::Image>("C:/github/MicroEngine/SceneEditor/folderIcon.png");
+    folderIcon = std::make_shared<Walnut::Image>(std::filesystem::current_path().string() + "\\folderIcon.png");
 }
 
 ProjectDirectory::~ProjectDirectory()

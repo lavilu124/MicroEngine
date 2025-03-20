@@ -18,7 +18,9 @@ private:
 	void RenderGameObjects() const;
 	void RenderLights();
 
-	void test();
+	std::shared_ptr<Walnut::Image> GenerateLightImage(LightObject& light);
+
+	void ExecutePlayCommand() const;
 
 	void RenderPlayButton(const ImVec2& contentRegion);
 
@@ -28,4 +30,5 @@ private:
 
 	std::shared_ptr<Walnut::Image> m_playButtonImage;
 
+	bool m_first = true;
 };
