@@ -164,7 +164,7 @@ void ObjectViewer::DisplayLightObject() {
 	ImGui::Unindent();
 
 	ImGui::Text("Type:");
-	ImGui::Indent();
+	/*ImGui::Indent();
 	if (ImGui::RadioButton("Spot", Light->type == 0)) {
 		Light->type = 0;
 		Light->UpdateVal();
@@ -174,7 +174,7 @@ void ObjectViewer::DisplayLightObject() {
 		Light->type = 1;
 		Light->UpdateVal();
 	}
-	ImGui::Unindent();
+	ImGui::Unindent();*/
 
 	/*if (Light->type == 0)
 	{
@@ -191,7 +191,7 @@ void ObjectViewer::DisplayLightObject() {
 	ImGui::Indent();
 	if (ImGui::InputFloat("##Radius", &Light->radius))
 	{
-		Light->radius = fmodf(Light->radius, 1000000000000000000);
+		Light->radius = fmodf(Light->radius, 512.0f);
 		Light->UpdateVal();
 	}
 	ImGui::Unindent();

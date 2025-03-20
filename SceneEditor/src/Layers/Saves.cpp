@@ -47,7 +47,7 @@ void Saves::SaveWindow()
 	ImGui::Text("Path:");
 	ImGui::Indent();
 
-	static char pathBuffer[512];
+	static char pathBuffer[1024];
 	strcpy_s(pathBuffer, sizeof(pathBuffer), "C:\\github\\MicroEngine\\Resources\\Scenes");
 	static char fileNameBuffer[128];
 	strcpy_s(fileNameBuffer, sizeof(fileNameBuffer), m_path.substr(m_path.find_last_of('\\') + 1).c_str());

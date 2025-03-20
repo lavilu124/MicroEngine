@@ -7,7 +7,7 @@ SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent) : m_sceneCo
 
 void SceneViewer::OnAttach()
 {
-    renderTexture.create(512, 512);
+    renderTexture.create(1024, 1024);
     renderTexture.clear(sf::Color::Transparent);
 
     std::string playImagePath = std::filesystem::current_path().string() + "/play.png";
@@ -83,13 +83,13 @@ void SceneViewer::RenderLights()
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     for (auto& light : m_sceneContent->GetLights()) {
         ImGui::SetCursorPos(
-            ImVec2(light.position.x + contentRegion.x / 2 - 520/2, light.position.y + contentRegion.y / 2 - 520/2 + 75));
+            ImVec2(light.position.x + contentRegion.x / 2 - 1024/2, light.position.y + contentRegion.y / 2 - 1024/2 + 75));
 
     	if (!light.image || !light.isUpdated()) {
             light.image = GenerateLightImage(light);
         }
 
-        ImGui::Image(light.image->GetDescriptorSet(), ImVec2(512, 512));
+        ImGui::Image(light.image->GetDescriptorSet(), ImVec2(1024, 1024));
     }
 }
 
@@ -101,7 +101,7 @@ std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& ligh
     radialLight.setRange(light.radius);
     radialLight.setColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
     radialLight.setIntensity(light.color.Value.w);
-    radialLight.setPosition(520 / 2, 520 / 2);
+    radialLight.setPosition(1024 / 2, 1024 / 2);
 
     renderTexture.clear(sf::Color::Transparent);
     renderTexture.draw(radialLight);
