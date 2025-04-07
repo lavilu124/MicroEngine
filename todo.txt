@@ -1,7 +1,6 @@
 add a delete object button in the scene editor
 add easy movement of object in the viewer
 add ui elements(text and buttons)
-finish lighting
 adding custom objects scripts in the scene editor
 play the scene of the scene editor when running the game through it
 

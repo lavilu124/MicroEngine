@@ -10,7 +10,7 @@ void SceneViewer::OnAttach()
     renderTexture.create(1024, 1024);
     renderTexture.clear(sf::Color::Transparent);
 
-    std::string playImagePath = std::filesystem::current_path().string() + "/play.png";
+    std::string playImagePath = "appGui/play.png";
     m_playButtonImage = std::make_shared<Walnut::Image>(playImagePath.c_str());
 }
 
@@ -49,9 +49,13 @@ void SceneViewer::RenderPlayButton(const ImVec2& contentRegion) {
 
 void SceneViewer::ExecutePlayCommand() const {
     std::string command = std::filesystem::current_path().string();
+
+
     if (command.find("SceneEditor") != std::string::npos) 
         command = command.substr(0, command.find_last_of('\\'));
-    command += "\binaries\windows-x86_64\debug\sendbox\sendbox.exe Scene1";
+    command += "\\binaries\\windows-x86_64\\Release\\sendbox\\sendbox.exe ";
+    command += m_sceneContent->GetCurrentScene();
+
     system(command.c_str());
 }
 

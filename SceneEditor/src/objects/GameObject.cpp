@@ -1,6 +1,6 @@
 #include "GameObject.h"
 #include <filesystem>
-#include <iostream>
+
 
 int GameObject::counter = 0;
 
@@ -19,6 +19,5 @@ void GameObject::SetPath(std::string newPath) {
 	spritename = std::filesystem::path(newPath).filename().string();
 	path = newPath;
 	sprite = std::make_shared<Walnut::Image>(newPath);
-	std::cout << counter++ << "\n";
 	
 }

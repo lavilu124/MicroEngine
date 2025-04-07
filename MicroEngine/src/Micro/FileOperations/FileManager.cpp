@@ -194,7 +194,7 @@ namespace Micro{
 
     std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager* systemManager) {
 
-        std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".json");
+        std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".McScene");
         Json::Value actualJson;
         Json::Reader Reader;
 
