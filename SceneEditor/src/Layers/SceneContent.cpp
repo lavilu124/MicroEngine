@@ -2,7 +2,11 @@
 
 #include "ObjectViewer.h"
 
-SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer) : m_viewer(viewer)
+#include "../json/json.h"
+#include "../include/json/value.h"
+#include <fstream>
+
+SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const std::shared_ptr<ProjectDirectory>& directory) : m_viewer(viewer), m_Directory(directory)
 {
 }
 
@@ -25,10 +29,13 @@ void SceneContent::Window()
 {
 	ImGui::Begin("Scene Content");
 
-
-
 	if (m_gameObjects.size() == 0 && m_lightObjects.size() == 0) {
 		ImGui::Text("No Objects");
+	}
+
+	std::string newScene = m_Directory->getNewScene();
+	if (newScene != "") {
+		SetNewScene(newScene);
 	}
 
 	RenderObjectList();
@@ -129,4 +136,99 @@ void SceneContent::RenderLightList()
 			m_newLightIndex = -1;
 		}
 	}
+}
+
+void SceneContent::SetNewScene(std::string NewScene)
+{
+	m_gameObjects.clear();
+	m_lightObjects.clear();
+
+	std::ifstream inputFile(NewScene);
+	Json::Value actualJson;
+	Json::Reader Reader;
+
+	//check if the input file exsist
+	if (!inputFile.is_open())
+		return;
+
+	//checing if the file can be read
+	if (!Reader.parse(inputFile, actualJson))
+		return;
+
+	m_currentScene = NewScene.substr(NewScene.find_last_of('\\') + 1, NewScene.size() - NewScene.find_last_of('\\') - 9);
+
+	int count = 0;
+
+	//going over the json and reading all the data
+	for (int i = 0; i < actualJson.size(); i++) {
+		std::stringstream ss;
+		ss << i;
+		Json::Value currentObject = actualJson["object" + ss.str()];
+
+
+		if (currentObject.isNull()) {
+			count = actualJson.size() - i - 1;
+			break;
+		}
+
+		//object values
+		int layer = currentObject["layer"].asInt();
+		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+		float rotation = currentObject["rotation"].asFloat();
+		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
+		std::string spriteName = currentObject["spriteName"].asString();
+		std::string name = currentObject["name"].asString();
+
+		std::string pathToSprite = GetDirForSprite(spriteName, std::filesystem::current_path().string());
+
+		m_gameObjects.push_back(GameObject(name, pathToSprite, position, scale, rotation, layer));
+
+
+	}
+
+	/*for (int i = 0; i < count; i++) {
+		std::stringstream ss;
+		ss << i;
+		Json::Value currentObject = actualJson["lightSource" + ss.str()];
+
+
+		int type = currentObject["LightType"].asInt();
+		std::string name = currentObject["name"].asString();
+		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+		ImColor color = ImColor(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
+		float radius = currentObject["radius"].asFloat();
+		sfu::LightId light;
+
+		m_lightObjects.push_back(LightObject(name, position, 0.0f, type, color, radius));
+	}*/
+
+	//close the file
+	inputFile.close();
+}
+
+std::string SceneContent::GetCurrentScene()
+{
+	return m_currentScene;
+}
+
+std::string SceneContent::GetDirForSprite(std::string sprite, std::string dir)
+{
+	if (dir.find("SceneEditor") != std::string::npos) {
+		dir = dir.substr(0, dir.find_last_of('\\'));
+		dir += "\\Resources";
+	}
+
+	for (const auto& entry : std::filesystem::directory_iterator(dir)) {
+		if (entry.is_directory())
+		{
+			std::string returnVal = GetDirForSprite(sprite, entry.path().string());
+			if (returnVal != "") {
+				return returnVal;
+			}
+		}
+		else if (entry.path().filename().string().find(sprite) != std::string::npos) {
+			return entry.path().string();
+		}
+	}
+	return "";
 }

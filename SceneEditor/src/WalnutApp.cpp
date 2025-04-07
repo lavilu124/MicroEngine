@@ -29,7 +29,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	std::shared_ptr<ObjectViewer> viewer =  std::make_shared<ObjectViewer>(dir);
 	app->PushLayer(viewer);
 
-	std::shared_ptr<SceneContent> sceneContent = std::make_shared<SceneContent>(viewer);
+	std::shared_ptr<SceneContent> sceneContent = std::make_shared<SceneContent>(viewer, dir);
 	app->PushLayer(sceneContent);
 
 	std::shared_ptr<SceneViewer> sceneViewer = std::make_shared<SceneViewer>(sceneContent);
