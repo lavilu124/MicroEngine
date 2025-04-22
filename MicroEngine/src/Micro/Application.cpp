@@ -2,31 +2,22 @@
 #include <SFML/Graphics.hpp>
 
 namespace Micro{
-	Application::Application(float windowWidth, float windowHeight, float maxFPS, std::string scene) :m_window(sf::VideoMode(windowWidth, windowHeight), "new game",
+	Application::Application(float windowWidth, float windowHeight, float maxFPS, const char* name, std::string scene) :m_window(sf::VideoMode(windowWidth, windowHeight), name,
 		sf::Style::Default), m_systemManager(m_window) {
 		
 		m_window.setFramerateLimit(maxFPS);
 
-		if (scene != "") {
-			m_systemManager.LoadScene(scene);
-		}
-		else
-			m_systemManager.LoadScene("DefualtScene");
+		(scene == "")? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
 		
 		 
 		m_camera = &m_systemManager.GetCamera();
 	}
 
-	Application::Application(sf::Vector2f windowSize, float maxFPS, std::string scene) :m_window(sf::VideoMode(windowSize.x, windowSize.y), "new game",
+	Application::Application(sf::Vector2f windowSize, float maxFPS, const char* name, std::string scene) :m_window(sf::VideoMode(windowSize.x, windowSize.y), name,
 		sf::Style::Default), m_systemManager(m_window){
 		m_window.setFramerateLimit(maxFPS);
 
-		if (scene != " ")
-		{
-			m_systemManager.LoadScene(scene);
-		}
-		else 
-			m_systemManager.LoadScene("DefualtScene");
+		(scene == "") ? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
 
 		m_camera = &m_systemManager.GetCamera();
 	}
@@ -54,6 +45,16 @@ namespace Micro{
 
 			m_systemManager.RunInput(event);
 		}
+	}
+
+	void Application::SetWindowSize(sf::Vector2u newSize)
+	{
+		m_window.setSize(newSize);
+	}
+
+	sf::Vector2u Application::GetWindowSize()
+	{
+		return m_window.getSize();
 	}
 
 	void Application::Display() {

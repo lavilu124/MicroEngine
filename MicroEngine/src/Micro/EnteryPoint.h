@@ -7,7 +7,7 @@
 extern Micro::Application* Micro::CreateApplication(std::string scene);
 
 int main(int argc, char** argv) {
-	std::string scene = ""; 
+	std::string scene = "";
 	if (argc > 1)
 	{
 		scene = argv[1];
