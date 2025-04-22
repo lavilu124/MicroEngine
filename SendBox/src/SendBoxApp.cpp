@@ -23,7 +23,6 @@ public:
 		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
 			sf::Vector2f(0.f, 300.f));
 
-
 		while (m_window.isOpen()) {
 			sf::Event e;
 			while (m_window.pollEvent(e)) {
@@ -37,9 +36,6 @@ public:
 					int mouseXRelativeToCenter = mousePositionWindow.x - windowSize.x / 2;
 					int mouseYRelativeToCenter = mousePositionWindow.y - windowSize.y / 2;
 					m_systemManager.GetLight<sfu::lightType::radial>(light)->setPosition(mouseXRelativeToCenter, mouseYRelativeToCenter);
-				}else if (e.key.code == sf::Keyboard::T)
-				{
-					SetWindowSize({ 1140, 810});
 				}
 			}
 
@@ -53,5 +49,5 @@ public:
 };
 
 Micro::Application* Micro::CreateApplication(std::string scene) {
-	return new App(960, 540, 144, scene);
+	return new App(1920, 1080, 144, scene);
 }
