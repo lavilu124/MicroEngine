@@ -20,6 +20,8 @@ namespace Micro{
 
 		void Update(SystemManager& systemManager);
 
+		void SetWindowSize(sf::Vector2f NewSize);
+
 	public:
 		sf::Vector2f position;
 		float rotation;

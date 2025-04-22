@@ -35,7 +35,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	std::shared_ptr<SceneViewer> sceneViewer = std::make_shared<SceneViewer>(sceneContent);
 	app->PushLayer(sceneViewer);
 
-	std::shared_ptr<Saves> saves = std::make_shared<Saves>(Saves(sceneContent));
+	/*std::shared_ptr<Saves> saves = std::make_shared<Saves>(Saves(sceneContent));
 	app->PushLayer(saves);
 
 	//menus
@@ -57,7 +57,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 			}
 			ImGui::EndMenu();
 		}
-	});
+	});*/
 
 
 	return app;

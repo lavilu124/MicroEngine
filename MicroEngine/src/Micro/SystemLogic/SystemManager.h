@@ -23,6 +23,8 @@ namespace Micro{
 
 		std::vector<GameObject>& GetObjects();
 
+		GameObject* GetObjectByName(const std::string& name);
+
 		bool CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith = Collision::ALL, GameObject* collideInfo = nullptr);
 
 		void RunInput(sf::Event event);
@@ -30,8 +32,6 @@ namespace Micro{
 		void LoadScene(std::string scene);
 
 		Camera& GetCamera();
-
-		GameObject& GetObjectByName(const std::string& name);
 
 		FileManager& GetFileManager();
 

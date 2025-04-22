@@ -20,7 +20,9 @@ namespace Micro{
 
 
 		void SetWindowSize(sf::Vector2u newSize);
-		sf::Vector2u GetWindowSize();
+		sf::Vector2u GetWindowSize() const;
+		void SetWindowTitle(const char* name);
+		void SetResolution(sf::Vector2f newRes);
 
 	protected:
 		sf::RenderWindow m_window;
