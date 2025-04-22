@@ -4,12 +4,11 @@
 class App : public Micro::Application
 {
 public:
-	App(const float windowWidth, const float windowHeight, const float maxFPS, std::string scene) : Micro::Application(windowWidth, windowHeight, maxFPS, scene) {
-		
+	App(const float windowWidth, const float windowHeight, const float maxFPS, std::string scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game", scene) {
 
 	}
 
-	App(const sf::Vector2f windowSize, float maxFPS, std::string scene) : Micro::Application(windowSize, maxFPS, scene) {
+	App(const sf::Vector2f windowSize, float maxFPS, std::string scene) : Micro::Application(windowSize, maxFPS, "new game", scene) {
 	}
 
 	void Run() override {
@@ -19,7 +18,6 @@ public:
 		sfu::LightId light = m_systemManager.AddLight(sfu::lightType::radial, "testrgjgi");
 		m_systemManager.GetLight<sfu::lightType::radial>(light)->setRange(150);
 		m_systemManager.GetLight<sfu::lightType::radial>(light)->setColor(sf::Color::Blue);
-
 
 
 		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
@@ -39,6 +37,9 @@ public:
 					int mouseXRelativeToCenter = mousePositionWindow.x - windowSize.x / 2;
 					int mouseYRelativeToCenter = mousePositionWindow.y - windowSize.y / 2;
 					m_systemManager.GetLight<sfu::lightType::radial>(light)->setPosition(mouseXRelativeToCenter, mouseYRelativeToCenter);
+				}else if (e.key.code == sf::Keyboard::T)
+				{
+					SetWindowSize({ 1140, 810});
 				}
 			}
 
