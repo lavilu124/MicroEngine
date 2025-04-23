@@ -25,11 +25,14 @@ public:
 
 	std::string getNewScene();
 
+
+	std::string getMainPath() const;
 private:
 	void Window();
 	void ProjectDirectory::SetCurrentPath(const std::string& path);
 
 private:
+	std::string m_mainPath;
 	std::string m_currentPath;
 	std::string m_selectedPath;
 	std::vector<std::pair<std::shared_ptr<Walnut::Image>, std::filesystem::path>> m_images;

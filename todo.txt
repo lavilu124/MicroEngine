@@ -2,8 +2,12 @@ add a delete object button in the scene editor
 add easy movement of object in the viewer
 add ui elements(text and buttons)
 adding custom objects scripts in the scene editor
-play the scene of the scene editor when running the game through it
+project creation
+add a feature for droping files to directory
+make directory show new files
+
 
 maybe:
 multiplayer and/or multiscreen(local multiplayer)
 physics
+events
