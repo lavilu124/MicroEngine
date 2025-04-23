@@ -4,7 +4,7 @@
 ProjectDirectory::ProjectDirectory(const std::string& path)
 {
     m_currentPath = path;
-    
+    m_mainPath = path;
 }
 
 void ProjectDirectory::OnAttach()
@@ -26,6 +26,9 @@ void ProjectDirectory::OnUIRender()
 
 void ProjectDirectory::SetCurrentPath(const std::string& path)
 {
+    if (path.find(m_mainPath) == std::string::npos)
+        return;
+
     m_currentPath = path;
 
 	m_images.clear();
@@ -195,6 +198,11 @@ std::string ProjectDirectory::getNewScene()
     std::string returnFile = newScene;
     newScene = "";
     return returnFile;
+}
+
+std::string ProjectDirectory::getMainPath() const
+{
+    return m_mainPath;
 }
 
 void ProjectDirectory::Window()

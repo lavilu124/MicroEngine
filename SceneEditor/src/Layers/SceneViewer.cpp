@@ -1,7 +1,9 @@
 ﻿#include "SceneViewer.h"
 #include <filesystem>
 
-SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent) : m_sceneContent(sceneContent)
+#include "../fileManage/FileManage.h"
+
+SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath) : m_sceneContent(sceneContent), m_mainPath(mainPath)
 {
 }
 
@@ -12,6 +14,8 @@ void SceneViewer::OnAttach()
 
     std::string playImagePath = "appGui/play.png";
     m_playButtonImage = std::make_shared<Walnut::Image>(playImagePath.c_str());
+    std::string saveImagePath = "appGui/saveIcon.png";
+    m_saveButtonImage = std::make_shared<Walnut::Image>(saveImagePath.c_str());
 }
 
 void SceneViewer::OnUIRender()
@@ -19,7 +23,7 @@ void SceneViewer::OnUIRender()
     Window();
 }
 
-void SceneViewer::RenderPlayButton(const ImVec2& contentRegion) {
+void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     constexpr float buttonWidth = 25.0f;
     constexpr float buttonHeight = 25.0f;
 
@@ -33,11 +37,36 @@ void SceneViewer::RenderPlayButton(const ImVec2& contentRegion) {
     style.Colors[ImGuiCol_Border] = ImVec4(0, 0, 0, 0);
     style.WindowBorderSize = 0.0f;
 
-    ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight));
+    ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight * 1.4));
+
+    ImGui::SetCursorPos({ 0.0f, 0.0f });
+    ImGui::Image(m_saveButtonImage->GetDescriptorSet(), ImVec2(buttonWidth * 1.2, buttonHeight * 1.2));
+
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        ImGui::BeginTooltip();
+        ImGui::Text("%s", "Save");
+        ImGui::EndTooltip();
+    }
+    if (ImGui::IsItemClicked()) {
+        if (m_sceneContent->GetCurrentScene() == "") {
+            //open save window
+            m_saving = true;
+        }
+        else {
+            FileManage::SaveScene(m_sceneContent->GetCurrentScene(), m_sceneContent.get());
+        }
+    }
+
     ImGui::SetCursorPos(buttonPos);
     ImGui::Image(m_playButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight));
 
-    if (ImGui::IsItemHovered()) ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        ImGui::BeginTooltip();
+        ImGui::Text("%s", "Run");
+        ImGui::EndTooltip();
+    }
     if (ImGui::IsItemClicked()) ExecutePlayCommand();
 
     ImGui::EndChild();
@@ -54,7 +83,10 @@ void SceneViewer::ExecutePlayCommand() const {
     if (command.find("SceneEditor") != std::string::npos) 
         command = command.substr(0, command.find_last_of('\\'));
     command += "\\binaries\\windows-x86_64\\Release\\sendbox\\sendbox.exe ";
-    command += m_sceneContent->GetCurrentScene();
+
+    std::string scene = m_sceneContent->GetCurrentScene();
+    scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
+    command += scene;
 
     system(command.c_str());
 }
@@ -62,13 +94,82 @@ void SceneViewer::ExecutePlayCommand() const {
 void SceneViewer::Window()
 {
     ImGui::Begin("Scene Viewer");
+    if (m_saving)
+        SaveWindow();
+
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
-    RenderPlayButton(contentRegion);
+    RenderHeader(contentRegion);
     ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetCursorScreenPos(), ImVec2(ImGui::GetCursorScreenPos().x + contentRegion.x, ImGui::GetCursorScreenPos().y + contentRegion.y), IM_COL32(0, 0, 0, 255));
     RenderGameObjects();
     RenderLights();
     ImGui::End();
 }
+
+void SceneViewer::SaveWindow()
+{
+    ImGui::Begin("Save");
+    ImGui::Text("Save Scene");
+
+    static bool initialized = false;
+    static char pathBuffer[1024];
+    static char fileNameBuffer[128];
+
+    if (!initialized)
+    {
+        strcpy_s(pathBuffer, sizeof(pathBuffer), m_mainPath);
+        std::string fileName = m_savePath.substr(m_savePath.find_last_of('\\') + 1);
+        strcpy_s(fileNameBuffer, sizeof(fileNameBuffer), fileName.c_str());
+        initialized = true;
+    }
+
+    ImGui::Text("Path:");
+    ImGui::Indent();
+
+    if (ImGui::InputText("##Path", pathBuffer, sizeof(pathBuffer)))
+    {
+        m_savePath = pathBuffer;
+    }
+
+    ImGui::Unindent();
+
+    ImGui::Text("File Name:");
+    ImGui::Indent();
+
+    if (ImGui::InputText("##FileName", fileNameBuffer, sizeof(fileNameBuffer)))
+    {
+        m_saveName = fileNameBuffer;
+    }
+
+    ImGui::Unindent();
+
+    if (ImGui::Button("Save"))
+    {
+        if (m_savePath.empty())
+            m_savePath = m_mainPath;
+
+        std::string fullPath = m_savePath + "\\" + m_saveName + ".McScene";
+        FileManage::SaveScene(fullPath, m_sceneContent.get());
+
+        m_doneSaving = true;
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Close"))
+    {
+        m_saving = false;
+        m_doneSaving = false;
+        initialized = false; // Reset buffer on close
+        ImGui::End();
+        return;
+    }
+
+    if (m_doneSaving)
+        ImGui::Text("Scene saved successfully");
+
+    ImGui::End();
+}
+
 
 void SceneViewer::RenderGameObjects() const
 {

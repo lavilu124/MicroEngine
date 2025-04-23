@@ -140,6 +140,7 @@ void SceneContent::RenderLightList()
 
 void SceneContent::SetNewScene(std::string NewScene)
 {
+	m_viewer->SetObject(nullptr, currentObjectType::game);
 	m_gameObjects.clear();
 	m_lightObjects.clear();
 
@@ -155,7 +156,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 	if (!Reader.parse(inputFile, actualJson))
 		return;
 
-	m_currentScene = NewScene.substr(NewScene.find_last_of('\\') + 1, NewScene.size() - NewScene.find_last_of('\\') - 9);
+	m_currentScene = NewScene;
 
 	int count = 0;
 

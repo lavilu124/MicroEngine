@@ -2,6 +2,7 @@
 	"object0" : 
 	{
 		"layer" : 0,
+		"name" : "0",
 		"position" : 
 		[
 			-200.0,
@@ -13,12 +14,12 @@
 			-1.0,
 			1.0
 		],
-		"spriteName" : "run0.png",
-		"name" : "0"
+		"spriteName" : "run0.png"
 	},
 	"object1" : 
 	{
 		"layer" : 0,
+		"name" : "1",
 		"position" : 
 		[
 			-200.0,
@@ -30,12 +31,12 @@
 			-1.0,
 			1.0
 		],
-		"spriteName" : "axe.png",
-		"name" : "1"
+		"spriteName" : "axe.png"
 	},
 	"object2" : 
 	{
 		"layer" : 0,
+		"name" : "2",
 		"position" : 
 		[
 			200.0,
@@ -47,7 +48,6 @@
 			-1.0,
 			1.0
 		],
-		"spriteName" : "run2.png",
-		"name" : "2"
+		"spriteName" : "run2.png"
 	}
 }

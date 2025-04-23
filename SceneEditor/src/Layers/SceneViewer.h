@@ -6,7 +6,7 @@
 class SceneViewer : public Walnut::Layer
 {
 public:
-	SceneViewer(std::shared_ptr<SceneContent> sceneContent);
+	SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath);
 
 	void OnUIRender() override;
 
@@ -14,6 +14,7 @@ public:
 
 private:
 	void Window();
+	void SaveWindow();
 
 	void RenderGameObjects() const;
 	void RenderLights();
@@ -22,13 +23,20 @@ private:
 
 	void ExecutePlayCommand() const;
 
-	void RenderPlayButton(const ImVec2& contentRegion);
+	void RenderHeader(const ImVec2& contentRegion);
 
 private:
 	std::shared_ptr<SceneContent> m_sceneContent;
 	sf::RenderTexture renderTexture;
 
 	std::shared_ptr<Walnut::Image> m_playButtonImage;
+	std::shared_ptr<Walnut::Image> m_saveButtonImage;
 
 	bool m_first = true;
+
+	bool m_saving = false;
+	bool m_doneSaving = false;
+	std::string m_savePath;
+	std::string m_saveName;
+	const char* m_mainPath;
 };
