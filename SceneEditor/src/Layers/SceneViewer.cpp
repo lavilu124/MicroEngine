@@ -75,10 +75,10 @@ void SceneViewer::RenderGameObjects() const
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     for (auto& gameObject : m_sceneContent->GetGameObjects()) {
         if (gameObject.sprite) {
-            ImVec2 relativePos(gameObject.position.x / 2.4, gameObject.position.y / 2.4);
+            ImVec2 relativePos(gameObject.position.x / 2, (gameObject.position.y + 25.0f) / 2);
             ImVec2 position(relativePos.x + contentRegion.x / 2, relativePos.y + contentRegion.y / 2);
             ImGui::SetCursorPos(position);
-            ImGui::Image(gameObject.sprite->GetDescriptorSet(), ImVec2(gameObject.scale.x * gameObject.sprite->GetWidth(), gameObject.scale.y * gameObject.sprite->GetHeight()));
+            ImGui::Image(gameObject.sprite->GetDescriptorSet(), ImVec2(gameObject.scale.x / 1.5 * gameObject.sprite->GetWidth(), gameObject.scale.y / 1.5 * gameObject.sprite->GetHeight()));
         }
     }
 }
