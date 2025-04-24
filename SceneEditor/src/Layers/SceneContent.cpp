@@ -233,3 +233,8 @@ std::string SceneContent::GetDirForSprite(std::string sprite, std::string dir)
 	}
 	return "";
 }
+
+std::shared_ptr<ProjectDirectory> SceneContent::GetDir()
+{
+	return m_Directory;
+}

@@ -38,5 +38,5 @@ private:
 	bool m_doneSaving = false;
 	std::string m_savePath;
 	std::string m_saveName;
-	const char* m_mainPath;
+	std::string m_mainPath;
 };

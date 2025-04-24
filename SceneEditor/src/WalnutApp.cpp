@@ -6,6 +6,15 @@
 #include "Layers/Saves.h"
 
 #include <filesystem>
+#include <GLFW/glfw3.h>
+
+void OnFileDrop(GLFWwindow* window, int count, const char** paths)
+{
+	for (int i = 0; i < count; i++)
+	{
+		ProjectDirectory::UploadFile(paths[i]);
+	}
+}
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
@@ -16,6 +25,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	
 	//the app
 	Walnut::Application* app = new Walnut::Application(spec);
+	
 
 	std::string path = std::filesystem::current_path().string();
 	if (path.find("SceneEditor") != std::string::npos)
@@ -25,6 +35,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	//add the layers (sub-windows) 
 	std::shared_ptr<ProjectDirectory> dir =  std::make_shared<ProjectDirectory>(path);
 	app->PushLayer(dir);
+	glfwSetDropCallback(static_cast<GLFWwindow*>(app->GetWindowHandle()), OnFileDrop);
 
 	std::shared_ptr<ObjectViewer> viewer =  std::make_shared<ObjectViewer>(dir);
 	app->PushLayer(viewer);

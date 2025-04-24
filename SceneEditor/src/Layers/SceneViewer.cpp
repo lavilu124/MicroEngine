@@ -2,6 +2,7 @@
 #include <filesystem>
 
 #include "../fileManage/FileManage.h"
+#include <iostream>
 
 SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath) : m_sceneContent(sceneContent), m_mainPath(mainPath)
 {
@@ -12,7 +13,7 @@ void SceneViewer::OnAttach()
     renderTexture.create(1024, 1024);
     renderTexture.clear(sf::Color::Transparent);
 
-    std::string playImagePath = "appGui/play.png";
+    std::string playImagePath = "appGui/playIcon.png";
     m_playButtonImage = std::make_shared<Walnut::Image>(playImagePath.c_str());
     std::string saveImagePath = "appGui/saveIcon.png";
     m_saveButtonImage = std::make_shared<Walnut::Image>(saveImagePath.c_str());
@@ -40,15 +41,8 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight * 1.4));
 
     ImGui::SetCursorPos({ 0.0f, 0.0f });
-    ImGui::Image(m_saveButtonImage->GetDescriptorSet(), ImVec2(buttonWidth * 1.2, buttonHeight * 1.2));
-
-    if (ImGui::IsItemHovered()) {
-        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-        ImGui::BeginTooltip();
-        ImGui::Text("%s", "Save");
-        ImGui::EndTooltip();
-    }
-    if (ImGui::IsItemClicked()) {
+    if (ImGui::ImageButton(m_saveButtonImage->GetDescriptorSet(), ImVec2(buttonWidth * 0.8, buttonHeight * 0.8)))
+    {
         if (m_sceneContent->GetCurrentScene() == "") {
             //open save window
             m_saving = true;
@@ -57,9 +51,16 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
             FileManage::SaveScene(m_sceneContent->GetCurrentScene(), m_sceneContent.get());
         }
     }
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        ImGui::BeginTooltip();
+        ImGui::Text("%s", "Save");
+        ImGui::EndTooltip();
+    }
 
     ImGui::SetCursorPos(buttonPos);
-    ImGui::Image(m_playButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight));
+    if (ImGui::ImageButton(m_playButtonImage->GetDescriptorSet(), ImVec2(buttonWidth * 0.8, buttonHeight * 0.8)))
+        ExecutePlayCommand();
 
     if (ImGui::IsItemHovered()) {
         ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
@@ -67,7 +68,6 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
         ImGui::Text("%s", "Run");
         ImGui::EndTooltip();
     }
-    if (ImGui::IsItemClicked()) ExecutePlayCommand();
 
     ImGui::EndChild();
 
@@ -116,7 +116,8 @@ void SceneViewer::SaveWindow()
 
     if (!initialized)
     {
-        strcpy_s(pathBuffer, sizeof(pathBuffer), m_mainPath);
+        strcpy_s(pathBuffer, sizeof(pathBuffer), m_mainPath.c_str());
+        std::cout << m_mainPath;
         std::string fileName = m_savePath.substr(m_savePath.find_last_of('\\') + 1);
         strcpy_s(fileNameBuffer, sizeof(fileNameBuffer), fileName.c_str());
         initialized = true;
@@ -169,7 +170,6 @@ void SceneViewer::SaveWindow()
 
     ImGui::End();
 }
-
 
 void SceneViewer::RenderGameObjects() const
 {

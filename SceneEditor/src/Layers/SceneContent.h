@@ -13,6 +13,8 @@ public:
 
 	std::string GetCurrentScene();
 
+	std::shared_ptr<ProjectDirectory> GetDir();
+
 private:
 	void Window();
 
@@ -24,6 +26,8 @@ private:
 	
 
 	std::string GetDirForSprite(std::string sprite, std::string dir);
+
+	
 private:
 	std::vector<GameObject> m_gameObjects;
 	std::vector <LightObject> m_lightObjects;

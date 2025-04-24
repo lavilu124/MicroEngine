@@ -54,4 +54,5 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		outputFile << sceneJson.toStyledString();
 		outputFile.close();
 	}
+	content->GetDir()->HandleFile(std::filesystem::directory_entry(path));
 }
