@@ -1,4 +1,6 @@
 #include "Walnut/Application.h"
+#include <GLFW/glfw3.h>
+#include <filesystem>
 
 class ProjectDirectory : public Walnut::Layer
 {
@@ -27,20 +29,33 @@ public:
 
 
 	std::string getMainPath() const;
+
+	static void UploadFile(std::string path);
+	void HandleFile(std::filesystem::directory_entry entry);
 private:
 	void Window();
-	void ProjectDirectory::SetCurrentPath(const std::string& path);
+
+	void SetCurrentPath(const std::string& path);
 
 private:
 	std::string m_mainPath;
 	std::string m_currentPath;
 	std::string m_selectedPath;
+
 	std::vector<std::pair<std::shared_ptr<Walnut::Image>, std::filesystem::path>> m_images;
 	std::vector < std::filesystem::path > m_folders;
 	std::vector < std::filesystem::path > m_maps;
+
 	int itemsPerRow = 10;
-	std::shared_ptr<Walnut::Image> folderIcon;
-	std::shared_ptr<Walnut::Image> mapIcon;
+
+	std::shared_ptr<Walnut::Image> m_folderIcon;
+	std::shared_ptr<Walnut::Image> m_mapIcon;
+	std::shared_ptr<Walnut::Image> m_reloadIcon;
+	std::shared_ptr<Walnut::Image> m_returnIcon;
+
 
 	std::string newScene = "";
+
+	static std::string m_copyPaths[30];
+	static int m_copySize;
 };
