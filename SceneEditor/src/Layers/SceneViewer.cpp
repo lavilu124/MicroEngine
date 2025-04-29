@@ -189,7 +189,7 @@ void SceneViewer::RenderLights()
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     for (auto& light : m_sceneContent->GetLights()) {
         ImGui::SetCursorPos(
-            ImVec2(light.position.x + contentRegion.x / 2 - 1024/2, light.position.y + contentRegion.y / 2 - 1024/2 + 75));
+            ImVec2(light.position.x /2 + contentRegion.x / 2 - 1024/2, light.position.y + contentRegion.y / 2 - 1024/2 + 75));
 
     	if (!light.image || !light.isUpdated()) {
             light.image = GenerateLightImage(light);
@@ -207,7 +207,11 @@ std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& ligh
     radialLight.setRange(light.radius);
     radialLight.setColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
     radialLight.setIntensity(light.color.Value.w);
-    radialLight.setPosition(1024 / 2, 1024 / 2);
+    radialLight.setPosition(1024/2, 1024 / 2);
+
+    radialLight.setBeamAngle(light.beamAngle);
+    std::vector<sfu::Line> vec;
+    radialLight.castLight(vec.begin(), vec.end());
 
     renderTexture.clear(sf::Color::Transparent);
     renderTexture.draw(radialLight);

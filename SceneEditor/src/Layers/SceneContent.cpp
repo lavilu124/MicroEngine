@@ -187,7 +187,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 
 	}
 
-	/*for (int i = 0; i < count; i++) {
+	for (int i = 0; i < count; i++) {
 		std::stringstream ss;
 		ss << i;
 		Json::Value currentObject = actualJson["lightSource" + ss.str()];
@@ -196,12 +196,13 @@ void SceneContent::SetNewScene(std::string NewScene)
 		int type = currentObject["LightType"].asInt();
 		std::string name = currentObject["name"].asString();
 		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
-		ImColor color = ImColor(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
-		float radius = currentObject["radius"].asFloat();
+		ImColor color = ImColor(currentObject["color"][0].asFloat() /255, currentObject["color"][1].asFloat() /255, currentObject["color"][2].asFloat() /255, 0.99);
+		float radius = currentObject["radius"].asFloat() /1.5;
+		float angle = currentObject["angle"].asFloat();
 		sfu::LightId light;
 
-		m_lightObjects.push_back(LightObject(name, position, 0.0f, type, color, radius));
-	}*/
+		m_lightObjects.push_back(LightObject(name, position, angle, type, color, radius));
+	}
 
 	//close the file
 	inputFile.close();
