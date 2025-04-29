@@ -1,5 +1,11 @@
 ﻿#include "ObjectViewer.h"
 
+template <class T>
+T min(T x, T y)
+{
+	return (x < y)? x : y;
+}
+
 ObjectViewer::ObjectViewer(std::shared_ptr<ProjectDirectory> projectDirectory) : m_ProjectDirectory(projectDirectory)
 {
 }
@@ -62,7 +68,7 @@ void ObjectViewer::DisplayGameObject() {
 	ImGui::Indent();
 	if (ImGui::InputFloat("##Rotation", &currentObject->rotation))
 	{
-		currentObject->rotation = fmodf(currentObject->rotation, 360.0f);
+		currentObject->rotation = min<float>(currentObject->rotation, 360.0f);
 	}
 	ImGui::Unindent();
 
@@ -76,25 +82,20 @@ void ObjectViewer::DisplayGameObject() {
 		GameOj->scale.y = scaleValues[1];
 	}
 	ImGui::Unindent();
+	
 
-	/*ImGui::Text("Path:");*/
-	ImGui::Indent();
+	ImGui::Text("Sprite:");
 
-
-	if (ImGui::IsItemHovered() && m_ProjectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left) ) {
+	if (ImGui::IsItemHovered() && m_ProjectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
 		// If user drops the path by clicking
-		/*strcpy_s(pathBuffer, sizeof(pathBuffer), m_ProjectDirectory->GetSelectedPath().c_str());*/
 		GameOj->SetPath(m_ProjectDirectory->GetSelectedPath());
 	}
 	m_ProjectDirectory->ClearSelectedPath();
-
 	// Visual indicator for drag-and-drop
 	if (ImGui::IsItemHovered()) {
 		ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 	}
-	ImGui::Unindent();
-
-	ImGui::Text("Sprite:");
+	
 	ImGui::Indent();
 	try {
 		if (GameOj->sprite)
@@ -138,7 +139,7 @@ void ObjectViewer::DisplayLightObject() {
 	ImGui::Indent();
 	if (ImGui::InputFloat("##Rotation", &currentObject->rotation))
 	{
-		currentObject->rotation = fmodf(currentObject->rotation, 360.0f);
+		currentObject->rotation = min<float>(currentObject->rotation, 360.0f);
 	}
 	ImGui::Unindent();
 
@@ -156,14 +157,15 @@ void ObjectViewer::DisplayLightObject() {
 
 	ImGui::Text("Intensity:");
 	ImGui::Indent();
+	float dispaledInt = Light->color.Value.w * 255.0f;
 	if (ImGui::InputFloat("##Intensity", &Light->color.Value.w))
 	{
-		Light->color.Value.w = fmodf(Light->color.Value.w, 1.0f);
+		Light->color.Value.w = min<float>(Light->color.Value.w, 255.0f) / 255.0f;
 		Light->UpdateVal();
 	}
 	ImGui::Unindent();
 
-	ImGui::Text("Type:");
+	//ImGui::Text("Type:");
 	/*ImGui::Indent();
 	if (ImGui::RadioButton("Spot", Light->type == 0)) {
 		Light->type = 0;
@@ -189,9 +191,19 @@ void ObjectViewer::DisplayLightObject() {
 
 	ImGui::Text("Radius");
 	ImGui::Indent();
-	if (ImGui::InputFloat("##Radius", &Light->radius))
+	float displayRad = Light->radius * 1.5;
+	if (ImGui::InputFloat("##Radius", &displayRad))
 	{
-		Light->radius = fmodf(Light->radius, 512.0f);
+		Light->radius = min<float>(Light->radius, 512.0f) / 1.5;
+		Light->UpdateVal();
+	}
+	ImGui::Unindent();
+
+	ImGui::Text("BeamAngle: ");
+	ImGui::Indent();
+	if (ImGui::InputFloat("##BeamAngle", &Light->beamAngle))
+	{
+		Light->beamAngle = min<float>(Light->beamAngle, 360);
 		Light->UpdateVal();
 	}
 	ImGui::Unindent();

@@ -84,19 +84,6 @@ namespace Micro{
 
     RadialLight::~RadialLight(){
         s_instanceCount--;
-        #ifdef RADIAL_LIGHT_FIX
-        if (s_instanceCount == 0 &&
-            l_lightTextureFade &&
-            l_lightTexturePlain)
-        {
-            l_lightTextureFade.reset(nullptr);
-            l_lightTexturePlain.reset(nullptr);
-            l_texturesReady = false;
-            #ifdef CANDLE_DEBUG
-            std::cout << "RadialLight: Textures destroyed" << std::endl;
-            #endif
-        }
-        #endif
     }
 
     void RadialLight::draw(sf::RenderTarget& t, sf::RenderStates s) const{
@@ -108,11 +95,7 @@ namespace Micro{
             s.blendMode = sf::BlendAdd;
         }
         t.draw(m_polygon, s);
-#ifdef CANDLE_DEBUG
-        sf::RenderStates deb_s;
-        deb_s.transform = s.transform;
-        t.draw(m_debug, deb_s);
-#endif
+
     }
     void RadialLight::resetColor(){
         sfu::setColor(m_polygon, m_color);
@@ -224,29 +207,12 @@ namespace Micro{
         m_polygon.resize(points.size() + 1 + beamAngleBigEnough); // + center and last
         m_polygon[0].color = m_color;
         m_polygon[0].position = m_polygon[0].texCoords = tr_i.transformPoint(castPoint);
-#ifdef CANDLE_DEBUG
-        float bl1rad = bl1 * sfu::PI/180.f;
-        float bl2rad = bl2 * sfu::PI/180.f;
-        sf::Vector2f al1(std::cos(bl1rad), std::sin(bl1rad));
-        sf::Vector2f al2(std::cos(bl2rad), std::sin(bl2rad));
-        int d_n = points.size()*2 + 4;
-        m_debug.resize(d_n);
-        m_debug[d_n-1].color = m_debug[d_n-2].color = sf::Color::Cyan;
-        m_debug[d_n-3].color = m_debug[d_n-4].color = sf::Color::Yellow;
-        m_debug[d_n-1].position = m_debug[d_n-3].position = m_polygon[0].position;
-        m_debug[d_n-2].position = tr_i.transformPoint(castPoint + m_range * al1);
-        m_debug[d_n-4].position = tr_i.transformPoint(castPoint + m_range * al2);
-#endif
         for(unsigned i=0; i < points.size(); i++){
             sf::Vector2f p = points[i];
             m_polygon[i+1].position = p;
             m_polygon[i+1].texCoords = p;
             m_polygon[i+1].color = m_color;
-#ifdef CANDLE_DEBUG
-            m_debug[i*2].position = m_polygon[0].position;
-            m_debug[i*2+1].position = p;
-            m_debug[i*2].color = m_debug[i*2+1].color = sf::Color::Magenta;
-#endif
+
         }
         if(beamAngleBigEnough){
             m_polygon[points.size()+1] = m_polygon[1];
