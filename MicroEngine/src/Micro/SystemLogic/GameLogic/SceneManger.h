@@ -19,8 +19,5 @@ namespace Micro{
 		std::vector<GameObject> objects;
 		std::vector<std::shared_ptr<LightSource>> lights;
 		EdgeVector edges;
-
-	private:
-		std::string name;
 	};
 }

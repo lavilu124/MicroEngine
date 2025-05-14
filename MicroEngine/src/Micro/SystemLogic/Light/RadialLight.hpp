@@ -31,20 +31,20 @@ namespace Micro{
         float m_beamAngle;
 
         void draw(sf::RenderTarget& t, sf::RenderStates st) const override;
-        void resetColor() override;
+        void ResetColor() override;
 
     public:
         /**
          * @brief Constructor
          */
-        RadialLight(const std::string& name, int id = 0);
+        RadialLight(const char* name, int id = 0);
 
         /**
          * @brief Destructor
          */
         virtual ~RadialLight();
 
-        void castLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) override;
+        void CastLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) override;
 
         /**
          * @brief Set the range for which rays may be casted.
@@ -53,26 +53,26 @@ namespace Micro{
          * @param angle
          * @see getBeamAngle
          */
-        void setBeamAngle(float angle);
+        void SetBeamAngle(float angle);
 
         /**
          * @brief Get the range for which rays may be casted.
          * @details It defaults to 360º.
          * @see setBeamAngle
          */
-        float getBeamAngle() const;
+        float GetBeamAngle() const;
 
         /**
          * @brief Get the local bounding rectangle of the light.
          * @returns The local bounding rectangle in float.
          */
-        sf::FloatRect getLocalBounds() const;
+        sf::FloatRect GetLocalBounds() const;
 
         /**
          * @brief Get the global bounding rectangle of the light.
          * @returns The global bounding rectangle in float.
          */
-        sf::FloatRect getGlobalBounds() const;
+        sf::FloatRect GetGlobalBounds() const;
 
     };
 }

@@ -1,7 +1,7 @@
 #include "Line.hpp"
 #include "Vector2.hpp"
 
-namespace sfu{
+namespace ls{
     Line::Line(const sf::Vector2f& p1, const sf::Vector2f& p2):
         m_origin(p1),
         m_direction(p2 - p1){}
@@ -9,10 +9,10 @@ namespace sfu{
     Line::Line(const sf::Vector2f& p, float angle):
         m_origin(p)
         {
-            const auto PI2 = sfu::PI*2;
-            float ang = (float)fmod(angle*sfu::PI/180.f + sfu::PI , PI2);
+            const auto PI2 = ls::PI*2;
+            float ang = (float)fmod(angle*ls::PI/180.f + ls::PI , PI2);
             if(ang < 0) ang += PI2;
-            ang -= sfu::PI;
+            ang -= ls::PI;
             m_direction = {std::cos(ang), std::sin(ang)};
         }
 
@@ -83,7 +83,7 @@ namespace sfu{
         }
 
         //Make sure that there is actually an intersection
-        if ( (normB>0) && (normA>0) && (normA<sfu::magnitude(m_direction)) )
+        if ( (normB>0) && (normA>0) && (normA<ls::magnitude(m_direction)) )
         {
             return true;
         }

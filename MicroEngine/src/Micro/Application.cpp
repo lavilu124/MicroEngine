@@ -7,7 +7,7 @@ namespace Micro{
 		
 		m_window.setFramerateLimit(maxFPS);
 
-		(scene == "")? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
+		(((std::string) scene).empty())? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
 		
 		 
 		m_camera = &m_systemManager.GetCamera();
@@ -17,7 +17,7 @@ namespace Micro{
 		sf::Style::Default), m_systemManager(m_window){
 		m_window.setFramerateLimit(maxFPS);
 
-		(scene == "") ? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
+		(((std::string)scene).empty())? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
 
 		m_camera = &m_systemManager.GetCamera();
 	}

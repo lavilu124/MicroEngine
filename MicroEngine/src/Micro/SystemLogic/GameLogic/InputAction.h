@@ -35,9 +35,9 @@ namespace Micro{
             bool KeyReleased(sf::Event event);
             bool KeyStarted(sf::Event event);
 
-            int checkKeyboardEvent(sf::Keyboard::Key key, sf::Event event);
-            int checkMouseEvent(sf::Mouse::Button button, sf::Event event);
-            int checkControllerEvent(unsigned int buttonIndex, sf::Event event);
+            int CheckKeyboardEvent(sf::Keyboard::Key key, sf::Event event);
+            int CheckMouseEvent(sf::Mouse::Button button, sf::Event event);
+            int CheckControllerEvent(unsigned int buttonIndex, sf::Event event);
 
             inputType m_type;
             KeyType m_key;

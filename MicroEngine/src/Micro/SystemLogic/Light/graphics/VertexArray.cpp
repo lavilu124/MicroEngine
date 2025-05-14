@@ -1,7 +1,7 @@
 #include "VertexArray.hpp"
 #include "Color.hpp"
 
-namespace sfu{
+namespace ls{
     void setColor(sf::VertexArray& va, const sf::Color& color){
         for(size_t i = 0; i < va.getVertexCount(); i++){
             va[i].color = color;

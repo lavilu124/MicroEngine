@@ -1,9 +1,9 @@
-#ifndef __CANDLE_CONSTANTS_HPP__
+ #ifndef __CANDLE_CONSTANTS_HPP__
 #define __CANDLE_CONSTANTS_HPP__
 
 #include "../../Core.h"
 
-namespace sfu{
+namespace ls{
     /**
      * PI constant.
      */
@@ -14,7 +14,7 @@ namespace sfu{
 	struct LightId
 	{
 		int id;
-		sfu::lightType type;
+		ls::lightType type;
 	};
 }
 

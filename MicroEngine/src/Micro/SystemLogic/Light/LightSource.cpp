@@ -8,7 +8,7 @@
 #include "graphics/VertexArray.hpp"
 
 namespace Micro{
-    LightSource::LightSource(const std::string& name, int id)
+    LightSource::LightSource(const char* name, int id)
         : m_color(sf::Color::White), m_id(id)
 		, m_fade(true), m_name(name)
 #ifdef CANDLE_DEBUG
@@ -16,49 +16,49 @@ namespace Micro{
 #endif
         {}
     
-    void LightSource::setIntensity(float intensity){
+    void LightSource::SetIntensity(float intensity){
         m_color.a = 255 * intensity;
-        resetColor();
+        ResetColor();
     }
     
-    float LightSource::getIntensity() const{
+    float LightSource::GetIntensity() const{
         return (float)m_color.a/255.f;
     }
 
-    int LightSource::getID() const
+    int LightSource::GetID() const
     {
         return m_id;
     }
 
-    void LightSource::setColor(const sf::Color& c){
+    void LightSource::SetColor(const sf::Color& c){
         m_color = {c.r, c.g, c.b, m_color.a};
-        resetColor();
+        ResetColor();
     }
     
-    sf::Color LightSource::getColor() const{
+    sf::Color LightSource::GetColor() const{
         const sf::Color &c = m_color;
         return {c.r, c.g, c.b, 255};
     }
     
-    void LightSource::setFade(bool fade){
+    void LightSource::SetFade(bool fade){
         m_fade = fade;
-        resetColor();
+        ResetColor();
     }
     
-    bool LightSource::getFade() const{
+    bool LightSource::GetFade() const{
         return m_fade;
     }
     
-    void LightSource::setRange(float r){
+    void LightSource::SetRange(float r){
         m_range = r;
     }
     
-    float LightSource::getRange() const{
+    float LightSource::GetRange() const{
         return m_range;
     }
     
 
-	std::string LightSource::getName() const {
+    const char* LightSource::GetName() const {
         return m_name;
     }
 }

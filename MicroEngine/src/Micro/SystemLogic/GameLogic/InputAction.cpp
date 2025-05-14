@@ -46,15 +46,15 @@ namespace Micro{
         bool InputAction::KeyPressed(sf::Event event) {
             if (m_type == inputType::KeyboardKey) {
                 sf::Keyboard::Key key = std::get<sf::Keyboard::Key>(m_key);
-                return checkKeyboardEvent(key, event) == 1 || m_isPressed;
+                return CheckKeyboardEvent(key, event) == 1 || m_isPressed;
             }
             else if (m_type == inputType::ControllerButton) {
                 unsigned int buttonIndex = std::get<sf::Joystick::Axis>(m_key);
-                return checkControllerEvent(buttonIndex, event) == 1 || m_isPressed;
+                return CheckControllerEvent(buttonIndex, event) == 1 || m_isPressed;
             }
             else if (m_type == inputType::MouseButton) {
                 sf::Mouse::Button key = std::get<sf::Mouse::Button>(m_key);
-                return checkMouseEvent(key, event) == 1 || m_isPressed;
+                return CheckMouseEvent(key, event) == 1 || m_isPressed;
             }
             return false;
         }
@@ -62,15 +62,15 @@ namespace Micro{
         bool InputAction::KeyReleased(sf::Event event) {
             if (m_type == inputType::KeyboardKey) {
                 sf::Keyboard::Key key = std::get<sf::Keyboard::Key>(m_key);
-                return checkKeyboardEvent(key, event) == 2;
+                return CheckKeyboardEvent(key, event) == 2;
             }
             else if (m_type == inputType::ControllerButton) {
                 unsigned int buttonIndex = std::get<sf::Joystick::Axis>(m_key);
-                return checkControllerEvent(buttonIndex, event) == 2;
+                return CheckControllerEvent(buttonIndex, event) == 2;
             }
             else if (m_type == inputType::MouseButton) {
                 sf::Mouse::Button key = std::get<sf::Mouse::Button>(m_key);
-                return checkMouseEvent(key, event) == 2;
+                return CheckMouseEvent(key, event) == 2;
             }
             return false;
         }
@@ -83,7 +83,7 @@ namespace Micro{
             return false;
         }
 
-        int InputAction::checkKeyboardEvent(sf::Keyboard::Key key, sf::Event event) {
+        int InputAction::CheckKeyboardEvent(sf::Keyboard::Key key, sf::Event event) {
             if (event.type == sf::Event::KeyPressed && event.key.code == key) {
                 m_isPressed = true;
                 return 1;
@@ -95,7 +95,7 @@ namespace Micro{
             return 0;
         }
 
-        int InputAction::checkMouseEvent(sf::Mouse::Button button, sf::Event event) {
+        int InputAction::CheckMouseEvent(sf::Mouse::Button button, sf::Event event) {
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == button) {
                 m_isPressed = true;
                 return 1;
@@ -107,7 +107,7 @@ namespace Micro{
             return 0;
         }
 
-        int InputAction::checkControllerEvent(unsigned int buttonIndex, sf::Event event) {
+        int InputAction::CheckControllerEvent(unsigned int buttonIndex, sf::Event event) {
             if (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == buttonIndex) {
                 m_isPressed = true;
                 return 1;

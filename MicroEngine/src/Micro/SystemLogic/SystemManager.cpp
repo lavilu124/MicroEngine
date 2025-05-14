@@ -18,9 +18,9 @@ namespace Micro {
 
         SetDarkness(0);
 
-        m_lighting.setAreaTexture(&m_drakness);
+        m_lighting.SetAreaTexture(&m_drakness);
         m_lighting.scale(960 / m_drakness.getSize().x, 540 / m_drakness.getSize().y);
-        m_lighting.clear();
+        m_lighting.Clear();
 
 
         m_fileManager.SetPaths();
@@ -41,7 +41,7 @@ namespace Micro {
 
         for (auto light : m_sceneManager.lights)
         {
-            light->castLight(m_sceneManager.edges.begin(), m_sceneManager.edges.end());
+            light->CastLight(m_sceneManager.edges.begin(), m_sceneManager.edges.end());
         }
 
 
@@ -53,14 +53,14 @@ namespace Micro {
 
         cam->Update(*this);
 
-        m_lighting.clear();
+        m_lighting.Clear();
 
         for (auto light : m_sceneManager.lights)
         {
-            m_lighting.draw(*light);
+            m_lighting.Draw(*light);
         }
 
-        m_lighting.display();
+        m_lighting.Display();
     }
 
     void SystemManager::Render(sf::RenderWindow& window) {
@@ -76,7 +76,7 @@ namespace Micro {
         }
     }
 
-    int SystemManager::CheckExistingObject(std::string name) {
+    int SystemManager::CheckExistingObject(const char* name) {
         for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
             if (m_sceneManager.objects[i].GetName() == name) {
                 return i;
@@ -86,9 +86,9 @@ namespace Micro {
         return -1;
     }
 
-    bool SystemManager::CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith, GameObject* collideInfo) {
+    bool SystemManager::CheckForCollision(sf::Sprite sprite, const char* name, Collision::collisionLayer layerToCollideWith, GameObject* collideInfo){
         for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
-            if (m_sceneManager.objects[i].GetName().compare(name) && (m_sceneManager.objects[i].GetLayer() == layerToCollideWith || (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i].GetLayer() < 6))) {
+            if (m_sceneManager.objects[i].GetName() != name && (m_sceneManager.objects[i].GetLayer() == layerToCollideWith || (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i].GetLayer() < 6))) {
                 if (Collision::PixelPerfectCollision(sprite, m_sceneManager.objects[i].GetSprite())) {
                     if (collideInfo != nullptr) {
                         collideInfo = &m_sceneManager.objects[i];
@@ -101,13 +101,13 @@ namespace Micro {
         return false;
     }
 
-    void SystemManager::RunInput(sf::Event event) {
+    void SystemManager::RunInput(sf::Event event)  {
         for (std::map<std::string, Input::InputAction>::iterator Input = m_fileManager.inputs.begin(); Input != m_fileManager.inputs.end(); ++Input)
             (*Input).second.Active(event);
 
     }
 
-    void SystemManager::LoadScene(std::string scene) {
+    void SystemManager::LoadScene(const char* scene) {
         m_sceneManager.LoadSceneFromFile(scene, this, m_fileManager);
 
         Start();
@@ -116,7 +116,7 @@ namespace Micro {
     Camera& SystemManager::GetCamera() { return m_sceneManager.camera; }
 
     void SystemManager::CreateGameObject(GameObject& ob) {
-        if (!CheckExistingObject(ob.GetName()))
+        if (!CheckExistingObject(ob.GetName().c_str()))
             m_sceneManager.objects.push_back(ob);
     }
 
@@ -125,11 +125,11 @@ namespace Micro {
     }
 
 
-    GameObject* SystemManager::GetObjectByName(const std::string& name) {
+    GameObject* SystemManager::GetObjectByName(const char* name) {
         return &m_sceneManager.objects[CheckExistingObject(name)];
     }
 
-    void SystemManager::DestroyObject(std::string name) {
+    void SystemManager::DestroyObject(const char* name) {
         m_sceneManager.objects.erase(m_sceneManager.objects.begin() + CheckExistingObject(name));
     }
 
@@ -138,14 +138,14 @@ namespace Micro {
         return m_fileManager;
     }
 
-    sfu::LightId SystemManager::AddLight(sfu::lightType type, const std::string& name)
+    ls::LightId SystemManager::AddLight(ls::lightType type, const char* name)
     {
         switch (type)
         {
-        case sfu::lightType::directed:
+        case ls::lightType::directed:
             m_sceneManager.lights.push_back(std::make_shared<DirectedLight>(DirectedLight(name, m_currentLightId)));
             break;
-        case sfu::radial:
+        case ls::radial:
             m_sceneManager.lights.push_back(std::make_shared<RadialLight>(RadialLight(name, m_currentLightId)));
             break;
         }
@@ -153,11 +153,11 @@ namespace Micro {
         return { m_currentLightId++, type };
     }
 
-    void SystemManager::RemoveLight(sfu::LightId id)
+    void SystemManager::RemoveLight(ls::LightId id)
     {
         for (int i = 0; i < m_sceneManager.lights.size(); i++)
         {
-            if (m_sceneManager.lights[i]->getID() == id.id)
+            if (m_sceneManager.lights[i]->GetID() == id.id)
                 m_sceneManager.lights.erase(m_sceneManager.lights.begin() + i);
         }
     }

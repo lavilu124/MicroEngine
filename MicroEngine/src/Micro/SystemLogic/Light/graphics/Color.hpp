@@ -3,7 +3,8 @@
 
 #include <SFML/Graphics/Color.hpp>
 
-namespace sfu{
+
+namespace ls{
     sf::Color darken(const sf::Color& c, float r);
     sf::Color lighten(const sf::Color& c, float r);
     sf::Color interpolate(const sf::Color& c1, const sf::Color& c2, float r);

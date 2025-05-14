@@ -31,7 +31,7 @@ namespace Micro{
 	}
 
 
-	void Camera::Follow(std::string& ObjectName) {
+	void Camera::Follow(std::string ObjectName) {
 		m_objectName = ObjectName;
 	}
 
@@ -52,8 +52,8 @@ namespace Micro{
 
 	void Camera::Update(SystemManager& systemManager) {
 		if (m_objectName != "") {
-			if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName)->GetPosition())
-				m_view.setCenter(systemManager.GetObjectByName(m_objectName)->GetPosition());
+			if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName.c_str())->GetPosition())
+				m_view.setCenter(systemManager.GetObjectByName(m_objectName.c_str())->GetPosition());
 		}
 		else if (m_view.getCenter() != position) {
 			m_view.setCenter(position);
@@ -73,4 +73,16 @@ namespace Micro{
 	{
 		m_windowSize = NewSize;
 	}
+
+	sf::View Camera::GetView() const
+	{
+		return m_view;
+	}
+
+	void Camera::SetView(sf::View newView)
+	{
+		m_view = newView;
+	}
+
+
 }

@@ -30,11 +30,11 @@ namespace Micro{
         float m_beamWidth;
         
         void draw(sf::RenderTarget& t, sf::RenderStates st) const override;
-        void resetColor() override;
+        void ResetColor() override;
     public:
-        DirectedLight(const std::string& name, int id = 0);
+        DirectedLight(const char* name, int id = 0);
         
-        void castLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) override;
+        void CastLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) override;
         
         /**
          * @brief Set the width of the beam.
@@ -44,14 +44,14 @@ namespace Micro{
          * @param width Width of the beam.
          * @see getBeamWidth
          */
-        void setBeamWidth(float width);
+        void SetBeamWidth(float width);
         
         /**
          * @brief Get the width of the beam.
          * @returns Width of the beam
          * @see setBeamWidth
          */
-        float getBeamWidth() const;
+        float GetBeamWidth() const;
         
     };
 }

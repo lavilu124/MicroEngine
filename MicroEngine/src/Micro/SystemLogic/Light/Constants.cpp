@@ -1,5 +1,5 @@
 #include "Constants.hpp"
 
-namespace sfu{
+namespace ls{
     const float PI = 3.1415926f;
 }

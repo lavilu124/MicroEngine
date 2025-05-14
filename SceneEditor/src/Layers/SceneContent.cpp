@@ -200,7 +200,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 		ImColor color = ImColor(currentObject["color"][0].asFloat() /255, currentObject["color"][1].asFloat() /255, currentObject["color"][2].asFloat() /255, 0.99);
 		float radius = currentObject["radius"].asFloat() /1.5;
 		float angle = currentObject["angle"].asFloat();
-		sfu::LightId light;
+		ls::LightId light;
 
 		m_lightObjects.push_back(LightObject(name, position, angle, type, color, radius));
 	}

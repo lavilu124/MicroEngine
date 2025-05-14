@@ -14,7 +14,7 @@ namespace Micro{
      * @typedef Edge
      * @brief Typedef with mere semantic purposes.
      */
-    typedef sfu::Line Edge;
+    typedef ls::Line Edge;
     
     /**
      * @typedef EdgeVector
@@ -30,7 +30,7 @@ namespace Micro{
      * some reason, is global or static RadialLight and is not constructed in
      * a normal order.
      */
-    void initializeTextures();
+    void InitializeTextures();
     
     /**
      * @brief Interface for objects that emit light
@@ -57,7 +57,7 @@ namespace Micro{
          */
         virtual void draw(sf::RenderTarget& t, sf::RenderStates st) const = 0;
 
-        std::string m_name;
+        const char* m_name;
   
     protected:
         sf::Color m_color;
@@ -71,16 +71,16 @@ namespace Micro{
         sf::VertexArray m_debug;
 #endif
         
-        virtual void resetColor() = 0;
+        virtual void ResetColor() = 0;
     
     public:
         /**
          * @brief Constructor
          */
-        LightSource(const std::string& name, int id = 0);
+        LightSource(const char* name, int id = 0);
 
 
-        std::string getName() const;
+        const char* GetName() const;
         
          /**
          * @brief Set the light intensity.
@@ -94,16 +94,16 @@ namespace Micro{
          * invisible.
          * @see getIntensity
          */
-        void setIntensity(float intensity);
+        void SetIntensity(float intensity);
         
         /**
          * @brief Get the intensity of the light.
          * @returns The light intensity.
          * @see setIntensity
          */
-        float getIntensity() const;
+        float GetIntensity() const;
 
-        int getID() const;
+        int GetID() const;
         
         /**
          * @brief Set the light color.
@@ -114,7 +114,7 @@ namespace Micro{
          * @param color New color of the light. The alpha value is ignored.
          * @see getColor
          */
-        void setColor(const sf::Color& color);
+        void SetColor(const sf::Color& color);
         
         /**
          * @brief Get the plain color of the light.
@@ -122,7 +122,7 @@ namespace Micro{
          * @returns The light color.
          * @see setColor
          */
-        sf::Color getColor() const;
+        sf::Color GetColor() const;
         
         /**
          * @brief Set the value of the _fade_ flag.
@@ -135,14 +135,14 @@ namespace Micro{
          * @param fade Value to set the flag.
          * @see getFade
          */
-        virtual void setFade(bool fade);
+        virtual void SetFade(bool fade);
         
         /**
          * @brief Check if the light fades or not.
          * @returns The value of the _fade_ flag.
          * @see setFade
          */
-        virtual bool getFade() const;
+        virtual bool GetFade() const;
             
         /**
          * @brief Set the range of the illuminated area.
@@ -151,28 +151,28 @@ namespace Micro{
          * @param range Range of the illuminated area.
          * @see getRange, setFade
          */
-        void setRange(float range);
+        void SetRange(float range);
         
         /**
          * @brief Get the range of the illuminated area.
          * @returns The range of the illuminated area.
          * @see setRange
          */
-        float getRange() const;
+        float GetRange() const;
         
         /**
          * @brief Modify the polygon of the illuminated area with a 
          * raycasting algorithm.
          * @details The algorithm needs to know which edges to use to cast 
          * shadows. They are specified within a range of two iterators of a
-         * vector of edges of type @ref sfu::Line.
-         * @param begin Iterator to the first sfu::Line of the vector to take 
+         * vector of edges of type @ref ls::Line.
+         * @param begin Iterator to the first ls::Line of the vector to take 
          * into account.
-         * @param end Iterator to the first sfu::Line of the vector not to be
+         * @param end Iterator to the first ls::Line of the vector not to be
          * taken into account.
          * @see setRange, [EdgeVector](@ref LightSource.hpp)
          */
-        virtual void castLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) = 0;
+        virtual void CastLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) = 0;
     };
 }
 

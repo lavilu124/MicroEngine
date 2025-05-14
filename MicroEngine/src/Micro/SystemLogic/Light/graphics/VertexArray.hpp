@@ -5,7 +5,7 @@
 #include "../../../core.h"
 
 
-namespace sfu{
+namespace ls{
     MICRO_API void setColor(sf::VertexArray& va, const sf::Color& color);
     MICRO_API void transform(sf::VertexArray& va, const sf::Transform& t);
     MICRO_API void move(sf::VertexArray& va, const sf::Vector2f& d);

@@ -11,13 +11,13 @@
 #include "../../../core.h"
 
 
-namespace sfu{
+namespace ls{
     /**
      * @brief Auxiliary class to represent a polygon as vector of lines.
      * Not meant to be used outside Candle.
      */
     struct MICRO_API Polygon{
-        std::vector<sfu::Line> lines;
+        std::vector<ls::Line> lines;
         Polygon(const sf::Vector2f* points, int n);
         void initialize(const sf::Vector2f* points, int n);
         template <typename T>

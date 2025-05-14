@@ -12,7 +12,7 @@ namespace Micro{
         sf::BlendMode::Factor::OneMinusSrcAlpha,  // alpha dst
         sf::BlendMode::Equation::Add    );            // alpha eq
     
-    void LightingArea::initializeRenderTexture(const sf::Vector2f& size){
+    void LightingArea::InitializeRenderTexture(const sf::Vector2f& size){
         m_renderTexture.create(size.x, size.y);
         m_renderTexture.setSmooth(true);
         m_baseTextureQuad[0].position =
@@ -37,7 +37,7 @@ namespace Micro{
         m_opacity = 1.f;
         m_mode = mode;
         m_baseTexture = nullptr;
-        initializeRenderTexture(size);
+        InitializeRenderTexture(size);
         Transformable::setPosition(position);
     }
     
@@ -48,14 +48,14 @@ namespace Micro{
     {
         m_opacity = 1.f;
         m_mode = mode;
-        setAreaTexture(t, r);
+        SetAreaTexture(t, r);
     }
     
-    sf::FloatRect LightingArea::getLocalBounds () const{
+    sf::FloatRect LightingArea::GetLocalBounds () const{
         return m_areaQuad.getBounds();
     }
     
-    sf::FloatRect LightingArea::getGlobalBounds () const{
+    sf::FloatRect LightingArea::GetGlobalBounds () const{
         return Transformable::getTransform().transformRect(m_areaQuad.getBounds());
     }
     
@@ -70,40 +70,40 @@ namespace Micro{
         }
     }
     
-    void LightingArea::clear(){
+    void LightingArea::Clear(){
         if(m_baseTexture != nullptr){
             m_renderTexture.clear(sf::Color::Transparent);
             m_renderTexture.draw(m_baseTextureQuad, m_baseTexture);
         }else{
-            m_renderTexture.clear(getActualColor());
+            m_renderTexture.clear(GetActualColor());
         }
     }
     
-    void LightingArea::setAreaColor(sf::Color c){
+    void LightingArea::SetAreaColor(sf::Color c){
         m_color = c;
-        sfu::setColor(m_baseTextureQuad, getActualColor());
+        ls::setColor(m_baseTextureQuad, GetActualColor());
     }
     
-    sf::Color LightingArea::getAreaColor() const{
+    sf::Color LightingArea::GetAreaColor() const{
         return m_color;
     }
     
-    sf::Color LightingArea::getActualColor() const{
+    sf::Color LightingArea::GetActualColor() const{
         sf::Color ret(m_color);
         ret.a *= m_opacity;
         return ret;
     }
     
-    void LightingArea::setAreaOpacity(float o){
+    void LightingArea::SetAreaOpacity(float o){
         m_opacity = o;
-        sfu::setColor(m_baseTextureQuad, getActualColor());
+        ls::setColor(m_baseTextureQuad, GetActualColor());
     }
     
-    float LightingArea::getAreaOpacity() const{
+    float LightingArea::GetAreaOpacity() const{
     return m_opacity;
     }
     
-    void LightingArea::draw(const LightSource& light){
+    void LightingArea::Draw(const LightSource& light){
         if(m_opacity > 0.f && m_mode == FOG){
             sf::RenderStates fogrs;
             fogrs.blendMode = l_substractAlpha;
@@ -112,40 +112,40 @@ namespace Micro{
         }
     }
     
-    void LightingArea::setAreaTexture(const sf::Texture* texture, sf::IntRect rect){
+    void LightingArea::SetAreaTexture(const sf::Texture* texture, sf::IntRect rect){
         m_baseTexture = texture;
         if(rect.width == 0 && rect.height == 0 && texture != nullptr){
             rect.width = texture->getSize().x;
             rect.height = texture->getSize().y;
         }
-        initializeRenderTexture(sf::Vector2f(rect.width, rect.height));
-        setTextureRect(rect);
+        InitializeRenderTexture(sf::Vector2f(rect.width, rect.height));
+        SetTextureRect(rect);
     }
     
-    const sf::Texture* LightingArea::getAreaTexture() const{
+    const sf::Texture* LightingArea::GetAreaTexture() const{
         return m_baseTexture;
     }
     
-    void LightingArea::setTextureRect(const sf::IntRect& rect){
+    void LightingArea::SetTextureRect(const sf::IntRect& rect){
         m_baseTextureQuad[0].texCoords = sf::Vector2f(rect.left, rect.top);
         m_baseTextureQuad[1].texCoords = sf::Vector2f(rect.left + rect.width, rect.top);
         m_baseTextureQuad[2].texCoords = sf::Vector2f(rect.left + rect.width, rect.top + rect.height);
         m_baseTextureQuad[3].texCoords = sf::Vector2f(rect.left, rect.top + rect.height);
     }
     
-    sf::IntRect LightingArea::getTextureRect() const{
+    sf::IntRect LightingArea::GetTextureRect() const{
         return m_baseTextureRect;
     }
     
-    void LightingArea::setMode(Mode mode){
+    void LightingArea::SetMode(Mode mode){
         m_mode = mode;
     }
     
-    LightingArea::Mode LightingArea::getMode() const{
+    LightingArea::Mode LightingArea::GetMode() const{
         return m_mode;
     }
     
-    void LightingArea::display(){
+    void LightingArea::Display(){
         m_renderTexture.display();
     }
 }

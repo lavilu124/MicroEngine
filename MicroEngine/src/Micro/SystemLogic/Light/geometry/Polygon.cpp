@@ -1,6 +1,6 @@
 #include "Polygon.hpp"
 
-namespace sfu{
+namespace ls{
 
     Polygon::Polygon(const sf::Vector2f* points, int n){
         initialize(points, n);
