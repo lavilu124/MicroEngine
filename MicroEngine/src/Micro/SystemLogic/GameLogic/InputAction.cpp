@@ -8,13 +8,16 @@ namespace Micro{
             m_type(type), m_key(key), m_name(name), m_part(part), m_onInput(onInput), m_offInput(offInput) {
 
             m_isPressed = false;
-            if (m_type != inputType::KeyboardKey && m_type != inputType::ControllerButton && m_type != inputType::MouseButton) {
-                throw std::invalid_argument("Invalid InputType specified.");
-            }
         }
 
         bool InputAction::Active(sf::Event event) {
             bool returnValue = false;
+
+            if (m_type == inputType::MouseMove && event.type == sf::Event::MouseMoved)
+            {
+                m_onInput();
+                return  true;
+            }
 
             switch (m_part) {
             case inputPart::Started:

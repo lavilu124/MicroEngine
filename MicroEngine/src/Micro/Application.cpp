@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 namespace Micro{
-	Application::Application(float windowWidth, float windowHeight, float maxFPS, const char* name, std::string scene) :m_window(sf::VideoMode(windowWidth, windowHeight), name,
+	Application::Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const char* scene) :m_window(sf::VideoMode(windowWidth, windowHeight), name,
 		sf::Style::Default), m_systemManager(m_window) {
 		
 		m_window.setFramerateLimit(maxFPS);
@@ -13,7 +13,7 @@ namespace Micro{
 		m_camera = &m_systemManager.GetCamera();
 	}
 
-	Application::Application(sf::Vector2f windowSize, float maxFPS, const char* name, std::string scene) :m_window(sf::VideoMode(windowSize.x, windowSize.y), name,
+	Application::Application(sf::Vector2f windowSize, float maxFPS, const char* name, const char* scene) :m_window(sf::VideoMode(windowSize.x, windowSize.y), name,
 		sf::Style::Default), m_systemManager(m_window){
 		m_window.setFramerateLimit(maxFPS);
 

@@ -51,12 +51,6 @@ namespace Micro{
 
 		void SetDarkness(int precent);
 
-		/*
-		
-		ls::LightValue GetLight(int index);
-
-		ls::LightSystem* GetLightSystem();*/
-
 	public:
 
 		static sf::Clock clock;

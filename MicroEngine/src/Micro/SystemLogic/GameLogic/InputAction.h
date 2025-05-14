@@ -13,7 +13,8 @@ namespace Micro{
         enum class MICRO_API inputType {
             KeyboardKey,
             ControllerButton,
-            MouseButton
+            MouseButton,
+            MouseMove
         };
 
         enum class MICRO_API inputPart {
