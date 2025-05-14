@@ -57,6 +57,7 @@ void SceneContent::Window()
 
 	if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
 		LightObject newLightObject("Light " + std::to_string(m_lightObjects.size() + 1));
+		newLightObject.color.Value.w = 1;
 		m_lightObjects.push_back(newLightObject);
 		m_newLightIndex = m_lightObjects.size() - 1;
 		if (isCurrentObjectLight && m_viewer->GetObject() != nullptr)

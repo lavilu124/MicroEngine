@@ -140,6 +140,7 @@ void ObjectViewer::DisplayLightObject() {
 	if (ImGui::InputFloat("##Rotation", &currentObject->rotation))
 	{
 		currentObject->rotation = min<float>(currentObject->rotation, 360.0f);
+		Light->UpdateVal();
 	}
 	ImGui::Unindent();
 
@@ -157,56 +158,60 @@ void ObjectViewer::DisplayLightObject() {
 
 	ImGui::Text("Intensity:");
 	ImGui::Indent();
-	float dispaledInt = Light->color.Value.w * 255.0f;
 	if (ImGui::InputFloat("##Intensity", &Light->color.Value.w))
 	{
-		Light->color.Value.w = min<float>(Light->color.Value.w, 255.0f) / 255.0f;
+		Light->color.Value.w = min<float>(Light->color.Value.w, 1.0f);
 		Light->UpdateVal();
 	}
 	ImGui::Unindent();
 
-	//ImGui::Text("Type:");
-	/*ImGui::Indent();
-	if (ImGui::RadioButton("Spot", Light->type == 0)) {
+	ImGui::Text("Type:");
+	ImGui::Indent();
+	if (ImGui::RadioButton("radial", Light->type == 0)) {
 		Light->type = 0;
 		Light->UpdateVal();
 	}
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Flash", Light->type == 1)) {
+	if (ImGui::RadioButton("directed", Light->type == 1)) {
 		Light->type = 1;
 		Light->UpdateVal();
 	}
-	ImGui::Unindent();*/
+	ImGui::Unindent();
 
-	/*if (Light->type == 0)
+	if (Light->type == 0)
 	{
-		ImGui::Text("Angle");
+		ImGui::Text("Radius");
 		ImGui::Indent();
-		if (ImGui::InputFloat("##Angle"))
+		float displayRad = Light->radius * 1.5;
+		if (ImGui::InputFloat("##Radius", &displayRad))
 		{
-			
+			Light->radius = min<float>(Light->radius, 512.0f) / 1.5;
+			Light->UpdateVal();
 		}
 		ImGui::Unindent();
-	}*/
 
-	ImGui::Text("Radius");
-	ImGui::Indent();
-	float displayRad = Light->radius * 1.5;
-	if (ImGui::InputFloat("##Radius", &displayRad))
-	{
-		Light->radius = min<float>(Light->radius, 512.0f) / 1.5;
-		Light->UpdateVal();
+		ImGui::Text("BeamAngle: ");
+		ImGui::Indent();
+		if (ImGui::InputFloat("##BeamAngle", &Light->beamAngle))
+		{
+			Light->beamAngle = min<float>(Light->beamAngle, 360);
+			Light->UpdateVal();
+		}
+		ImGui::Unindent();
 	}
-	ImGui::Unindent();
+	else if (Light->type == 1) {
+		ImGui::Text("Length");
+		ImGui::Indent();
+		float displayRad = Light->radius * 1.5;
+		if (ImGui::InputFloat("##Length", &displayRad))
+		{
+			Light->radius = min<float>(Light->radius, 512.0f) / 1.5;
+			Light->UpdateVal();
+		}
+		ImGui::Unindent();
+	}
 
-	ImGui::Text("BeamAngle: ");
-	ImGui::Indent();
-	if (ImGui::InputFloat("##BeamAngle", &Light->beamAngle))
-	{
-		Light->beamAngle = min<float>(Light->beamAngle, 360);
-		Light->UpdateVal();
-	}
-	ImGui::Unindent();
+	
 }
 
 void ObjectViewer::SetObject(Object* newObject, currentObjectType type)
