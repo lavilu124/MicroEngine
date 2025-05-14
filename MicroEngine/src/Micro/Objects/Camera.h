@@ -11,7 +11,7 @@ namespace Micro{
 
 		Camera(const float winodwWidth, const float windowHight);
 
-		void Follow(std::string& ObjectName);
+		void Follow(std::string ObjectName);
 		void Unfollow();
 
 		void SetCam(sf::RenderWindow& win);
@@ -22,17 +22,21 @@ namespace Micro{
 
 		void SetWindowSize(sf::Vector2f NewSize);
 
+		sf::View GetView() const;
+		void SetView(sf::View newView);
+
 	public:
 		sf::Vector2f position;
 		float rotation;
 		float zoom;
 
-		sf::View m_view;
+
 
 	private:
 		std::string m_objectName;
 		sf::RenderWindow* m_window;
 		sf::Vector2f m_windowSize;
+		sf::View m_view;
 	};
 }
 

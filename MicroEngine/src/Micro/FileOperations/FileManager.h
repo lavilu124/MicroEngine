@@ -24,7 +24,7 @@ namespace Micro{
 
 		void SetPaths();
 
-		std::string GetShaderPath(std::string& shadername);
+		std::string GetShaderPath(std::string& shadername) const;
 
 		std::vector<GameObject> GetObjects(std::string name, SystemManager* systemManger);
 
@@ -51,6 +51,6 @@ namespace Micro{
 		std::map <std::string, sf::SoundBuffer> m_buffers;
 
 		static std::string m_mainPath;
-		static int currentLog;
+		static int m_currentLog;
 	};
 }

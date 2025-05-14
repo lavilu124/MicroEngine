@@ -203,26 +203,26 @@ std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& ligh
 {
     light.Updating();
     if (light.type == 0) {
-        Micro::RadialLight radialLight(light.name, 0);
-        radialLight.setRange(light.radius);
-        radialLight.setColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
-        radialLight.setIntensity(light.color.Value.w);
+        Micro::RadialLight radialLight(light.name.c_str(), 0);
+        radialLight.SetRange(light.radius);
+        radialLight.SetColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
+        radialLight.SetIntensity(light.color.Value.w);
         radialLight.setPosition(1024 / 2, 1024 / 2);
         radialLight.setRotation(light.rotation);
 
-        radialLight.setBeamAngle(light.beamAngle);
-        std::vector<sfu::Line> vec;
-        radialLight.castLight(vec.begin(), vec.end());
+        radialLight.SetBeamAngle(light.beamAngle);
+        std::vector<ls::Line> vec;
+        radialLight.CastLight(vec.begin(), vec.end());
 
         renderTexture.clear(sf::Color::Transparent);
         renderTexture.draw(radialLight);
         renderTexture.display();
     }
     else if (light.type == 1) {
-        Micro::DirectedLight directedLight(light.name, 0);
-        directedLight.setBeamWidth(light.radius);
-        directedLight.setColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
-        directedLight.setIntensity(light.color.Value.w);
+        Micro::DirectedLight directedLight(light.name.c_str(), 0);
+        directedLight.SetBeamWidth(light.radius);
+        directedLight.SetColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
+        directedLight.SetIntensity(light.color.Value.w);
         directedLight.setPosition(1024 / 2, 1024 / 2);
         directedLight.setRotation(light.rotation);
 

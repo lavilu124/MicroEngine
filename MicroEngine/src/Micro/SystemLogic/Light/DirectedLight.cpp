@@ -15,7 +15,7 @@ namespace Micro{
         t.draw(m_polygon, st);
     }
 
-    void DirectedLight::resetColor(){
+    void DirectedLight::ResetColor(){
         int quads = m_polygon.getVertexCount() / 4;
         for(int i = 0; i < quads; i++){
             float p1 = i*4;
@@ -27,8 +27,8 @@ namespace Micro{
             sf::Vector2f r3 = m_polygon[p4].position;
             sf::Vector2f r4 = m_polygon[p3].position;
 
-            float dr1 = 1.f - m_fade * (sfu::magnitude(r2-r1) / m_range);
-            float dr2 = 1.f - m_fade * (sfu::magnitude(r4-r3) / m_range);
+            float dr1 = 1.f - m_fade * (ls::magnitude(r2-r1) / m_range);
+            float dr2 = 1.f - m_fade * (ls::magnitude(r4-r3) / m_range);
             m_polygon[p1].color = m_polygon[p2].color =
                 m_polygon[p3].color = m_polygon[p4].color = m_color;
             m_polygon[p2].color.a = m_color.a * dr1;
@@ -36,35 +36,35 @@ namespace Micro{
         }
     }
 
-    DirectedLight::DirectedLight(const std::string& name, int id) : LightSource(name, id){
+    DirectedLight::DirectedLight(const char* name, int id) : LightSource(name, id){
         m_id = id;
         m_polygon.setPrimitiveType(sf::Quads);
         m_polygon.resize(2);
-        setBeamWidth(10.f);
+        SetBeamWidth(10.f);
         // castLight();
     }
 
-    void DirectedLight::setBeamWidth(float width){
+    void DirectedLight::SetBeamWidth(float width){
         m_beamWidth = width;
     }
 
-    float DirectedLight::getBeamWidth() const{
+    float DirectedLight::GetBeamWidth() const{
         return m_beamWidth;
     }
 
-    struct LineParam: public sfu::Line{
+    struct LineParam: public ls::Line{
         float param;
-        LineParam(float f, const sfu::Line& l)
-            : sfu::Line(l)
+        LineParam(float f, const ls::Line& l)
+            : ls::Line(l)
             , param(f) { }
         LineParam(const sf::Vector2f& orig, const sf::Vector2f& dir, float p)
-            : sfu::Line(orig, orig + dir)
+            : ls::Line(orig, orig + dir)
             , param(p) { }
     };
     bool operator < (const LineParam& a, const LineParam& b){
         return a.param < b.param;
     }
-    void DirectedLight::castLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end){
+    void DirectedLight::CastLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end){
         sf::Transform trm = Transformable::getTransform();
         sf::Transform trm_i = trm.getInverse();
 
@@ -76,13 +76,13 @@ namespace Micro{
         sf::Vector2f lim2o = trm.transformPoint(0, widthHalf);
         sf::Vector2f lim2d = trm.transformPoint(m_range, widthHalf);
 
-        float off = 0.01/sfu::magnitude(lim2o - lim1o);
+        float off = 0.01/ls::magnitude(lim2o - lim1o);
         sf::Vector2f lightDir = lim1d - lim1o;
 
-        sfu::Line lim1(lim1o, lim1d);
-        sfu::Line lim2(lim2o, lim2d);
-        sfu::Line raySrc(lim1o, lim2o);
-        sfu::Line rayRng(lim1d, lim2d);
+        ls::Line lim1(lim1o, lim1d);
+        ls::Line lim2(lim2o, lim2d);
+        ls::Line raySrc(lim1o, lim2o);
+        ls::Line rayRng(lim1d, lim2d);
 
         std::priority_queue <LineParam> rays;
 
@@ -103,14 +103,14 @@ namespace Micro{
             float t;
             sf::Vector2f end = seg.m_origin;
             if(baseBeam.contains(trm_i.transformPoint(end))){
-                raySrc.intersection(sfu::Line(end, end-lightDir), t);
+                raySrc.intersection(ls::Line(end, end-lightDir), t);
                 rays.emplace(raySrc.point(t - off), lightDir, t - off);
                 rays.emplace(raySrc.point(t), lightDir, t);
                 rays.emplace(raySrc.point(t + off), lightDir, t + off);
             }
             end = seg.point(1.f);
             if(baseBeam.contains(trm_i.transformPoint(end))){
-                raySrc.intersection(sfu::Line(end, end-lightDir), t);
+                raySrc.intersection(ls::Line(end, end-lightDir), t);
                 rays.emplace(raySrc.point(t - off), lightDir, t - off);
                 rays.emplace(raySrc.point(t), lightDir, t);
                 rays.emplace(raySrc.point(t + off), lightDir, t + off);
@@ -121,7 +121,7 @@ namespace Micro{
 #ifdef CANDLE_DEBUG
         int deb_r = rays.size()*2 + 4;
         m_debug.resize(deb_r);
-        sfu::setColor(m_debug, sf::Color::Magenta);
+        ls::setColor(m_debug, sf::Color::Magenta);
         int i=0;
         m_debug[deb_r-1].color = m_debug[deb_r-2].color = sf::Color::Cyan;
         m_debug[deb_r-3].color = m_debug[deb_r-4].color = sf::Color::Yellow;
@@ -134,7 +134,7 @@ namespace Micro{
             LineParam r = rays.top();
 
             sf::Vector2f p1 = trm_i.transformPoint(r.m_origin);
-            sf::Vector2f p2 = trm_i.transformPoint(sfu::castRay(begin, end, r, m_range));
+            sf::Vector2f p2 = trm_i.transformPoint(ls::castRay(begin, end, r, m_range));
             points.push_back(p1);
             points.push_back(p2);
 #ifdef CANDLE_DEBUG
@@ -156,8 +156,8 @@ namespace Micro{
                 m_polygon[p3].position = points[r4];
                 m_polygon[p4].position = points[r3];
 
-                float dr1 = 1.f - m_fade * (sfu::magnitude(points[r2]-points[r1]) / m_range);
-                float dr2 = 1.f - m_fade * (sfu::magnitude(points[r4]-points[r3]) / m_range);
+                float dr1 = 1.f - m_fade * (ls::magnitude(points[r2]-points[r1]) / m_range);
+                float dr2 = 1.f - m_fade * (ls::magnitude(points[r4]-points[r3]) / m_range);
                 m_polygon[p1].color = m_polygon[p4].color = m_color;
                 m_polygon[p2].color = m_polygon[p3].color = m_color;
                 m_polygon[p2].color.a = m_color.a * dr1;

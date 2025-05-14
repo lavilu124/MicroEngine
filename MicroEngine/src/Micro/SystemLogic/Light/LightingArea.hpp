@@ -86,8 +86,8 @@ namespace Micro{
          * @brief Draw the object to the target.
          */
         void draw(sf::RenderTarget&, sf::RenderStates)const override;
-        sf::Color getActualColor() const;
-        void initializeRenderTexture(const sf::Vector2f& size);
+        sf::Color GetActualColor() const;
+        void InitializeRenderTexture(const sf::Vector2f& size);
     public:
         
         /**
@@ -117,7 +117,7 @@ namespace Micro{
          * transformations.
          * @returns Local bounding rectangle of the area.
          */
-        sf::FloatRect getLocalBounds() const;
+        sf::FloatRect GetLocalBounds() const;
         
         /**
          * @brief Get the global bounding rectangle of the area.
@@ -125,7 +125,7 @@ namespace Micro{
          * transformation already applied.
          * @returns Global bounding rectangle of the area.
          */
-        sf::FloatRect getGlobalBounds() const;
+        sf::FloatRect GetGlobalBounds() const;
         
         /**
          * @brief Set color of the fog/light. 
@@ -138,14 +138,14 @@ namespace Micro{
          * @param color
          * @see getAreaColor, setAreaOpacity
          */
-        void setAreaColor(sf::Color color);
+        void SetAreaColor(sf::Color color);
         
         /**
          * @brief Get color of the fog/light.
          * @returns The plain color of the fog/light.
          * @see setAreaColor, setAreaOpacity
          */
-        sf::Color getAreaColor() const;
+        sf::Color GetAreaColor() const;
         
         /**
          * @brief Set the opacity of the fog/light.
@@ -154,14 +154,14 @@ namespace Micro{
          * @param opacity
          * @see getAreaOpacity, setAreaColor
          */
-        void setAreaOpacity(float opacity);
+        void SetAreaOpacity(float opacity);
         
         /**
          * @brief Get the opacity of the fog/light.
          * @returns The opacity of the fog/light.
          * @see setAreaOpacity getAreaColor
          */
-        float getAreaOpacity() const;
+        float GetAreaOpacity() const;
         
         /**
          * @brief Set the texture of the fog/light.
@@ -171,14 +171,14 @@ namespace Micro{
          * is specified, the whole texture is used.
          * @see getAreaTexture
          */
-        void setAreaTexture(const sf::Texture* texture, sf::IntRect rect=sf::IntRect());
+        void SetAreaTexture(const sf::Texture* texture, sf::IntRect rect=sf::IntRect());
         
         /**
          * @brief Get the texture of the fog/light.
          * @returns Pointer to the texture of the fog/light.
          * @see getAreaTexture
          */
-        const sf::Texture* getAreaTexture() const;
+        const sf::Texture* GetAreaTexture() const;
         
         /**
          * @brief Set the rectangle of the used sub-section of the texture.
@@ -187,34 +187,34 @@ namespace Micro{
          * @param rect
          * @see getTextureRect
          */
-        void setTextureRect(const sf::IntRect& rect);
+        void SetTextureRect(const sf::IntRect& rect);
         
         /**
          * @brief Get the rectangle of the used sub-section of the texture.
          * @returns The rectangle of the used sub-section of the texture.
          * @see setTextureRect
          */
-        sf::IntRect getTextureRect() const;
+        sf::IntRect GetTextureRect() const;
         
         /**
          * @brief Set the lighting mode.
          * @param mode
          * @see LightingArea::Mode, setMode
          */
-        void setMode(Mode mode);
+        void SetMode(Mode mode);
         
         /**
          * @brief Set the lighting mode.
          * @returns The lighting mode.
          * @see LightingArea::Mode, setMode
          */
-        Mode getMode() const;
+        Mode GetMode() const;
         
         /**
          * @brief Updates and restores the color and the texture.
          * @details In FOG mode, it restores the covered areas.
          */
-        void clear();
+        void Clear();
         
         /**
          * @brief In FOG mode, makes visible the area illuminated by the light.
@@ -223,13 +223,13 @@ namespace Micro{
          * function has no effect. 
          * @param light
          */
-        void draw(const LightSource& light);
+        void Draw(const LightSource& light);
         
         /**
          * @brief Calls display on the sf::RenderTexture.
          * @details Updates the changes made since the last call to @ref clear.
          */
-        void display();
+        void Display();
     };
 }
 

@@ -14,7 +14,7 @@
 using std::filesystem::directory_iterator;
 
 
-int Micro::FileManager::currentLog = 0;
+int Micro::FileManager::m_currentLog = 0;
 std::string Micro::FileManager::m_mainPath = "";
 
 namespace Micro{
@@ -188,7 +188,7 @@ namespace Micro{
         }
     }
 
-    std::string FileManager::GetShaderPath(std::string& shadername) {
+    std::string FileManager::GetShaderPath(std::string& shadername) const  {
         return m_mainPath + "\\Resources\\graphics\\shaders\\" + shadername;
     }
 
@@ -252,27 +252,27 @@ namespace Micro{
 
 
             int type = currentObject["LightType"].asInt();
-			std::string name = currentObject["name"].asString();
+            std::string name = currentObject["name"].asString();
             sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
             sf::Color color = sf::Color(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
             float radius = currentObject["radius"].asFloat();
-            sfu::LightId light;
+            ls::LightId light;
 
 			switch (type) {
 			case 0: //Radial light
-                light = systemManager->AddLight(sfu::radial, name);
-                systemManager->GetLight<sfu::lightType::radial>(light)->setRange(radius);
-                systemManager->GetLight<sfu::lightType::radial>(light)->setColor(color);
-                systemManager->GetLight<sfu::lightType::radial>(light)->setPosition(position);
+                light = systemManager->AddLight(ls::radial, name.c_str());
+                systemManager->GetLight<ls::lightType::radial>(light)->SetRange(radius);
+                systemManager->GetLight<ls::lightType::radial>(light)->SetColor(color);
+                systemManager->GetLight<ls::lightType::radial>(light)->setPosition(position);
 				break;
 			case 1: //Directional light
-                light = systemManager->AddLight(sfu::directed, name);
-                systemManager->GetLight<sfu::lightType::directed>(light)->setRange(radius);
-                systemManager->GetLight<sfu::lightType::directed>(light)->setColor(color);
-				systemManager->GetLight<sfu::lightType::directed>(light)->setRotation(currentObject["angle"].asFloat());
+                light = systemManager->AddLight(ls::directed, name.c_str());
+                systemManager->GetLight<ls::lightType::directed>(light)->SetRange(radius);
+                systemManager->GetLight<ls::lightType::directed>(light)->SetColor(color);
+				systemManager->GetLight<ls::lightType::directed>(light)->setRotation(currentObject["angle"].asFloat());
 				break;
 			default:
-				MC_LOG("unknown light type in " + name);
+				MC_LOG(((std::string)"unknown light type in " + name));
 				break;
 			} 
         }
@@ -312,8 +312,8 @@ namespace Micro{
             }
         }
 
-        currentLog = maxLogNumber + 1;
-        std::string logFileName = logDir + "\\log" + std::to_string(currentLog) + ".log";
+        m_currentLog = maxLogNumber + 1;
+        std::string logFileName = logDir + "\\log" + std::to_string(m_currentLog) + ".log";
         std::ofstream logFile(logFileName);
 
         if (!logFile) {
@@ -324,11 +324,11 @@ namespace Micro{
     }
 
     void FileManager::Log(std::string msg) {
-		if (currentLog == 0) 
+		if (m_currentLog == 0) 
 			CreateLog();
 		
 
-        std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(currentLog) + ".log";
+        std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(m_currentLog) + ".log";
 
         std::ofstream logFile(logFileName, std::ios::app);
 

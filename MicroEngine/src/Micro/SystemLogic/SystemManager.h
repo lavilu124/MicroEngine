@@ -1,7 +1,6 @@
 #pragma once
 #include "../Core.h"
 #include "GameLogic/SceneManger.h"
-//#include "Light/include/LightSystem/LightSystem.hpp"
 #include "../../lightInclude.h"
 #include <vector>
 
@@ -19,32 +18,32 @@ namespace Micro{
 
 		void CreateGameObject(GameObject& ob);
 
-		void DestroyObject(std::string name);
+		void DestroyObject(const char* name);
 
 		std::vector<GameObject>& GetObjects();
 
-		GameObject* GetObjectByName(const std::string& name);
+		GameObject* GetObjectByName(const char* name);
 
-		bool CheckForCollision(sf::Sprite sprite, std::string name, Collision::collisionLayer layerToCollideWith = Collision::ALL, GameObject* collideInfo = nullptr);
+		bool CheckForCollision(sf::Sprite sprite, const char* name, Collision::collisionLayer layerToCollideWith = Collision::ALL, GameObject* collideInfo = nullptr);
 
 		void RunInput(sf::Event event);
 
-		void LoadScene(std::string scene);
+		void LoadScene(const char* scene);
 
 		Camera& GetCamera();
 
 		FileManager& GetFileManager();
 
-		sfu::LightId AddLight(sfu::lightType type, const std::string& name);
+		ls::LightId AddLight(ls::lightType type, const char* name);
 
 
-		void RemoveLight(sfu::LightId id);
+		void RemoveLight(ls::LightId id);
 
-		template <sfu::lightType T>
-		auto GetLight(sfu::LightId Id);
+		template <ls::lightType T>
+		auto GetLight(ls::LightId Id);
 
-		template <sfu::lightType T>
-		auto GetLight(const std::string& name);
+		template <ls::lightType T>
+		auto GetLight(const char* name);
 
 		void AddEdge(sf::Vector2f a, sf::Vector2f b);
 		void RemoveEdge(sf::Vector2f a, sf::Vector2f b);
@@ -60,11 +59,9 @@ namespace Micro{
 	private:
 		void Start();
 
-		int CheckExistingObject(std::string name);
+		int CheckExistingObject(const char* name);
 
 	private:
-
-		//ls::LightSystem m_lightSystem;
 
 		SceneManger m_sceneManager;
 		FileManager m_fileManager;
@@ -80,31 +77,31 @@ namespace Micro{
 
 	
 
-	template <sfu::lightType T>
-	auto SystemManager::GetLight(sfu::LightId Id) {
+	template <ls::lightType T>
+	auto SystemManager::GetLight(ls::LightId Id) {
 
 		for (int i = 0; i < m_sceneManager.lights.size(); i++)
 		{
-			if (m_sceneManager.lights[i]->getID() == Id.id)
+			if (m_sceneManager.lights[i]->GetID() == Id.id)
 			{
-				if constexpr (T == sfu::lightType::radial)
+				if constexpr (T == ls::lightType::radial)
 					return static_cast<RadialLight*>(m_sceneManager.lights[i].get());
-				if constexpr (T == sfu::lightType::directed)
+				if constexpr (T == ls::lightType::directed)
 					return static_cast<DirectedLight*>(m_sceneManager.lights[i].get());
 			}
 		}
 	}
 
-	template<sfu::lightType T>
-	auto SystemManager::GetLight(const std::string& name)
+	template<ls::lightType T>
+	auto SystemManager::GetLight(const char* name)
 	{
 		for (int i = 0; i < m_sceneManager.lights.size(); i++)
 		{
 			if (m_sceneManager.lights[i]->getName() == name)
 			{
-				if constexpr (T == sfu::lightType::radial)
+				if constexpr (T == ls::lightType::radial)
 					return static_cast<RadialLight*>(m_sceneManager.lights[i].get());
-				if constexpr (T == sfu::lightType::directed)
+				if constexpr (T == ls::lightType::directed)
 					return static_cast<DirectedLight*>(m_sceneManager.lights[i].get());
 			}
 		}

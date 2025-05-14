@@ -25,9 +25,9 @@ namespace Micro{
 
     private:
         //all the variable to keep track of the animation
-        float Speed;
-        float Counter = 0;
-        int Index = 0;
-        sf::Sprite CurrentSprite;
+        float m_speed;
+        float m_counter = 0;
+        int m_index = 0;
+        sf::Sprite m_currentSprite;
     };
 }

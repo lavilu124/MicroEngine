@@ -1,7 +1,7 @@
 #include "Color.hpp"
 
 
-namespace sfu{
+namespace ls{
     sf::Color darken(const sf::Color& c, float r){
         return sf::Color(c.r * (1.f-r), c.g * (1.f-r), c.b * (1.f-r), c.a);
     }

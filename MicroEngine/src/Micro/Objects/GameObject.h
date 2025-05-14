@@ -9,7 +9,7 @@ namespace Micro{
 	class MICRO_API GameObject
 	{
 	public:
-		GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER);
+		GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER);
 
 		bool IsFacingRight();
 
@@ -34,7 +34,7 @@ namespace Micro{
 		virtual void Start();
 		virtual void Update(float DeltaTime);
 
-		std::string GetName();
+		std::string GetName() const;
 
 	private:
 		void SetCenter();

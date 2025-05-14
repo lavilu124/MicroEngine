@@ -12,7 +12,7 @@
 
 #include "../../../core.h"
 
-namespace sfu{
+namespace ls{
     /**
      * @brief 2D %Line defined by an origin point and a direction vector.
      */
@@ -109,9 +109,9 @@ namespace sfu{
     /**
      * @brief Cast a ray against a set of segments.
      * @details Use a line as a ray, casted from its
-     * [origin](@ref sfu::Line::m_origin) in its
-     * [direction](@ref sfu::Line::m_direction). It is intersected with * a set
-     * of segments, represented as [Lines](sfu::Line) too, and the one closest
+     * [origin](@ref ls::Line::m_origin) in its
+     * [direction](@ref ls::Line::m_direction). It is intersected with * a set
+     * of segments, represented as [Lines](ls::Line) too, and the one closest
      * to the cast point is returned.
      *
      * Segments are interpreted to be delimited by the @p ray.m_origin and
@@ -129,7 +129,7 @@ namespace sfu{
                          Line ray,
                          float maxRange=std::numeric_limits<float>::infinity()){
         float minRange = maxRange;
-        ray.m_direction = sfu::normalize(ray.m_direction);
+        ray.m_direction = ls::normalize(ray.m_direction);
         for(auto it = begin; it != end; it++){
             float t_seg, t_ray;
             if(
