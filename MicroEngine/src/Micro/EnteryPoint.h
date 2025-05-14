@@ -4,7 +4,7 @@
 
 #ifdef MC_PLATFORM_WINDOWS
 
-extern Micro::Application* Micro::CreateApplication(std::string scene);
+extern Micro::Application* Micro::CreateApplication(const char* scene);
 
 int main(int argc, char** argv) {
 	std::string scene = "";
@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 		scene = argv[1];
 	}
 
-	auto app = Micro::CreateApplication(scene);
+	auto app = Micro::CreateApplication(scene.c_str());
 
 	if (!app) {
 		return -1;

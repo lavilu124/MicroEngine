@@ -18,6 +18,9 @@ namespace Micro{
 	public:
 		void LoadInput();
 		void AddInputFunc(std::string name, void(*function)());
+		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput, std::string OffInput);
+
+		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput);
 
 		void SetPaths();
 
@@ -33,9 +36,7 @@ namespace Micro{
 
 	private:
 		void GetFilesInDir(std::string Dir);
-		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput, std::string OffInput);
-
-		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput);
+		
 		void LoadAsset(std::string FileName);
 
 	private:
