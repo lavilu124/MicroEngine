@@ -201,23 +201,37 @@ void SceneViewer::RenderLights()
 
 std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& light)
 {
-    light.UpdateVal();
+    light.Updating();
+    if (light.type == 0) {
+        Micro::RadialLight radialLight(light.name, 0);
+        radialLight.setRange(light.radius);
+        radialLight.setColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
+        radialLight.setIntensity(light.color.Value.w);
+        radialLight.setPosition(1024 / 2, 1024 / 2);
+        radialLight.setRotation(light.rotation);
 
-    Micro::RadialLight radialLight(light.name, 0);
-    radialLight.setRange(light.radius);
-    radialLight.setColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
-    radialLight.setIntensity(light.color.Value.w);
-    radialLight.setPosition(1024/2, 1024 / 2);
+        radialLight.setBeamAngle(light.beamAngle);
+        std::vector<sfu::Line> vec;
+        radialLight.castLight(vec.begin(), vec.end());
 
-    radialLight.setBeamAngle(light.beamAngle);
-    std::vector<sfu::Line> vec;
-    radialLight.castLight(vec.begin(), vec.end());
+        renderTexture.clear(sf::Color::Transparent);
+        renderTexture.draw(radialLight);
+        renderTexture.display();
+    }
+    else if (light.type == 1) {
+        Micro::DirectedLight directedLight(light.name, 0);
+        directedLight.setBeamWidth(light.radius);
+        directedLight.setColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
+        directedLight.setIntensity(light.color.Value.w);
+        directedLight.setPosition(1024 / 2, 1024 / 2);
+        directedLight.setRotation(light.rotation);
 
-    renderTexture.clear(sf::Color::Transparent);
-    renderTexture.draw(radialLight);
-    renderTexture.display();
+        renderTexture.clear(sf::Color::Transparent);
+        renderTexture.draw(directedLight);
+        renderTexture.display();
+    }
+    
     const sf::Texture& texture = renderTexture.getTexture();
-
     std::string path = std::filesystem::current_path().string() + "\\temp.png";
     texture.copyToImage().saveToFile("temp.png");
     auto returnVal = std::make_shared<Walnut::Image>(path);

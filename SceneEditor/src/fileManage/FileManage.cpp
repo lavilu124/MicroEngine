@@ -42,7 +42,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		lightObjectJson["color"][0] = content->GetLights()[i].color.Value.x;
 		lightObjectJson["color"][1] = content->GetLights()[i].color.Value.y;
 		lightObjectJson["color"][2] = content->GetLights()[i].color.Value.z;
-		lightObjectJson["color"][3] = content->GetLights()[i].color.Value.w; // Intensity
+		lightObjectJson["color"][3] = content->GetLights()[i].color.Value.w * 255.0f; // Intensity
 		lightObjectJson["angle"] = content->GetLights()[i].rotation; // Assuming rotation is the angle
 		lightObjectJson["radius"] = content->GetLights()[i].radius;
 		sceneJson[lightKey] = lightObjectJson;

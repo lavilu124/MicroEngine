@@ -2,6 +2,7 @@
 
 
 LightObject::LightObject(std::string name, ImVec2 position, float rotation, float beamAngle, int type, ImColor color, float radius) : Object(name, position, rotation), type(type), color(color), radius(radius), beamAngle(beamAngle) {
+	color.Value.w = 1;
 }
 
 void LightObject::UpdateVal()
