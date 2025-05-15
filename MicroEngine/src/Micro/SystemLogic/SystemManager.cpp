@@ -140,6 +140,11 @@ namespace Micro {
 
     ls::LightId SystemManager::AddLight(ls::lightType type, const char* name)
     {
+        for (int i = 0; i < m_sceneManager.lights.size(); i++)
+        {
+            if (m_sceneManager.lights[i]->GetName() == name)
+                throw std::runtime_error("a light with this name already exist");
+        }
         switch (type)
         {
         case ls::lightType::directed:
