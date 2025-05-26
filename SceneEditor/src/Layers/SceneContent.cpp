@@ -6,13 +6,23 @@
 #include "../include/json/value.h"
 #include <fstream>
 
-SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const std::shared_ptr<ProjectDirectory>& directory) : m_viewer(viewer), m_Directory(directory)
+SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const std::shared_ptr<ProjectDirectory>& directory) : m_viewer(viewer), m_directory(directory)
 {
 }
 
 void SceneContent::OnUIRender()
 {
 	Window();
+
+	if (m_viewer->Delete()) {
+		if (m_isCurrentObjectLight) {
+			m_lightObjects.erase(m_lightObjects.begin() + m_indexOfCurrentOb);
+		}
+		else {
+			m_gameObjects.erase(m_gameObjects.begin() + m_indexOfCurrentOb);
+		}
+		m_viewer->SetObject(nullptr, currentObjectType::light);
+	}
 }
 
 std::vector<GameObject>& SceneContent::GetGameObjects()
@@ -33,7 +43,7 @@ void SceneContent::Window()
 		ImGui::Text("No Objects");
 	}
 
-	std::string newScene = m_Directory->getNewScene();
+	std::string newScene = m_directory->getNewScene();
 	if (newScene != "") {
 		SetNewScene(newScene);
 	}
@@ -51,8 +61,8 @@ void SceneContent::Window()
 		GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
 		m_gameObjects.push_back(newGameObject);
 		m_NewGameObIndex = m_gameObjects.size() - 1;
-		if (!isCurrentObjectLight && m_viewer->GetObject() != nullptr)
-			m_viewer->SetObject(&m_gameObjects[indexOfCurrentOb], currentObjectType::game);
+		if (!m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
+			m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::game);
 	}
 
 	if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
@@ -60,8 +70,8 @@ void SceneContent::Window()
 		newLightObject.color.Value.w = 1;
 		m_lightObjects.push_back(newLightObject);
 		m_newLightIndex = m_lightObjects.size() - 1;
-		if (isCurrentObjectLight && m_viewer->GetObject() != nullptr)
-			m_viewer->SetObject(&m_gameObjects[indexOfCurrentOb], currentObjectType::light);
+		if (m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
+			m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::light);
 	}
 
 	ImGui::End();
@@ -80,8 +90,8 @@ void SceneContent::RenderObjectList()
 	for (int i = 0; i < m_gameObjects.size(); i++) {
 		if (ImGui::Button(m_gameObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
-			indexOfCurrentOb = i;
-			isCurrentObjectLight = false;
+			m_indexOfCurrentOb = i;
+			m_isCurrentObjectLight = false;
 		}
 	}
 	ImGui::Unindent();
@@ -116,8 +126,8 @@ void SceneContent::RenderLightList()
 	for (int i = 0; i < m_lightObjects.size(); i++) {
 		if (ImGui::Button(m_lightObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_lightObjects[i], currentObjectType::light);
-			indexOfCurrentOb = i;
-			isCurrentObjectLight = true;
+			m_indexOfCurrentOb = i;
+			m_isCurrentObjectLight = true;
 		}
 	}
 	ImGui::Unindent();
@@ -238,5 +248,5 @@ std::string SceneContent::GetDirForSprite(std::string sprite, std::string dir)
 
 std::shared_ptr<ProjectDirectory> SceneContent::GetDir()
 {
-	return m_Directory;
+	return m_directory;
 }

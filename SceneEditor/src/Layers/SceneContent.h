@@ -35,11 +35,11 @@ private:
 	int m_newLightIndex = -1;
 	int m_NewGameObIndex = -1;
 
-	int indexOfCurrentOb = -1;
-	bool isCurrentObjectLight = false;
+	int m_indexOfCurrentOb = -1;
+	bool m_isCurrentObjectLight = false;
 
 	std::shared_ptr<ObjectViewer> m_viewer;
-	std::shared_ptr<ProjectDirectory> m_Directory;
+	std::shared_ptr<ProjectDirectory> m_directory;
 
 	std::string m_currentScene = "";
 };

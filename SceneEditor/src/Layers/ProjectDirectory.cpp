@@ -186,7 +186,7 @@ void ProjectDirectory::ShowMapsInDir(int columnIndex)
             }
             if (ImGui::IsItemClicked())
             {
-                newScene = mapPath.string();
+                m_newScene = mapPath.string();
             }
 
             std::string fileName = mapPath.filename().string();
@@ -206,8 +206,8 @@ void ProjectDirectory::ShowMapsInDir(int columnIndex)
 
 std::string ProjectDirectory::getNewScene()
 {
-    std::string returnFile = newScene;
-    newScene = "";
+    std::string returnFile = m_newScene;
+    m_newScene = "";
     return returnFile;
 }
 

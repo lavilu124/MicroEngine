@@ -1,4 +1,3 @@
-add a delete object button in the scene editor
 add ui elements(text and buttons)
 adding custom objects scripts in the scene editor
 project creation
