@@ -54,7 +54,7 @@ private:
 	std::shared_ptr<Walnut::Image> m_returnIcon;
 
 
-	std::string newScene = "";
+	std::string m_newScene = "";
 
 	static std::string m_copyPaths[30];
 	static int m_copySize;

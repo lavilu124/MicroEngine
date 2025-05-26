@@ -20,6 +20,10 @@ public:
 
 	Object* GetObject() const;
 
+	bool Delete();
+
+	void OnAttach() override;
+
 private:
 	void Window();
 	void DisplayGameObject();
@@ -27,8 +31,14 @@ private:
 	void DisplayLightObject();
 
 private:
-	Object* currentObject = nullptr;
-	std::string currentObjectName = "";
-	currentObjectType m_CurrentObjectType;
-	std::shared_ptr<ProjectDirectory> m_ProjectDirectory;
+	Object* m_currentObject = nullptr;
+	std::string m_currentObjectName = "";
+	currentObjectType m_currentObjectType;
+
+	std::shared_ptr<ProjectDirectory> m_projectDirectory;
+
+	bool m_toDelete = false;
+
+	std::shared_ptr<Walnut::Image> m_deleteIcon;
+
 };
