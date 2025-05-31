@@ -31,10 +31,6 @@ public:
 			sf::Vector2f(0.f, 300.f));
 
 
-		Player* test = dynamic_cast<Player*>(m_systemManager.GetObjectByName("1"));
-		if (test) {
-			
-		}
 	}
 
 	void Run() override {
