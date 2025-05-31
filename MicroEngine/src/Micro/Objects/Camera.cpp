@@ -52,8 +52,8 @@ namespace Micro{
 
 	void Camera::Update(SystemManager& systemManager) {
 		if (m_objectName != "") {
-			if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName.c_str())->GetPosition())
-				m_view.setCenter(systemManager.GetObjectByName(m_objectName.c_str())->GetPosition());
+			//if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName.c_str())->GetPosition())
+			//	m_view.setCenter(systemManager.GetObjectByName(m_objectName.c_str())->GetPosition());
 		}
 		else if (m_view.getCenter() != position) {
 			m_view.setCenter(position);

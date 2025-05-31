@@ -16,7 +16,7 @@ namespace Micro{
 
 	public:
 		Camera camera;
-		std::vector<GameObject> objects;
+		std::vector<std::shared_ptr<Micro::GameObject>> objects;
 		std::vector<std::shared_ptr<LightSource>> lights;
 		EdgeVector edges;
 	};

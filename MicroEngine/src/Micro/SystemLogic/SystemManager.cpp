@@ -1,4 +1,4 @@
-#include "SystemManager.h"
+﻿#include "SystemManager.h"
 
 
 namespace Micro {
@@ -32,8 +32,8 @@ namespace Micro {
     void SystemManager::Start() {
         if (m_sceneManager.objects.empty()) return;
 
-        for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-            (*it).Start();
+        for (auto it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
+            (*it)->Start();
     }
 
     void SystemManager::Update(Camera* cam) {
@@ -45,8 +45,8 @@ namespace Micro {
         }
 
 
-        for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-            (*it).Update(deltaTime);
+        for (auto it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
+            (*it)->Update(deltaTime);
 
         deltaTimeT = clock.restart();
         deltaTime = deltaTimeT.asSeconds();
@@ -64,9 +64,8 @@ namespace Micro {
     }
 
     void SystemManager::Render(sf::RenderWindow& window) {
-        //m_lightSystem.setView(window.getView());
-        for (std::vector<GameObject>::iterator it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-            window.draw((*it).GetSprite());
+        for (auto it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
+            window.draw((*it)->GetSprite());
 
         window.draw(m_lighting);
 
@@ -77,29 +76,34 @@ namespace Micro {
     }
 
     int SystemManager::CheckExistingObject(const char* name) {
-        for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
-            if (m_sceneManager.objects[i].GetName() == name) {
-                return i;
-            }
-        }
+        auto it = std::find_if(m_sceneManager.objects.begin(), m_sceneManager.objects.end(),
+            [&](const std::shared_ptr<GameObject>& obj) {
+                return obj->GetName() == name;
+            });
 
-        return -1;
+        return (it != m_sceneManager.objects.end()) ? std::distance(m_sceneManager.objects.begin(), it) : -1;
     }
 
-    bool SystemManager::CheckForCollision(sf::Sprite sprite, const char* name, Collision::collisionLayer layerToCollideWith, GameObject* collideInfo){
-        for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
-            if (m_sceneManager.objects[i].GetName() != name && (m_sceneManager.objects[i].GetLayer() == layerToCollideWith || (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i].GetLayer() < 6))) {
-                if (Collision::PixelPerfectCollision(sprite, m_sceneManager.objects[i].GetSprite())) {
-                    if (collideInfo != nullptr) {
-                        collideInfo = &m_sceneManager.objects[i];
-                    }
 
+    bool SystemManager::CheckForCollision(sf::Sprite sprite, const char* name, GameObject*& collideInfo, Collision::collisionLayer layerToCollideWith) {
+        if (layerToCollideWith == 7)
+            return false;
+
+        for (int i = 0; i < m_sceneManager.objects.size(); ++i) {
+            if (m_sceneManager.objects[i]->GetName() != name &&
+                (m_sceneManager.objects[i]->GetLayer() == layerToCollideWith ||
+                    (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i]->GetLayer() != 7))) {
+
+                if (Collision::PixelPerfectCollision(sprite, m_sceneManager.objects[i]->GetSprite())) {
+                    collideInfo = m_sceneManager.objects[i].get();
                     return true;
                 }
             }
         }
+
         return false;
     }
+
 
     void SystemManager::RunInput(sf::Event event)  {
         for (std::map<std::string, Input::InputAction>::iterator Input = m_fileManager.inputs.begin(); Input != m_fileManager.inputs.end(); ++Input)
@@ -115,18 +119,21 @@ namespace Micro {
 
     Camera& SystemManager::GetCamera() { return m_sceneManager.camera; }
 
-    void SystemManager::CreateGameObject(GameObject& ob) {
-        if (!CheckExistingObject(ob.GetName().c_str()))
-            m_sceneManager.objects.push_back(ob);
+    void SystemManager::CreateGameObject(std::shared_ptr<GameObject> ob) {
+        if (CheckExistingObject(ob->GetName().c_str()) == -1)
+            m_sceneManager.objects.push_back(std::move(ob));
     }
 
-    std::vector<GameObject>& SystemManager::GetObjects() {
+    std::vector<std::shared_ptr<GameObject>>& SystemManager::GetObjects() {
         return m_sceneManager.objects;
     }
 
 
     GameObject* SystemManager::GetObjectByName(const char* name) {
-        return &m_sceneManager.objects[CheckExistingObject(name)];
+        int index = CheckExistingObject(name);
+        if (index != -1)
+            return m_sceneManager.objects[index].get();
+        return nullptr;
     }
 
     void SystemManager::DestroyObject(const char* name) {
@@ -162,8 +169,10 @@ namespace Micro {
     {
         for (int i = 0; i < m_sceneManager.lights.size(); i++)
         {
-            if (m_sceneManager.lights[i]->GetID() == id.id)
+            if (m_sceneManager.lights[i]->GetID() == id.id) {
                 m_sceneManager.lights.erase(m_sceneManager.lights.begin() + i);
+                break;
+            }
         }
     }
 

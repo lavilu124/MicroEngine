@@ -8,6 +8,7 @@
 
 
 
+
 namespace Micro {
 	class MICRO_API  ObjectManager
 	{
@@ -35,15 +36,15 @@ namespace Micro {
 		std::unordered_map<std::string, CreatorFunc> m_creators;
 	};
 
-	#define REGISTER_GAMEOBJECT(classType) \
-		namespace { \
-			const bool registered_##classType = []() { \
-				Micro::GameObjectFactory::Instance().Register(#classType, \
-					[](Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer) -> std::unique_ptr<Micro::GameObject> { \
-						return std::make_unique<classType>(systemManager, sprite, name, layer); \
-					}); \
-				return true; \
-			}(); \
-		}
-
 }
+
+#define REGISTER_GAMEOBJECT(classType) \
+	namespace { \
+		const bool registered_##classType = []() { \
+			Micro::ObjectManager::Instance().Register(#classType, \
+				[](Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer) -> std::unique_ptr<Micro::GameObject> { \
+					return std::make_unique<classType>(systemManager, sprite, name, layer); \
+				}); \
+			return true; \
+		}(); \
+	}
