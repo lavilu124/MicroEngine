@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "../SystemLogic/GameLogic/InputAction.h"
-#include "..//Objects/GameObject.h"
+#include "../Objects/ObjectManager.h"
 #include "../Core.h"
 
 namespace Micro{
