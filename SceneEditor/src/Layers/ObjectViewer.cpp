@@ -121,13 +121,37 @@ void ObjectViewer::DisplayGameObject()
     ImGui::Spacing();
 
     ImGui::Text("Sprite:");
+    ImGui::Indent();
+
+    ImVec2 dropAreaSize = ImVec2(200, 200); 
+    ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+    // Draw the drop area background
+    drawList->AddRectFilled(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(50, 50, 50, 100));
+    drawList->AddRect(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(255, 255, 255, 255));
+
+    ImGui::InvisibleButton("##SpriteDropArea", dropAreaSize);
+
+    // Handle drop
     if (ImGui::IsItemHovered() && m_projectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
         GameOj->SetPath(m_projectDirectory->GetSelectedPath());
     }
-    m_projectDirectory->ClearSelectedPath();
     if (ImGui::IsItemHovered()) {
         ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        ImGui::SetTooltip("Drop a sprite from the File Explorer here");
     }
+    m_projectDirectory->ClearSelectedPath();
+
+    // Display the sprite if available
+    if (GameOj->sprite && GameOj->sprite->GetDescriptorSet()) {
+        ImVec2 imageSize = ImVec2((float)GameOj->sprite->GetWidth(), (float)GameOj->sprite->GetHeight());
+        ImVec2 imagePos = ImVec2(cursorPos.x + (dropAreaSize.x - imageSize.x) / 2, cursorPos.y + (dropAreaSize.y - imageSize.y) / 2);
+        drawList->AddImage(GameOj->sprite->GetDescriptorSet(), imagePos, ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y));
+    }
+
+    ImGui::Unindent();
+
 
     ImGui::Indent();
     try {

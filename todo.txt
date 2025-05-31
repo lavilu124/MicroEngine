@@ -1,7 +1,5 @@
 add ui elements(text and buttons)
 adding custom objects scripts in the scene editor
-fix place image on game object bug
-
 
 maybe:
 multiplayer and/or multiscreen(local multiplayer)
