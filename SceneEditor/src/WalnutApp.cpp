@@ -19,7 +19,6 @@
 #define SELECTOR_HEIGHT 600
 #define SELECTOR_WIDTH 800
 
-// Forward declare
 void InitMainLayers(Walnut::Application* app, const std::string& projectPath);
 
 void OnFileDrop(GLFWwindow* window, int count, const char** paths)
@@ -36,10 +35,9 @@ enum class AppState
     MainApp
 };
 
-// Recent projects utility functions
 static std::string GetRecentProjectsPath()
 {
-    return "recent.txt"; // Could be improved to use platform-specific app data folder
+    return "recent.txt";
 }
 
 static std::vector<std::string> LoadRecentProjects()
@@ -58,17 +56,19 @@ static std::vector<std::string> LoadRecentProjects()
 static void SaveRecentProject(const std::string& path)
 {
     std::vector<std::string> recent = LoadRecentProjects();
-
-    // Remove the path if it already exists to avoid duplicates
     recent.erase(std::remove(recent.begin(), recent.end(), path), recent.end());
-
-    // Add to front
     recent.insert(recent.begin(), path);
-
-    // Limit to max 10 entries
     if (recent.size() > 10)
         recent.resize(10);
+    std::ofstream out(GetRecentProjectsPath(), std::ios::trunc);
+    for (const auto& p : recent)
+        out << p << '\n';
+}
 
+static void RemoveRecentProject(const std::string& path)
+{
+    std::vector<std::string> recent = LoadRecentProjects();
+    recent.erase(std::remove(recent.begin(), recent.end(), path), recent.end());
     std::ofstream out(GetRecentProjectsPath(), std::ios::trunc);
     for (const auto& p : recent)
         out << p << '\n';
@@ -90,20 +90,13 @@ static bool CopyDirectory(const std::filesystem::path& source, const std::filesy
             auto targetPath = destination / relativePath;
 
             if (entry.is_directory())
-            {
                 std::filesystem::create_directories(targetPath);
-            }
             else if (entry.is_regular_file())
-            {
                 std::filesystem::copy_file(path, targetPath, std::filesystem::copy_options::overwrite_existing);
-            }
         }
         return true;
     }
-    catch (...)
-    {
-        return false;
-    }
+    catch (...) { return false; }
 }
 
 static bool CreateNewProjectStructure(const std::filesystem::path& basePath, const std::string& projectName)
@@ -111,32 +104,25 @@ static bool CreateNewProjectStructure(const std::filesystem::path& basePath, con
     try
     {
         std::filesystem::path projectRoot = basePath / projectName;
-
         if (std::filesystem::exists(projectRoot))
-            return false; // Project already exists
+            return false;
 
-        // Define template paths (you may want to make these configurable)
         std::filesystem::path templatePath = "setupProject";
         std::filesystem::path enginePath = "../MicroEngine";
         std::filesystem::path depPath = "../dependencies";
 
-        // Copy setupProject contents
-        if (!CopyDirectory(templatePath, projectRoot))
-            return false;
+        if (!CopyDirectory(templatePath, projectRoot)) return false;
+        if (!CopyDirectory(enginePath, projectRoot / "MicroEngine")) return false;
+        if (!CopyDirectory(depPath, projectRoot / "dependencies")) return false;
 
-        // Copy MicroEngine folder inside new project
-        if (!CopyDirectory(enginePath, projectRoot / "MicroEngine"))
-            return false;
 
-        if (!CopyDirectory(depPath, projectRoot / "dependencies"))
-            return false;
+        std::filesystem::path setupScript = projectRoot / "Scripts" / "Setup-Windows.bat";
+        if (!std::filesystem::exists(setupScript)) return false;
 
-        return true;
+        int result = system(setupScript.string().c_str());
+        return result == 0;
     }
-    catch (...)
-    {
-        return false;
-    }
+    catch (...) { return false; }
 }
 
 class ProjectSelector : public Walnut::Layer
@@ -150,15 +136,14 @@ public:
 
     virtual void OnUIRender() override
     {
+        bool openConfirmDeletePopup = false;
+
         if (m_State == AppState::ProjectSelection)
         {
             ImGui::SetNextWindowSize(ImVec2(SELECTOR_WIDTH, SELECTOR_HEIGHT), ImGuiCond_Always);
             ImGui::Begin("Select Project", nullptr,
-                ImGuiWindowFlags_NoTitleBar |
-                ImGuiWindowFlags_NoResize |
-                ImGuiWindowFlags_NoMove |
-                ImGuiWindowFlags_NoCollapse |
-                ImGuiWindowFlags_NoScrollbar);
+                ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
 
             ImGui::Text("Choose a project directory:");
             ImGui::Separator();
@@ -166,43 +151,50 @@ public:
             if (ImGui::Button("Open Project..."))
             {
                 const char* selectedFolder = tinyfd_selectFolderDialog("Select Project Folder", "");
-                if (selectedFolder)
-                {
+                if (selectedFolder) {
                     m_ProjectPath = selectedFolder;
                     m_NeedsResize = true;
                 }
             }
+
             ImGui::SameLine();
             if (ImGui::Button("Create New Project"))
             {
                 m_CreateProjectPath.clear();
                 m_CreateProjectName.clear();
-
                 memset(m_BasePathBuffer, 0, sizeof(m_BasePathBuffer));
                 memset(m_ProjectNameBuffer, 0, sizeof(m_ProjectNameBuffer));
-
                 ImGui::OpenPopup("Create New Project");
             }
 
             ImGui::Separator();
             ImGui::Text("Recent Projects:");
 
-            for (const auto& path : m_RecentProjects)
+            for (size_t i = 0; i < m_RecentProjects.size(); ++i)
             {
+                const std::string& path = m_RecentProjects[i];
+                ImGui::PushID(static_cast<int>(i));
                 if (ImGui::Button(path.c_str()))
                 {
                     m_ProjectPath = path;
                     m_NeedsResize = true;
                 }
+                ImGui::SameLine();
+                if (ImGui::Button("X"))
+                {
+                    m_ProjectToDeleteIndex = static_cast<int>(i);
+                    m_ProjectToDeletePath = path;
+                    openConfirmDeletePopup = true;
+                }
+                ImGui::PopID();
             }
 
             if (!m_ProjectPath.empty())
                 ImGui::Text("Selected: %s", m_ProjectPath.c_str());
 
-            
+            if (openConfirmDeletePopup)
+                ImGui::OpenPopup("Confirm Delete");
 
-
-            ImGui::SetNextWindowSize(ImVec2(400, 160), ImGuiCond_Appearing);
             if (ImGui::BeginPopupModal("Create New Project", NULL, ImGuiWindowFlags_NoResize))
             {
                 ImGui::Text("Select base folder:");
@@ -221,12 +213,11 @@ public:
 
                 if (ImGui::Button("Create"))
                 {
-                    m_CreateProjectPath = std::string(m_BasePathBuffer);
-                    m_CreateProjectName = std::string(m_ProjectNameBuffer);
+                    m_CreateProjectPath = m_BasePathBuffer;
+                    m_CreateProjectName = m_ProjectNameBuffer;
 
                     if (!m_CreateProjectPath.empty() && !m_CreateProjectName.empty())
                     {
-
                         bool success = CreateNewProjectStructure(m_CreateProjectPath, m_CreateProjectName);
                         if (success)
                         {
@@ -234,16 +225,11 @@ public:
                             m_NeedsResize = true;
                             ImGui::CloseCurrentPopup();
                         }
-                        else
-                        {
-                            m_ErrorMessage = "Failed to create project (folder may already exist).";
-                        }
+                        else m_ErrorMessage = "Failed to create project (folder may already exist).";
                     }
-                    else
-                    {
-                        m_ErrorMessage = "Please specify both base path and project name.";
-                    }
+                    else m_ErrorMessage = "Please specify both base path and project name.";
                 }
+
                 ImGui::SameLine();
                 if (ImGui::Button("Cancel"))
                 {
@@ -252,20 +238,39 @@ public:
                 }
 
                 if (!m_ErrorMessage.empty())
-                {
                     ImGui::TextColored(ImVec4(1, 0, 0, 1), "%s", m_ErrorMessage.c_str());
+
+                ImGui::EndPopup();
+            }
+
+            if (ImGui::BeginPopupModal("Confirm Delete", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text("Are you sure you want to delete this project?\n%s", m_ProjectToDeletePath.c_str());
+                ImGui::Separator();
+
+                if (ImGui::Button("Yes"))
+                {
+                    std::filesystem::remove_all(m_ProjectToDeletePath);
+                    RemoveRecentProject(m_ProjectToDeletePath);
+                    m_RecentProjects = LoadRecentProjects();
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("No"))
+                {
+                    ImGui::CloseCurrentPopup();
                 }
 
                 ImGui::EndPopup();
             }
-            
+
             ImGui::End();
         }
 
         if (m_NeedsResize)
         {
             SaveRecentProject(m_ProjectPath);
-
             InitMainLayers(m_App, m_ProjectPath);
             m_State = AppState::MainApp;
             m_NeedsResize = false;
@@ -296,14 +301,16 @@ private:
     std::string m_CreateProjectName;
     std::string m_ErrorMessage;
 
+    std::string m_ProjectToDeletePath;
+    int m_ProjectToDeleteIndex = -1;
+
     char m_BasePathBuffer[512] = {};
     char m_ProjectNameBuffer[256] = {};
 };
 
-// Function to initialize actual app layers
 void InitMainLayers(Walnut::Application* app, const std::string& path)
 {
-    std::shared_ptr<ProjectDirectory> dir = std::make_shared<ProjectDirectory>(path);
+    std::shared_ptr<ProjectDirectory> dir = std::make_shared<ProjectDirectory>(path + "\\Resources");
     app->PushLayer(dir);
 
     glfwSetDropCallback(static_cast<GLFWwindow*>(app->GetWindowHandle()), OnFileDrop);
@@ -325,7 +332,6 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
     spec.CustomTitlebar = true;
 
     Walnut::Application* app = new Walnut::Application(spec);
-
     app->PushLayer(std::make_shared<ProjectSelector>(app));
 
     return app;
