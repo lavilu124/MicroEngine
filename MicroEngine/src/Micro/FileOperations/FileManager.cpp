@@ -192,13 +192,13 @@ namespace Micro{
         return m_mainPath + "\\Resources\\graphics\\shaders\\" + shadername;
     }
 
-    std::vector<GameObject> FileManager::GetObjects(std::string name, SystemManager* systemManager) {
+    std::vector<std::shared_ptr<Micro::GameObject>> FileManager::GetObjects(std::string name, SystemManager* systemManager) {
 
         std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".McScene");
         Json::Value actualJson;
         Json::Reader Reader;
 
-        std::vector<GameObject> returnVector;
+        std::vector<std::shared_ptr<Micro::GameObject>> returnVector;
 
         //check if the input file exsist
         if (!inputFile.is_open())
@@ -224,20 +224,30 @@ namespace Micro{
                 break;
             }
 
-            //object values
             Collision::collisionLayer layer = static_cast<Collision::collisionLayer>(currentObject["layer"].asInt());
             sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
             float rotation = currentObject["rotation"].asFloat();
             sf::Vector2f scale = sf::Vector2f(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
             std::string spriteName = currentObject["spriteName"].asString();
             std::string name = currentObject["name"].asString();
-
             LoadAsset(spriteName);
 
-            returnVector.push_back(GameObject(systemManager, m_sprites[spriteName], name, layer));
-            returnVector[returnVector.size() - 1].SetPosition(position);
-            returnVector[returnVector.size() - 1].SetScale(scale);
-            returnVector[returnVector.size() - 1].SetRotation(rotation);
+            std::string type = currentObject["type"].asString();
+            if (type != "none") {
+               
+                auto obj = ObjectManager::Instance().Create(type, systemManager, m_sprites[spriteName], name);
+                obj->SetPosition(position);
+                obj->SetScale(scale);
+                obj->SetRotation(rotation);
+                returnVector.push_back(std::move(obj)); 
+            }
+            else {
+                auto plain = std::make_unique<GameObject>(systemManager, m_sprites[spriteName], name, layer);
+                plain->SetPosition(position);
+                plain->SetScale(scale);
+                plain->SetRotation(rotation);
+                returnVector.push_back(std::move(plain));
+            }
         }
 
         for (int i = 0; i < count; i++) {

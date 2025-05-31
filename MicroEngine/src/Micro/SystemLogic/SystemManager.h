@@ -16,15 +16,15 @@ namespace Micro{
 
 		void Render(sf::RenderWindow& window);
 
-		void CreateGameObject(GameObject& ob);
+		void CreateGameObject(std::shared_ptr<GameObject> ob);
 
 		void DestroyObject(const char* name);
 
-		std::vector<GameObject>& GetObjects();
+		std::vector<std::shared_ptr<GameObject>>& GetObjects();
 
 		GameObject* GetObjectByName(const char* name);
 
-		bool CheckForCollision(sf::Sprite sprite, const char* name, Collision::collisionLayer layerToCollideWith = Collision::ALL, GameObject* collideInfo = nullptr);
+		bool CheckForCollision(sf::Sprite sprite, const char* name, GameObject*& collideInfo , Collision::collisionLayer layerToCollideWith = Collision::ALL);
 
 		void RunInput(sf::Event event);
 

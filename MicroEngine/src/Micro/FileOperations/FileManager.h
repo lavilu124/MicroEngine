@@ -26,7 +26,7 @@ namespace Micro{
 
 		std::string GetShaderPath(std::string& shadername) const;
 
-		std::vector<GameObject> GetObjects(std::string name, SystemManager* systemManger);
+		std::vector<std::shared_ptr<Micro::GameObject>> GetObjects(std::string name, SystemManager* systemManger);
 
 		sf::Sprite* GetSprite(std::string name);
 		sf::Sound* GetSound(std::string name);

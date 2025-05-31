@@ -14,7 +14,8 @@
 			1.0
 		],
 		"spriteName" : "run0.png",
-		"name" : "hi"
+		"name" : "hi",
+		"type" : "none"
 	},
 	"object1" : 
 	{
@@ -31,7 +32,8 @@
 			1.0
 		],
 		"spriteName" : "axe.png",
-		"name" : "1"
+		"name" : "1",
+		"type" : "Player"
 	},
 	"object2" : 
 	{
@@ -48,7 +50,8 @@
 			1.0
 		],
 		"spriteName" : "run2.png",
-		"name" : "2"
+		"name" : "2",
+		"type" : "none"
 	},
 	"lightSource0" : 
 	{

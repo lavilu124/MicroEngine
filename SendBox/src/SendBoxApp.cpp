@@ -1,5 +1,6 @@
-#include <Micro.h>
+#include "Objects/Player.h"
 #include <LightInclude.h>
+#include <Micro/EnteryPoint.h>
 
 class App : public Micro::Application
 {
@@ -28,9 +29,16 @@ public:
 		//add a wall to block light
 		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
 			sf::Vector2f(0.f, 300.f));
+
+
+		Player* test = dynamic_cast<Player*>(m_systemManager.GetObjectByName("1"));
+		if (test) {
+			
+		}
 	}
 
 	void Run() override {
+
 		while (m_window.isOpen()) {
 			InputFunc();
 

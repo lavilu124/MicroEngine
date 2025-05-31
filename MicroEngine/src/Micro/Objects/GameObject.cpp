@@ -5,7 +5,7 @@ namespace Micro{
     GameObject::GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer)
         : m_objectSprite(ObjectSprite), m_layer(Layer), m_rotation(ObjectSprite.getRotation()), m_position(ObjectSprite.getPosition()), m_scale(ObjectSprite.getScale()), m_name(name), m_systemManager(systemManager)
     {
-        m_systemManager->CreateGameObject(*this);
+        //m_systemManager->CreateGameObject(*this);
 
         SetCenter();
     }
@@ -50,9 +50,9 @@ namespace Micro{
         m_objectSprite.setOrigin(sf::Vector2f(centerX, centerY));
     }
 
-    void GameObject::Delete() {
-        m_systemManager->DestroyObject(m_name.c_str());
-    }
+    //void GameObject::Delete() {
+    //    m_systemManager->DestroyObject(m_name.c_str());
+    //}
 
     void GameObject::OnCollision(GameObject* HitInfo) {}
 
@@ -64,13 +64,13 @@ namespace Micro{
         GameObject* HitInfo = this;
 
         //checking if the new position collides with anything
-        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), Collision::ALL, HitInfo)) {
-            if (m_layer < 6 && HitInfo->m_layer < 6) {
+        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
+            if ((m_layer < 6 && HitInfo->m_layer < 6) || m_layer == 13 || HitInfo->m_layer == 13) { //13 is collison with all 6 is trigger 7 is none and 7-13 is custom
                 OnCollision(HitInfo);
                 HitInfo->OnCollision(this);
                 m_objectSprite.setPosition(m_position);
             }
-            else if (m_layer > 6) {
+            else if (m_layer == 6 && HitInfo->m_layer == 6) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
                 m_position = NewPosition;
@@ -82,9 +82,8 @@ namespace Micro{
             sf::Vector2f TestX = sf::Vector2f(NewPosition.x, NewPosition.y);
             m_objectSprite.setPosition(TestX);
 
-            Collision::collisionLayer LayerToCollideWith = Collision::ALL;
             //checking collison for the movement along the x axies
-            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), LayerToCollideWith)) {
+            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
                 m_position = m_objectSprite.getPosition();
                 return;
             }
@@ -94,7 +93,7 @@ namespace Micro{
             m_objectSprite.setPosition(TestY);
 
             //checking collison for the movement along the y axies
-            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), LayerToCollideWith)) {
+            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
                 m_position = m_objectSprite.getPosition();
             }
         }
@@ -109,7 +108,7 @@ namespace Micro{
         GameObject* HitInfo = this;
 
         //checking if the new position collides with anything
-        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), Collision::ALL, HitInfo)) {
+        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
             if (HitInfo == this) {}
             else if (m_layer < 6 && HitInfo->m_layer < 6) {
                 OnCollision(HitInfo);
@@ -133,7 +132,7 @@ namespace Micro{
         GameObject* HitInfo = this;
 
         //checking if the new position collides with anything
-        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), Collision::ALL, HitInfo)) {
+        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
             if (HitInfo == this) {}
             else if (m_layer < 6 && HitInfo->m_layer < 6) {
                 OnCollision(HitInfo);
