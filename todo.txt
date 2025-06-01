@@ -1,5 +1,4 @@
 add ui elements(text and buttons)
-adding custom objects scripts in the scene editor
 input Manager
 
 maybe:
