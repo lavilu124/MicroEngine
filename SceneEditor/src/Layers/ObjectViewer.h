@@ -24,6 +24,8 @@ public:
 
 	void OnAttach() override;
 
+	void NewObject();
+
 private:
 	void Window();
 	void DisplayGameObject();
@@ -40,5 +42,8 @@ private:
 	bool m_toDelete = false;
 
 	std::shared_ptr<Walnut::Image> m_deleteIcon;
+
+	bool m_ObjectsLoaded = false;
+	std::vector<std::string> m_typeList;
 
 };

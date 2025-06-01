@@ -2,7 +2,6 @@
 #include <filesystem>
 
 #include "../fileManage/FileManage.h"
-#include <iostream>
 
 SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath) : m_sceneContent(sceneContent), m_mainPath(mainPath)
 {
@@ -117,7 +116,6 @@ void SceneViewer::SaveWindow()
     if (!initialized)
     {
         strcpy_s(pathBuffer, sizeof(pathBuffer), m_mainPath.c_str());
-        std::cout << m_mainPath;
         std::string fileName = m_savePath.substr(m_savePath.find_last_of('\\') + 1);
         strcpy_s(fileNameBuffer, sizeof(fileNameBuffer), fileName.c_str());
         initialized = true;
