@@ -61,7 +61,10 @@ void ProjectDirectory::HandleFile(std::filesystem::directory_entry entry)
         }
     }
     else if (entry.path().extension() == ".McScene") {
-        m_maps.push_back(entry);
+        auto test = entry.path().parent_path();
+        if (test.string() == m_currentPath) {
+            m_maps.push_back(entry);
+        }
     }
 }
 

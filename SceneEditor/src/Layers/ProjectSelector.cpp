@@ -118,20 +118,21 @@ void InitMainLayers(Walnut::Application* app, const std::string& path)
     std::shared_ptr<SceneContent> sceneContent = std::make_shared<SceneContent>(viewer, dir);
     app->PushLayer(sceneContent);
 
-    std::shared_ptr<SceneViewer> sceneViewer = std::make_shared<SceneViewer>(sceneContent, path.c_str());
+    std::shared_ptr<SceneViewer> sceneViewer = std::make_shared<SceneViewer>(sceneContent, (path + "\\Resources").c_str());
     app->PushLayer(sceneViewer);
 
-    std::shared_ptr<Menu> menu = std::make_shared<Menu>(path);
+    std::shared_ptr<Menu> menu = std::make_shared<Menu>(path, viewer);
     app->PushLayer(menu);
 
     app->SetMenubarCallback([app, menu]()
         {
-            if (ImGui::BeginMenu("File"))
+            if (ImGui::BeginMenu("Custom Object"))
             {
                 if (ImGui::MenuItem("Create Object"))
                 {
                     menu->NewObjectPressed();
                 }
+
                 ImGui::EndMenu();
             }
         });

@@ -1,4 +1,8 @@
 ﻿#include "ObjectViewer.h"
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
 
 template <class T>
 T min(T x, T y)
@@ -103,7 +107,7 @@ void ObjectViewer::DisplayGameObject()
     ImGui::Text("Rotation (Degrees):");
     ImGui::Indent();
     if (ImGui::InputFloat("##GameRotation", &m_currentObject->rotation)) {
-        m_currentObject->rotation = min<float>(m_currentObject->rotation, 360.0f);
+        m_currentObject->rotation = std::min<float>(m_currentObject->rotation, 360.0f);
     }
     ImGui::Unindent();
 
@@ -120,20 +124,75 @@ void ObjectViewer::DisplayGameObject()
 
     ImGui::Spacing();
 
+    ImGui::Text("Collison Layer:");
+    ImGui::Indent();
+    static const char* layerItems[] = {
+        "0:collider", "1:custom", "2:custom", "3:custom", "4:custom", "5:custom", "6:trigger", "7:ignore",
+        "8:custom", "9:custom", "10:custom", "11:custom", "12:custom", "13:all"
+    };
+    static int currentLayerIndex = GameOj->layer;
+
+    if (ImGui::Combo("##LayerCombo", &currentLayerIndex, layerItems, IM_ARRAYSIZE(layerItems))) {
+        GameOj->layer = currentLayerIndex;
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Type:");
+    ImGui::Indent();
+    
+    static std::vector<const char*> typeCStrs;
+    
+
+    if (!m_ObjectsLoaded) {
+        m_typeList.clear();
+        typeCStrs.clear();
+        m_typeList.push_back("none");
+
+        std::filesystem::path rootPath = m_projectDirectory->getMainPath();
+        rootPath.remove_filename();
+        std::ifstream file(rootPath / "projectData.txt");
+        std::string line;
+        while (std::getline(file, line)) {
+            if (!line.empty()) {
+                m_typeList.push_back(line);
+            }
+        }
+        for (const auto& str : m_typeList) {
+            typeCStrs.push_back(str.c_str());
+        }
+        m_ObjectsLoaded = true;
+    }
+
+    // Find current type index
+    int currentIndex = 0;
+    for (size_t i = 0; i < m_typeList.size(); ++i) {
+        if (m_typeList[i] == GameOj->type) {
+            currentIndex = static_cast<int>(i);
+            break;
+        }
+    }
+
+    if (ImGui::Combo("##GameType", &currentIndex, typeCStrs.data(), (int)typeCStrs.size())) {
+        GameOj->type = m_typeList[currentIndex];
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
     ImGui::Text("Sprite:");
     ImGui::Indent();
 
-    ImVec2 dropAreaSize = ImVec2(200, 200); 
+    ImVec2 dropAreaSize = ImVec2(200, 200);
     ImVec2 cursorPos = ImGui::GetCursorScreenPos();
     ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-    // Draw the drop area background
     drawList->AddRectFilled(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(50, 50, 50, 100));
     drawList->AddRect(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(255, 255, 255, 255));
 
     ImGui::InvisibleButton("##SpriteDropArea", dropAreaSize);
 
-    // Handle drop
     if (ImGui::IsItemHovered() && m_projectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
         GameOj->SetPath(m_projectDirectory->GetSelectedPath());
     }
@@ -143,7 +202,6 @@ void ObjectViewer::DisplayGameObject()
     }
     m_projectDirectory->ClearSelectedPath();
 
-    // Display the sprite if available
     if (GameOj->sprite && GameOj->sprite->GetDescriptorSet()) {
         ImVec2 imageSize = ImVec2((float)GameOj->sprite->GetWidth(), (float)GameOj->sprite->GetHeight());
         ImVec2 imagePos = ImVec2(cursorPos.x + (dropAreaSize.x - imageSize.x) / 2, cursorPos.y + (dropAreaSize.y - imageSize.y) / 2);
@@ -152,17 +210,17 @@ void ObjectViewer::DisplayGameObject()
 
     ImGui::Unindent();
 
-
     ImGui::Indent();
     try {
         if (GameOj->sprite)
             ImGui::Image(GameOj->sprite->GetDescriptorSet(), { (float)GameOj->sprite->GetWidth(), (float)GameOj->sprite->GetHeight() });
     }
-    catch (std::exception) {
+    catch (std::exception&) {
         // Fail silently
     }
     ImGui::Unindent();
 }
+
 
 void ObjectViewer::DisplayLightObject()
 {
@@ -296,4 +354,9 @@ bool ObjectViewer::Delete()
 void ObjectViewer::OnAttach()
 {
     m_deleteIcon = std::make_shared<Walnut::Image>("appGui\\deleteIcon.png");
+}
+
+void ObjectViewer::NewObject()
+{
+    m_ObjectsLoaded = false;
 }

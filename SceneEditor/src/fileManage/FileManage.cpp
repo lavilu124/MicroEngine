@@ -28,6 +28,8 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		gameObjectJson["scale"][1] = content->GetGameObjects()[i].scale.y;
 		gameObjectJson["spriteName"] = content->GetGameObjects()[i].spritename;
 		gameObjectJson["name"] = content->GetGameObjects()[i].name;
+		std::string type = content->GetGameObjects()[i].type;
+		gameObjectJson["type"] = (type == "")? "none" : type;
 		sceneJson[objectKey] = gameObjectJson;
 	}
 

@@ -10,6 +10,7 @@ public:
 	int layer;
 	std::string spritename;
 	std::shared_ptr<Walnut::Image> sprite = nullptr;
+	std::string type;
 
 	void SetPath(std::string newPath);
 private:

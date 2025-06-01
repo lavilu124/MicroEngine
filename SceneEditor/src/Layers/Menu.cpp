@@ -1,7 +1,7 @@
 #include "Menu.h"
 #include <fstream>
 
-Menu::Menu(std::string ProjectRootPath) : m_rootPath(ProjectRootPath)
+Menu::Menu(std::string projectRootPath, std::shared_ptr<ObjectViewer> objectViewer) : m_rootPath(projectRootPath), m_objectViewer(objectViewer)
 {
     memset(m_ClassNameBuffer, 0, sizeof(m_ClassNameBuffer));
 }
@@ -16,6 +16,16 @@ void Menu::OnUIRender()
 	if (m_newObjectOpen) {
 		NewObjectWindow();
 	}
+
+}
+
+bool Menu::ObjectExist(const std::string& name) const{
+    std::filesystem::path projDir = m_rootPath;
+    std::ifstream classes(projDir / "projectData.txt");
+    std::string content((std::istreambuf_iterator<char>(classes)), std::istreambuf_iterator<char>());
+    classes.close();
+
+    return content.find(name) != std::string::npos;
 }
 
 void Menu::NewObjectWindow()
@@ -30,7 +40,7 @@ void Menu::NewObjectWindow()
         if (ImGui::Button("Create"))
         {
             std::string className = m_ClassNameBuffer;
-            if (!className.empty())
+            if (!className.empty() && !ObjectExist(className))
             {
                 std::filesystem::path currDir = std::filesystem::current_path().string();
                 std::filesystem::path headerSrc = currDir / "templates" / "Template.h";
@@ -62,6 +72,12 @@ void Menu::NewObjectWindow()
 
                     replaceInFile(headerDest);
                     replaceInFile(cppDest);
+
+                    std::ofstream classes(projDir / "projectData.txt", std::ios::app);
+                    classes << className << "\n";
+                    classes.close();
+
+                    m_objectViewer->NewObject();
                 }
                 catch (const std::exception& e)
                 {
@@ -69,6 +85,8 @@ void Menu::NewObjectWindow()
                 }
 
                 m_newObjectOpen = false;
+
+
                 ImGui::CloseCurrentPopup();
             }
         }
