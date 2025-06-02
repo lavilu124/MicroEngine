@@ -1,5 +1,6 @@
 #include "ProjectSelector.h"
 #include "SceneViewer.h"
+#include "InputManager.h"
 #include "Menu.h"
 
 static std::string GetRecentProjectsPath()
@@ -123,6 +124,9 @@ void InitMainLayers(Walnut::Application* app, const std::string& path)
 
     std::shared_ptr<Menu> menu = std::make_shared<Menu>(path, viewer);
     app->PushLayer(menu);
+
+    std::shared_ptr<InputManager> inputM = std::make_shared<InputManager>(path + "\\Resources\\settings\\input.cfg");
+    app->PushLayer(inputM);
 
     app->SetMenubarCallback([app, menu]()
         {

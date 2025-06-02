@@ -2,7 +2,6 @@
 #include <LightInclude.h>
 #include <Micro/EnteryPoint.h>
 
-
 class App : public Micro::Application
 {
 public:
@@ -19,6 +18,7 @@ public:
 		//add a wall to block light
 		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
 			sf::Vector2f(0.f, 300.f));
+
 	}
 
 	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game", scene) {

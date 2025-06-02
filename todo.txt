@@ -1,5 +1,4 @@
 add ui elements(text and buttons)
-input Manager
 
 maybe:
 multiplayer and/or multiscreen(local multiplayer)

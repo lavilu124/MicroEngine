@@ -19,6 +19,7 @@ std::string Micro::FileManager::m_mainPath = "";
 
 namespace Micro{
 
+
     void FileManager::AddInputFunc(std::string name, void(*function)(Micro::Input::InputAction&)) {
         m_functionMap[name] = function;
     }
