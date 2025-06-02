@@ -19,27 +19,53 @@ std::string Micro::FileManager::m_mainPath = "";
 
 namespace Micro{
 
-    void FileManager::AddInputFunc(std::string name, void(*function)()) {
+    void FileManager::AddInputFunc(std::string name, void(*function)(Micro::Input::InputAction&)) {
         m_functionMap[name] = function;
     }
     void FileManager::CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput, std::string OffInput) {
-        inputs.emplace(Name, Input::InputAction(
-            Type,
-            Key,
-            Name,
-            Part,
-            m_functionMap[OnInput],
-            m_functionMap[OffInput]
-        ));
+        if (!OnInput.empty() && !OffInput.empty()) {
+            inputs.emplace(Name, Input::InputAction(
+                Type,
+                Key,
+                Name,
+                Part,
+                m_functionMap[OnInput],
+                m_functionMap[OffInput]
+            ));
+        }
+        else if (!OnInput.empty()) {
+            inputs.emplace(Name, Input::InputAction(
+                Type,
+                Key,
+                Name,
+                Part,
+                m_functionMap[OnInput]
+            ));
+        }
+        else if (!OffInput.empty()){
+            inputs.emplace(Name, Input::InputAction(
+                Type,
+                Key,
+                Name,
+                Part,
+                nullptr,
+                m_functionMap[OffInput]
+            ));
+        }
+        else {
+            inputs.emplace(Name, Input::InputAction(
+                Type,
+                Key,
+                Name,
+                Part
+            ));
+        }
+        
     }
-    void FileManager::CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput) {
-        inputs.emplace(Name, Input::InputAction(
-            Type,
-            Key,
-            Name,
-            Part,
-            m_functionMap[OnInput]
-        ));
+
+    void FileManager::addInput(Micro::Input::InputAction& action)
+    {
+        inputs.emplace(action.GetName(), action);
     }
     void FileManager::LoadInput() {
         std::ifstream file("../Resources\\settings\\Input.cfg");
@@ -84,7 +110,7 @@ namespace Micro{
                 continue;
             }
 
-            Input::inputPart inputPart = Input::inputPart::Pressed; // Default to Pressed
+            Input::inputPart inputPart = Input::inputPart::Pressed;
             if (Part == "started") {
                 inputPart = Input::inputPart::Started;
             }
@@ -99,19 +125,22 @@ namespace Micro{
                 InputType = Input::inputType::MouseButton;
             }
             else if (Type == "ControllerKey") {
-                InputKey = sf::Joystick::Axis(std::stoi(Key));
+                InputKey = std::stoi(Key);
                 InputType = Input::inputType::ControllerButton;
             }
-            else {
+            else if (Type == "KeyboardKey") {
                 InputKey = sf::Keyboard::Key(std::stoi(Key));
             }
-
-            if (!OffInput.empty()) {
-                CreateInput(Name, InputType, InputKey, inputPart, OnInput, OffInput);
+            else if (Type == "MouseMove") {
+                InputKey = std::stoi(Key);
+                InputType = Input::inputType::MouseMove;
             }
             else {
-                CreateInput(Name, InputType, InputKey, inputPart, OnInput);
+                InputKey = std::stoi(Key);
+                InputType = Input::inputType::JoystickMove;
             }
+
+            CreateInput(Name, InputType, InputKey, inputPart, OnInput, OffInput);
         }
     }
 

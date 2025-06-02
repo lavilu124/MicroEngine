@@ -28,6 +28,8 @@ namespace Micro{
 
 		void RunInput(sf::Event event);
 
+		void AddInput(Micro::Input::InputAction& action);
+
 		void LoadScene(const char* scene);
 
 		Camera& GetCamera();
