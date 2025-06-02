@@ -2,9 +2,12 @@
 #include <LightInclude.h>
 #include <Micro/EnteryPoint.h>
 
+
 class App : public Micro::Application
 {
 public:
+	
+
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game", scene) {
 		m_systemManager.SetDarkness(75);
 
@@ -46,6 +49,7 @@ public:
 
 private:
 	ls::LightId m_lightId;  
+
 };
 
 Micro::Application* Micro::CreateApplication(const char* scene) {

@@ -1,6 +1,6 @@
 #pragma once
 #include <Micro.h>
-#include <iostream>
+//#include <iostream>
 
 class Player : public Micro::GameObject
 {
@@ -9,11 +9,11 @@ public:
         : GameObject(systemManager, sprite, name, layer) {}
 
     void Start() override {
-        std::cout << "test";
+        //std::cout << "test";
     }
 
     void test() {
-        std::cout << "testing";
+        //std::cout << "testing";
     }
 };
 

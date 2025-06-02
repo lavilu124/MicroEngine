@@ -111,6 +111,11 @@ namespace Micro {
 
     }
 
+    void SystemManager::AddInput(Micro::Input::InputAction& action)
+    {
+        m_fileManager.addInput(action);
+    }
+
     void SystemManager::LoadScene(const char* scene) {
         m_sceneManager.LoadSceneFromFile(scene, this, m_fileManager);
 
