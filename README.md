@@ -38,9 +38,11 @@ Here is a list of the features that exist in this game engine, and the features 
 | **Animations** | ✔️ |
 | **Lighting** | ✔️ |
 | **assets Manager** | ✔️ |
-| **Ui Enigne (in porgress)** | ✔️  |
-| **project setup** | ❌ |
+| **Ui Enigne** | ✔️  |
+| **project setup** | ✔️ |
 | **logging system** | ✔️ |
+| **input system** | ✔️ |
+
 
 ## How to build
 - ❗ to create and build copy the repository go to Scripts and the run setup depending on your system
