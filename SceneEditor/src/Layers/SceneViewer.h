@@ -19,6 +19,8 @@ private:
 	void RenderGameObjects() const;
 	void RenderLights();
 
+	void HandleZoomAndPan();
+
 	std::shared_ptr<Walnut::Image> GenerateLightImage(LightObject& light);
 
 	void ExecutePlayCommand() const;
@@ -39,4 +41,9 @@ private:
 	std::string m_savePath;
 	std::string m_saveName;
 	std::string m_mainPath;
+
+	float m_zoom = 1.0f;
+	sf::Vector2f m_offset = { 0.0f, 0.0f };
+	bool m_dragging = false;
+	ImVec2 m_lastMousePos = { 0.0f, 0.0f };
 };

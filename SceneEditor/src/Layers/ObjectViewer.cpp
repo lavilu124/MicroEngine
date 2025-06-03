@@ -209,16 +209,6 @@ void ObjectViewer::DisplayGameObject()
     }
 
     ImGui::Unindent();
-
-    ImGui::Indent();
-    try {
-        if (GameOj->sprite)
-            ImGui::Image(GameOj->sprite->GetDescriptorSet(), { (float)GameOj->sprite->GetWidth(), (float)GameOj->sprite->GetHeight() });
-    }
-    catch (std::exception&) {
-        // Fail silently
-    }
-    ImGui::Unindent();
 }
 
 
