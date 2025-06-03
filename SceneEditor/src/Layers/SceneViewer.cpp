@@ -92,9 +92,35 @@ void SceneViewer::ExecutePlayCommand() const {
 
 void SceneViewer::Window()
 {
-    ImGui::Begin("Scene Viewer");
+    ImGui::Begin("Scene Viewer", nullptr, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
     if (m_saving)
         SaveWindow();
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImVec2 mousePos = io.MousePos;
+    ImVec2 windowPos = ImGui::GetWindowPos();
+    ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+    ImVec2 relativeMousePos = { mousePos.x - cursorPos.x, mousePos.y - cursorPos.y };
+
+    // Zoom (scroll wheel)
+    if (ImGui::IsWindowHovered() && io.MouseWheel != 0.0f)
+    {
+        float zoomFactor = 1.1f;
+        float oldZoom = m_zoom;
+        m_zoom *= (io.MouseWheel > 0) ? zoomFactor : (1.0f / zoomFactor);
+
+        // Zoom towards mouse position
+        m_offset.x -= (relativeMousePos.x - m_offset.x) * (1.0f - m_zoom / oldZoom);
+        m_offset.y -= (relativeMousePos.y - m_offset.y) * (1.0f - m_zoom / oldZoom);
+    }
+
+    // Panning (mouse drag)
+    if (ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
+    {
+        ImVec2 delta = io.MouseDelta;
+        m_offset.x += delta.x;
+        m_offset.y += delta.y;
+    }
 
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     RenderHeader(contentRegion);
@@ -174,10 +200,18 @@ void SceneViewer::RenderGameObjects() const
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     for (auto& gameObject : m_sceneContent->GetGameObjects()) {
         if (gameObject.sprite) {
-            ImVec2 relativePos(gameObject.position.x / 2, (gameObject.position.y + 25.0f) / 2);
-            ImVec2 position(relativePos.x + contentRegion.x / 2, relativePos.y + contentRegion.y / 2);
+            sf::Vector2f scaledPos = sf::Vector2f(gameObject.position.x * m_zoom, gameObject.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
+            ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
+            ImVec2 size = {
+                gameObject.scale.x * gameObject.sprite->GetWidth() * m_zoom,
+                gameObject.scale.y * gameObject.sprite->GetHeight() * m_zoom
+            };
+
+            if (position.y <= 75.f) {
+                continue;
+            }
             ImGui::SetCursorPos(position);
-            ImGui::Image(gameObject.sprite->GetDescriptorSet(), ImVec2(gameObject.scale.x / 1.5 * gameObject.sprite->GetWidth(), gameObject.scale.y / 1.5 * gameObject.sprite->GetHeight()));
+            ImGui::Image(gameObject.sprite->GetDescriptorSet(), size);
         }
     }
 }
@@ -186,8 +220,13 @@ void SceneViewer::RenderLights()
 {
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     for (auto& light : m_sceneContent->GetLights()) {
-        ImGui::SetCursorPos(
-            ImVec2(light.position.x /2 + contentRegion.x / 2 - 1024/2, light.position.y + contentRegion.y / 2 - 1024/2 + 75));
+        auto pos = ImVec2(light.position.x / 2 + contentRegion.x / 2 - 1024 / 2, light.position.y + contentRegion.y / 2 - 1024 / 2 + 75);
+        if (pos.y <= 25.0f * 1.4f) {
+            continue;
+        }
+
+        ImGui::SetCursorPos(pos);
+        
 
     	if (!light.image || !light.isUpdated()) {
             light.image = GenerateLightImage(light);
