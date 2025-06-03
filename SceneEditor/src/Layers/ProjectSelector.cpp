@@ -128,9 +128,11 @@ void InitMainLayers(Walnut::Application* app, const std::string& path)
     std::shared_ptr<InputManager> inputM = std::make_shared<InputManager>(path + "\\Resources\\settings\\input.cfg");
     app->PushLayer(inputM);
 
-    app->SetMenubarCallback([app, menu]()
+    std::weak_ptr<Menu> weakMenu = menu;
+    app->SetMenubarCallback([app, weakMenu]()
         {
-            if (ImGui::BeginMenu("Custom Object"))
+            auto menu = weakMenu.lock();
+            if (ImGui::BeginMenu("Custom Object") && menu)
             {
                 if (ImGui::MenuItem("Create Object"))
                 {
