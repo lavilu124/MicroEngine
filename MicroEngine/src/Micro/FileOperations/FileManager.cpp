@@ -197,24 +197,33 @@ namespace Micro{
             return;
         }
 
-        if (FileName.find(".png") != std::string::npos) {
-            sf::Texture NewTexture;
-            NewTexture.loadFromFile(m_mainPath + "\\Resources\\graphics\\" + FileName);
-            m_textures[FileName] = NewTexture;
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(m_mainPath + "\\Resources\\graphics\\")) {
+            if (entry.is_regular_file() && entry.path().extension() == ".png" && entry.path().filename().string() == FileName) {
 
+                sf::Texture NewTexture;
+                if (NewTexture.loadFromFile(entry.path().string())) {
+                    m_textures[FileName] = NewTexture;
 
-            sf::Sprite NewSprite;
-            NewSprite.setTexture(m_textures[FileName]);
-            m_sprites[FileName] = NewSprite;
+                    sf::Sprite NewSprite;
+                    NewSprite.setTexture(m_textures[FileName]);
+                    m_sprites[FileName] = NewSprite;
+                }
+
+            }
         }
-        else if (FileName.find(".wav") != std::string::npos) {
-            sf::SoundBuffer NewBuffer;
-            NewBuffer.loadFromFile(m_mainPath + "\\Resources\\sounds\\" + FileName);
-            m_buffers[FileName] = NewBuffer;
 
-            sf::Sound newSound;
-            newSound.setBuffer(m_buffers[FileName]);
-            m_sounds[FileName] = newSound;
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(m_mainPath + "\\Resources\\sounds\\")) {
+            if (entry.is_regular_file() && entry.path().extension() == ".wav" && entry.path().filename().string() == FileName) {
+
+                sf::SoundBuffer NewBuffer;
+                if (NewBuffer.loadFromFile(entry.path().string())) {
+                    m_buffers[FileName] = NewBuffer;
+
+                    sf::Sound newSound;
+                    newSound.setBuffer(m_buffers[FileName]);
+                    m_sounds[FileName] = newSound;
+                }
+            }
         }
     }
 
