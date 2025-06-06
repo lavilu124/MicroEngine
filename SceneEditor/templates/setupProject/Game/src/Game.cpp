@@ -1,5 +1,6 @@
 #include <Micro.h>
 #include <LightInclude.h>
+#include <Micro/EnteryPoint.h>
 
 class App : public Micro::Application
 {
