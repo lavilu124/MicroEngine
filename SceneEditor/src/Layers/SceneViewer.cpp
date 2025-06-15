@@ -291,8 +291,7 @@ void SceneViewer::GenerateLightImage(LightObject& light)
         renderTexture.display();
     }
     
-    const sf::Texture& texture = renderTexture.getTexture();
-    sf::Image image = texture.copyToImage();
+    sf::Image image = renderTexture.getTexture().copyToImage();
     const sf::Uint8* pixels = image.getPixelsPtr();
     size_t dataSize = image.getSize().x * image.getSize().y * 4; 
 
