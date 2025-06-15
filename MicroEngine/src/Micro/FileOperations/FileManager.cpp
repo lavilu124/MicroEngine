@@ -122,22 +122,22 @@ namespace Micro{
             Input::inputType InputType = Input::inputType::KeyboardKey;
             Input::KeyType InputKey;
             if (Type == "MouseKey") {
-                InputKey = sf::Mouse::Button(std::stoi(Key));
+                InputKey = static_cast<sf::Mouse::Button>(std::stoi(Key));
                 InputType = Input::inputType::MouseButton;
             }
             else if (Type == "ControllerKey") {
-                InputKey = std::stoi(Key);
+                InputKey = static_cast<unsigned int>(std::stoi(Key));
                 InputType = Input::inputType::ControllerButton;
             }
             else if (Type == "KeyboardKey") {
-                InputKey = sf::Keyboard::Key(std::stoi(Key));
+                InputKey = static_cast<unsigned int>(std::stoi(Key));
             }
             else if (Type == "MouseMove") {
-                InputKey = std::stoi(Key);
+                InputKey = static_cast<unsigned int>(std::stoi(Key));
                 InputType = Input::inputType::MouseMove;
             }
             else {
-                InputKey = std::stoi(Key);
+                InputKey = static_cast<unsigned int>(std::stoi(Key));
                 InputType = Input::inputType::JoystickMove;
             }
 
