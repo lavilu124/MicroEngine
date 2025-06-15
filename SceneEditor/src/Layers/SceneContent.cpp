@@ -10,8 +10,12 @@ SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const st
 {
 }
 
-SceneContent::~SceneContent()
+void SceneContent::OnDetach()
 {
+	for (auto& light : m_lightObjects) {
+		light.image.reset();
+		light.imageData.reset();
+	}
 	m_lightObjects.clear();
 	m_gameObjects.clear();
 }

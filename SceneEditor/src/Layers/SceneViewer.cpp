@@ -7,7 +7,7 @@ SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char*
 {
 }
 
-SceneViewer::~SceneViewer()
+void SceneViewer::OnDetach()
 {
     renderTexture.clear();
 }
@@ -240,7 +240,7 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
         
 
     	if (!light.isUpdated()) {
-            light.image = GenerateLightImage(light);
+           GenerateLightImage(light);
         }
 
         if (light.image)
@@ -248,7 +248,7 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
     }
 }
 
-std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& light)
+void SceneViewer::GenerateLightImage(LightObject& light)
 {
     light.Updating();
     sf::Vector2u size = renderTexture.getSize();
@@ -297,15 +297,14 @@ std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& ligh
     size_t dataSize = image.getSize().x * image.getSize().y * 4; 
 
     
-    auto pixelData = std::make_unique<uint8_t[]>(dataSize);
-    std::memcpy(pixelData.get(), pixels, dataSize);
-    light.imageData = std::move(pixelData);
+    light.imageData = std::shared_ptr<uint8_t[]>(new uint8_t[dataSize], std::default_delete<uint8_t[]>());
+    std::memcpy(light.imageData.get(), pixels, dataSize);
 
-
-    
-    auto walnutImage = std::make_shared<Walnut::Image>(image.getSize().x, image.getSize().y, Walnut::ImageFormat::RGBA, light.imageData.get());
-
-    
-    return walnutImage;
+    light.image = std::make_shared<Walnut::Image>(
+        image.getSize().x,
+        image.getSize().y,
+        Walnut::ImageFormat::RGBA,
+        light.imageData.get()
+    );
 
 }

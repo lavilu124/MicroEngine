@@ -1,6 +1,5 @@
 #include "LightObject.h"
 
-#include <iostream>
 
 
 LightObject::LightObject(std::string name, ImVec2 position, float rotation, float beamAngle, int type, ImVec4 color, float radius, float width) : Object(name, position, rotation), type(type), color(color), radius(radius), beamAngle(beamAngle), width(width) {

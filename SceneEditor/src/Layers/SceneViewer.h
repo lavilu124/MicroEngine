@@ -7,7 +7,8 @@ class SceneViewer : public Walnut::Layer
 {
 public:
 	SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath);
-	~SceneViewer();
+
+	void OnDetach() override;
 
 	void OnUIRender() override;
 
@@ -20,10 +21,10 @@ private:
 	void RenderGameObjects(ImVec2 contentRegion) const;
 	void RenderLights(ImVec2 contentRegion);
 
-	std::shared_ptr<Walnut::Image> GenerateLightImage(LightObject& light);
+	void GenerateLightImage(LightObject& light);
 
 	void ExecutePlayCommand() const;
-
+	
 	void RenderHeader(const ImVec2& contentRegion);
 
 private:

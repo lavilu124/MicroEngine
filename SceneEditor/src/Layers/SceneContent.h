@@ -5,7 +5,7 @@ class SceneContent : public Walnut::Layer
 {
 public:
 	SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const std::shared_ptr<ProjectDirectory>& directory);
-	~SceneContent();
+	void OnDetach() override;
 
 	void OnUIRender() override;
 
