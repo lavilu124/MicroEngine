@@ -5,10 +5,11 @@ class SceneContent : public Walnut::Layer
 {
 public:
 	SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const std::shared_ptr<ProjectDirectory>& directory);
+	~SceneContent();
 
 	void OnUIRender() override;
 
-	std::vector<GameObject>& GetGameObjects() ;
+	std::vector<GameObject>& GetGameObjects();
 	std::vector<LightObject>& GetLights();
 
 	std::string GetCurrentScene();
