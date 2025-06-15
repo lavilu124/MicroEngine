@@ -68,11 +68,12 @@ static bool CreateNewProjectStructure(const std::filesystem::path& basePath, con
         if (!CopyDirectory(depPath, projectRoot / "dependencies")) return false;
 
 
-        std::filesystem::path setupScript = projectRoot / "Scripts" / "Setup-Windows.bat";
+        /*std::filesystem::path setupScript = projectRoot / "Scripts" / "Setup-Windows.bat";
         if (!std::filesystem::exists(setupScript)) return false;
 
         int result = system(setupScript.string().c_str());
-        return result == 0;
+        return result == 0;*/
+        return true;
     }
     catch (...) { return false; }
 }

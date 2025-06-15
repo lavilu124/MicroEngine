@@ -304,7 +304,9 @@ namespace Micro{
             std::string name = currentObject["name"].asString();
             sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
             sf::Color color = sf::Color(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
+            float rotation = currentObject["rotation"].asFloat();
             float radius = currentObject["radius"].asFloat();
+            bool fade = currentObject["fade"].asBool();
             ls::LightId light;
 
 			switch (type) {
@@ -313,12 +315,17 @@ namespace Micro{
                 systemManager->GetLight<ls::lightType::radial>(light)->SetRange(radius);
                 systemManager->GetLight<ls::lightType::radial>(light)->SetColor(color);
                 systemManager->GetLight<ls::lightType::radial>(light)->setPosition(position);
+                systemManager->GetLight<ls::lightType::radial>(light)->setRotation(rotation);
+                systemManager->GetLight<ls::lightType::radial>(light)->SetBeamAngle(currentObject["angle"].asFloat());
+                systemManager->GetLight<ls::lightType::radial>(light)->SetFade(fade);
 				break;
 			case 1: //Directional light
                 light = systemManager->AddLight(ls::directed, name.c_str());
                 systemManager->GetLight<ls::lightType::directed>(light)->SetRange(radius);
                 systemManager->GetLight<ls::lightType::directed>(light)->SetColor(color);
-				systemManager->GetLight<ls::lightType::directed>(light)->setRotation(currentObject["angle"].asFloat());
+				systemManager->GetLight<ls::lightType::directed>(light)->setRotation(rotation);
+                systemManager->GetLight<ls::lightType::directed>(light)->SetBeamWidth(currentObject["width"].asFloat());
+                systemManager->GetLight<ls::lightType::directed>(light)->SetFade(fade);
 				break;
 			default:
 				MC_LOG(((std::string)"unknown light type in " + name));

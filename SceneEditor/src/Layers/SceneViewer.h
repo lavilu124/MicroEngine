@@ -7,6 +7,7 @@ class SceneViewer : public Walnut::Layer
 {
 public:
 	SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath);
+	~SceneViewer();
 
 	void OnUIRender() override;
 
@@ -16,10 +17,8 @@ private:
 	void Window();
 	void SaveWindow();
 
-	void RenderGameObjects() const;
-	void RenderLights();
-
-	void HandleZoomAndPan();
+	void RenderGameObjects(ImVec2 contentRegion) const;
+	void RenderLights(ImVec2 contentRegion);
 
 	std::shared_ptr<Walnut::Image> GenerateLightImage(LightObject& light);
 

@@ -68,7 +68,9 @@
 			0.0,
 			25.5
 		],
-		"angle" : 0.0,
-		"radius" : 200.0
+		"rotation" : 0.0,
+		"angle" : 360.0,
+		"radius" : 200.0,
+		"fade" : true
 	}
 }

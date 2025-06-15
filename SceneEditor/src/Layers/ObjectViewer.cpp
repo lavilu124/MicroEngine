@@ -253,21 +253,22 @@ void ObjectViewer::DisplayLightObject()
 
     ImGui::Text("Color:");
     ImGui::Indent();
-    float colorValues[3] = { Light->color.Value.x, Light->color.Value.y, Light->color.Value.z };
+    float colorValues[3] = { Light->color.x, Light->color.y, Light->color.z };
     if (ImGui::ColorEdit3("##LightColor", colorValues)) {
-        Light->color.Value.x = colorValues[0];
-        Light->color.Value.y = colorValues[1];
-        Light->color.Value.z = colorValues[2];
+        Light->color.x = colorValues[0] * 255;
+        Light->color.y = colorValues[1] * 255;
+        Light->color.z = colorValues[2] * 255;
         Light->UpdateVal();
     }
     ImGui::Unindent();
 
     ImGui::Spacing();
 
+
     ImGui::Text("Intensity:");
     ImGui::Indent();
-    if (ImGui::InputFloat("##LightIntensity", &Light->color.Value.w)) {
-        Light->color.Value.w = min<float>(Light->color.Value.w, 1.0f);
+    if (ImGui::InputFloat("##LightIntensity", &Light->color.w)) {
+        Light->color.w ;
         Light->UpdateVal();
     }
     ImGui::Unindent();
@@ -283,6 +284,21 @@ void ObjectViewer::DisplayLightObject()
     ImGui::SameLine();
     if (ImGui::RadioButton("Directed", Light->type == 1)) {
         Light->type = 1;
+        Light->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Fade:");
+    ImGui::Indent();
+    if (ImGui::RadioButton("true", Light->fade)) {
+        Light->fade = true;
+        Light->UpdateVal();
+    }
+    ImGui::SameLine();
+    if (ImGui::RadioButton("false", !Light->fade)) {
+        Light->fade = false;
         Light->UpdateVal();
     }
     ImGui::Unindent();
@@ -315,6 +331,15 @@ void ObjectViewer::DisplayLightObject()
         float displayRad = Light->radius * 1.5f;
         if (ImGui::InputFloat("##LightLength", &displayRad)) {
             Light->radius = min<float>(displayRad / 1.5f, 512.0f);
+            Light->UpdateVal();
+        }
+        ImGui::Unindent();
+
+        ImGui::Text("Width:");
+        ImGui::Indent();
+        float displayWi = Light->width * 1.5f;
+        if (ImGui::InputFloat("##LightWidth", &displayWi)) {
+            Light->width = min<float>(displayWi / 1.5f, 512.0f);
             Light->UpdateVal();
         }
         ImGui::Unindent();

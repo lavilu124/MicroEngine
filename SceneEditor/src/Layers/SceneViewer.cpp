@@ -7,6 +7,11 @@ SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char*
 {
 }
 
+SceneViewer::~SceneViewer()
+{
+    renderTexture.clear();
+}
+
 void SceneViewer::OnAttach()
 {
     renderTexture.create(1024, 1024);
@@ -88,6 +93,7 @@ void SceneViewer::ExecutePlayCommand() const {
     command += scene;
 
     system(command.c_str());
+    
 }
 
 void SceneViewer::Window()
@@ -125,8 +131,8 @@ void SceneViewer::Window()
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     RenderHeader(contentRegion);
     ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetCursorScreenPos(), ImVec2(ImGui::GetCursorScreenPos().x + contentRegion.x, ImGui::GetCursorScreenPos().y + contentRegion.y), IM_COL32(0, 0, 0, 255));
-    RenderGameObjects();
-    RenderLights();
+    RenderGameObjects(contentRegion);
+    RenderLights(contentRegion);
     ImGui::End();
 }
 
@@ -195,9 +201,8 @@ void SceneViewer::SaveWindow()
     ImGui::End();
 }
 
-void SceneViewer::RenderGameObjects() const
+void SceneViewer::RenderGameObjects(ImVec2 contentRegion) const
 {
-    ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     for (auto& gameObject : m_sceneContent->GetGameObjects()) {
         if (gameObject.sprite) {
             sf::Vector2f scaledPos = sf::Vector2f(gameObject.position.x * m_zoom, gameObject.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
@@ -216,38 +221,49 @@ void SceneViewer::RenderGameObjects() const
     }
 }
 
-void SceneViewer::RenderLights()
+void SceneViewer::RenderLights(ImVec2 contentRegion)
 {
-    ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     for (auto& light : m_sceneContent->GetLights()) {
-        auto pos = ImVec2(light.position.x / 2 + contentRegion.x / 2 - 1024 / 2, light.position.y + contentRegion.y / 2 - 1024 / 2 + 75);
-        if (pos.y <= 25.0f * 1.4f) {
+        sf::Vector2f scaledPos = sf::Vector2f(light.position.x * m_zoom, light.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
+        ImVec2 position(scaledPos.x + contentRegion.x / 2 - 1024 / 2, scaledPos.y + contentRegion.y / 2 - 1024 / 2);
+
+
+        //fix light offset
+        (position.x > 0) ? position.x += 25 : position.x -= 25;
+        (position.y > 0) ? position.y -= 25 : position.y += 25;
+
+        if (position.y <= (75.f - 512)) {
             continue;
         }
 
-        ImGui::SetCursorPos(pos);
+        ImGui::SetCursorPos(position);
         
 
-    	if (!light.image || !light.isUpdated()) {
+    	if (!light.isUpdated()) {
             light.image = GenerateLightImage(light);
         }
 
-        ImGui::Image(light.image->GetDescriptorSet(), ImVec2(1024, 1024));
+        if (light.image)
+            ImGui::Image(light.image->GetDescriptorSet(), ImVec2(1024, 1024));
     }
 }
 
 std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& light)
 {
     light.Updating();
+    sf::Vector2u size = renderTexture.getSize();
     if (light.type == 0) {
         Micro::RadialLight radialLight(light.name.c_str(), 0);
         radialLight.SetRange(light.radius);
-        radialLight.SetColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
-        radialLight.SetIntensity(light.color.Value.w);
-        radialLight.setPosition(1024 / 2, 1024 / 2);
+        radialLight.SetColor(sf::Color(static_cast<int>(light.color.x), static_cast<int>(light.color.y), static_cast<int>(light.color.z)));
+        radialLight.SetIntensity((light.color.w / 255 + 0.3 > 1)? 1 : (light.color.w / 255 + 0.3));
+        radialLight.setPosition(size.x / 2.f, size.y / 2.f);
         radialLight.setRotation(light.rotation);
+        radialLight.SetFade(light.fade);
 
-        radialLight.SetBeamAngle(light.beamAngle);
+        if (light.beamAngle < 359.9f)
+            radialLight.SetBeamAngle(light.beamAngle);
+
         std::vector<ls::Line> vec;
         radialLight.CastLight(vec.begin(), vec.end());
 
@@ -257,11 +273,18 @@ std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& ligh
     }
     else if (light.type == 1) {
         Micro::DirectedLight directedLight(light.name.c_str(), 0);
-        directedLight.SetBeamWidth(light.radius);
-        directedLight.SetColor(sf::Color(static_cast<int>(light.color.Value.x * 255), static_cast<int>(light.color.Value.y * 255), static_cast<int>(light.color.Value.z * 255)));
-        directedLight.SetIntensity(light.color.Value.w);
-        directedLight.setPosition(1024 / 2, 1024 / 2);
+        directedLight.SetBeamWidth(light.width);
+        directedLight.SetColor(sf::Color(static_cast<int>(light.color.x 
+            ), static_cast<int>(light.color.y), static_cast<int>(light.color.z
+                )));
+        directedLight.SetIntensity(light.color.w);
+        directedLight.setPosition(size.x / 2.f, size.y / 2.f);
         directedLight.setRotation(light.rotation);
+        directedLight.SetRange(light.radius);
+        directedLight.SetFade(light.fade);
+
+        std::vector<ls::Line> vec;
+        directedLight.CastLight(vec.begin(), vec.end());
 
         renderTexture.clear(sf::Color::Transparent);
         renderTexture.draw(directedLight);
@@ -269,10 +292,20 @@ std::shared_ptr<Walnut::Image> SceneViewer::GenerateLightImage(LightObject& ligh
     }
     
     const sf::Texture& texture = renderTexture.getTexture();
-    std::string path = std::filesystem::current_path().string() + "\\temp.png";
-    texture.copyToImage().saveToFile("temp.png");
-    auto returnVal = std::make_shared<Walnut::Image>(path);
-    std::remove("temp.png");
+    sf::Image image = texture.copyToImage();
+    const sf::Uint8* pixels = image.getPixelsPtr();
+    size_t dataSize = image.getSize().x * image.getSize().y * 4; 
 
-    return returnVal;
+    
+    auto pixelData = std::make_unique<uint8_t[]>(dataSize);
+    std::memcpy(pixelData.get(), pixels, dataSize);
+    light.imageData = std::move(pixelData);
+
+
+    
+    auto walnutImage = std::make_shared<Walnut::Image>(image.getSize().x, image.getSize().y, Walnut::ImageFormat::RGBA, light.imageData.get());
+
+    
+    return walnutImage;
+
 }

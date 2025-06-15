@@ -10,6 +10,12 @@ SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const st
 {
 }
 
+SceneContent::~SceneContent()
+{
+	m_lightObjects.clear();
+	m_gameObjects.clear();
+}
+
 void SceneContent::OnUIRender()
 {
 	Window();
@@ -66,9 +72,21 @@ void SceneContent::Window()
 	}
 
 	if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
-		LightObject newLightObject("Light " + std::to_string(m_lightObjects.size() + 1));
-		newLightObject.color.Value.w = 1;
-		m_lightObjects.push_back(newLightObject);
+		//LightObject newLightObject();
+		//newLightObject.color = ImColor(255, 255, 255, 255);
+		//m_lightObjects.push_back(newLightObject);
+		m_lightObjects.push_back(LightObject(
+			"Light " + std::to_string(m_lightObjects.size() + 1),
+			ImVec2(0, 0),
+			0,
+			360,
+			0,
+			ImVec4(255, 255, 255, 255),
+			200,
+			200
+		));
+
+
 		m_newLightIndex = m_lightObjects.size() - 1;
 		if (m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
 			m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::light);
@@ -207,12 +225,16 @@ void SceneContent::SetNewScene(std::string NewScene)
 		int type = currentObject["LightType"].asInt();
 		std::string name = currentObject["name"].asString();
 		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
-		ImColor color = ImColor(currentObject["color"][0].asFloat() /255, currentObject["color"][1].asFloat() /255, currentObject["color"][2].asFloat() /255, 0.99);
+		ImColor color = ImColor(currentObject["color"][0].asFloat() , currentObject["color"][1].asFloat() , currentObject["color"][2].asFloat() , currentObject["color"][3].asFloat());
 		float radius = currentObject["radius"].asFloat() /1.5;
+		float rotation = currentObject["rotation"].asFloat();
 		float angle = currentObject["angle"].asFloat();
+		bool fade = currentObject["fade"].asBool();
 		ls::LightId light;
 
-		m_lightObjects.push_back(LightObject(name, position, angle, type, color, radius));
+		m_lightObjects.push_back(LightObject(name, position, rotation, angle, type, color, radius));
+		m_lightObjects.back().fade = fade;
+
 	}
 
 	//close the file

@@ -41,12 +41,19 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		lightObjectJson["name"] = content->GetLights()[i].name;
 		lightObjectJson["position"][0] = content->GetLights()[i].position.x;
 		lightObjectJson["position"][1] = content->GetLights()[i].position.y;
-		lightObjectJson["color"][0] = content->GetLights()[i].color.Value.x;
-		lightObjectJson["color"][1] = content->GetLights()[i].color.Value.y;
-		lightObjectJson["color"][2] = content->GetLights()[i].color.Value.z;
-		lightObjectJson["color"][3] = content->GetLights()[i].color.Value.w * 255.0f; // Intensity
-		lightObjectJson["angle"] = content->GetLights()[i].rotation; // Assuming rotation is the angle
+		lightObjectJson["color"][0] = content->GetLights()[i].color.x;
+		lightObjectJson["color"][1] = content->GetLights()[i].color.y;
+		lightObjectJson["color"][2] = content->GetLights()[i].color.z;
+		lightObjectJson["color"][3] = content->GetLights()[i].color.w * 255.0f; 
+		lightObjectJson["rotation"] = content->GetLights()[i].rotation;
+		if (content->GetLights()[i].type == 0) {
+			lightObjectJson["angle"] = content->GetLights()[i].beamAngle;
+		}
+		else {
+			lightObjectJson["width"] = content->GetLights()[i].width;
+		}
 		lightObjectJson["radius"] = content->GetLights()[i].radius;
+		lightObjectJson["fade"] = content->GetLights()[i].fade;
 		sceneJson[lightKey] = lightObjectJson;
 	}
 

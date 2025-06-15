@@ -46,4 +46,6 @@ private:
 	bool m_ObjectsLoaded = false;
 	std::vector<std::string> m_typeList;
 
+
+	float m_lightint = 0;
 };
