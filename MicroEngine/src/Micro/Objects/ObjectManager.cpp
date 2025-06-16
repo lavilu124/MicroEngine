@@ -11,11 +11,11 @@ namespace Micro {
 	{
 		m_creators[className] = creator;
 	}
-	std::unique_ptr<GameObject> ObjectManager::Create(const std::string& className, SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer layer) const
+	std::unique_ptr<GameObject> ObjectManager::Create(const std::string& className, SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer layer, int level) const
 	{
 		auto it = m_creators.find(className);
 		if (it != m_creators.end()) {
-			return it->second(systemManager, ObjectSprite, name, layer);
+			return it->second(systemManager, ObjectSprite, name, layer, level);
 		}
 		return nullptr;
 	}

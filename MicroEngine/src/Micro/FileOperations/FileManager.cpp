@@ -269,19 +269,20 @@ namespace Micro{
             sf::Vector2f scale = sf::Vector2f(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
             std::string spriteName = currentObject["spriteName"].asString();
             std::string name = currentObject["name"].asString();
+            int level = currentObject["level"].asInt();
             LoadAsset(spriteName);
 
             std::string type = currentObject["type"].asString();
             if (type != "none") {
                
-                auto obj = ObjectManager::Instance().Create(type, systemManager, m_sprites[spriteName], name);
+                auto obj = ObjectManager::Instance().Create(type, systemManager, m_sprites[spriteName], name, layer, level);
                 obj->SetPosition(position);
                 obj->SetScale(scale);
                 obj->SetRotation(rotation);
                 returnVector.push_back(std::move(obj)); 
             }
             else {
-                auto plain = std::make_unique<GameObject>(systemManager, m_sprites[spriteName], name, layer);
+                auto plain = std::make_unique<GameObject>(systemManager, m_sprites[spriteName], name, layer, level);
                 plain->SetPosition(position);
                 plain->SetScale(scale);
                 plain->SetRotation(rotation);

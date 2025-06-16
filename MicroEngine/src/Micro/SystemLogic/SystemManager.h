@@ -52,6 +52,8 @@ namespace Micro{
 
 		void SetDarkness(int precent);
 
+		void ChangedLevel();
+
 	public:
 
 		static sf::Clock clock;

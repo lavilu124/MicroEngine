@@ -212,10 +212,11 @@ void SceneContent::SetNewScene(std::string NewScene)
 		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
 		std::string spriteName = currentObject["spriteName"].asString();
 		std::string name = currentObject["name"].asString();
+		int level = currentObject["level"].asInt();
 
 		std::string pathToSprite = GetDirForSprite(spriteName, std::filesystem::current_path().string());
 
-		m_gameObjects.push_back(GameObject(name, pathToSprite, position, scale, rotation, layer));
+		m_gameObjects.push_back(GameObject(name, pathToSprite, position, scale, rotation, layer, level));
 
 
 	}

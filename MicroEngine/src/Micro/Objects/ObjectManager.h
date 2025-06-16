@@ -17,7 +17,8 @@ namespace Micro {
 			SystemManager* systemManager,
 			const sf::Sprite& ObjectSprite,
 			const std::string& name,
-			Collision::collisionLayer layer
+			Collision::collisionLayer layer,
+			int level
 		)>;
 
 		static ObjectManager& Instance();
@@ -29,7 +30,8 @@ namespace Micro {
 			SystemManager* systemManager,
 			const sf::Sprite& ObjectSprite,
 			const std::string& name,
-			Collision::collisionLayer layer = Collision::collisionLayer::COLLIDER
+			Collision::collisionLayer layer = Collision::collisionLayer::COLLIDER,
+			int level = 0
 		) const;
 
 	private:
@@ -42,8 +44,8 @@ namespace Micro {
 	namespace { \
 		const bool registered_##classType = []() { \
 			Micro::ObjectManager::Instance().Register(#classType, \
-				[](Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer) -> std::unique_ptr<Micro::GameObject> { \
-					return std::make_unique<classType>(systemManager, sprite, name, layer); \
+				[](Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer, int level) -> std::unique_ptr<Micro::GameObject> { \
+					return std::make_unique<classType>(systemManager, sprite, name, layer, level); \
 				}); \
 			return true; \
 		}(); \

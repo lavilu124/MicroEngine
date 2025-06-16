@@ -139,6 +139,15 @@ void ObjectViewer::DisplayGameObject()
 
     ImGui::Spacing();
 
+    ImGui::Text("Level:");
+    ImGui::Indent();
+    if (ImGui::InputInt("##Level", &GameOj->level)) {
+    
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
     ImGui::Text("Type:");
     ImGui::Indent();
     
