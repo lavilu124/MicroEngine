@@ -15,11 +15,10 @@ public:
 		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetRange(150);
 		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetColor(sf::Color::Blue);
 
+
 		//add a wall to block light
 		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
 			sf::Vector2f(0.f, 300.f));
-
-		m_systemManager.GetObjectByName("hi")->SetPosition({-200, 200});
 	}
 
 	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game", scene) {

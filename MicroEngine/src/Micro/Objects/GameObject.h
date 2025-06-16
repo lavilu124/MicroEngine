@@ -40,6 +40,10 @@ namespace Micro{
 
 		void SetLevel(int level);
 
+		bool IsShowen() const;
+
+		void SetShowen(bool showen);
+
 	private:
 		void SetCenter();
 
@@ -63,6 +67,8 @@ namespace Micro{
 		SystemManager* m_systemManager;
 
 		int m_level = 0;
+
+		bool m_showen = true;
 	};
 }
 

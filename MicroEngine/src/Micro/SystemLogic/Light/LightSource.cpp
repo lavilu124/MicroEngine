@@ -56,6 +56,16 @@ namespace Micro{
     float LightSource::GetRange() const{
         return m_range;
     }
+
+    bool LightSource::IsShowen() const
+    {
+        return m_showen;
+    }
+
+    void LightSource::SetShowen(bool showen)
+    {
+        m_showen = showen;
+    }
     
 
     const char* LightSource::GetName() const {
