@@ -4,7 +4,7 @@
 
 int GameObject::counter = 0;
 
-GameObject::GameObject(std::string name, std::string imagePath, ImVec2 position, ImVec2 scale, float rotation, int layer) : Object(name, position ,rotation), layer(layer), scale(scale){
+GameObject::GameObject(std::string name, std::string imagePath, ImVec2 position, ImVec2 scale, float rotation, int layer, int level) : Object(name, position ,rotation), layer(layer), scale(scale), level(level){
 	SetPath(imagePath);
 	
 }

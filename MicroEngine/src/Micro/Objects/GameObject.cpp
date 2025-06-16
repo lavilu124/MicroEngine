@@ -2,10 +2,9 @@
 #include "..//SystemLogic//SystemManager.h"
 
 namespace Micro{
-    GameObject::GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer)
-        : m_objectSprite(ObjectSprite), m_layer(Layer), m_rotation(ObjectSprite.getRotation()), m_position(ObjectSprite.getPosition()), m_scale(ObjectSprite.getScale()), m_name(name), m_systemManager(systemManager)
+    GameObject::GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer, int level)
+        : m_objectSprite(ObjectSprite), m_layer(Layer), m_rotation(ObjectSprite.getRotation()), m_position(ObjectSprite.getPosition()), m_scale(ObjectSprite.getScale()), m_name(name), m_systemManager(systemManager), m_level(level)
     {
-        //m_systemManager->CreateGameObject(*this);
 
         SetCenter();
     }
@@ -50,9 +49,9 @@ namespace Micro{
         m_objectSprite.setOrigin(sf::Vector2f(centerX, centerY));
     }
 
-    //void GameObject::Delete() {
-    //    m_systemManager->DestroyObject(m_name.c_str());
-    //}
+    void GameObject::Delete() {
+        m_systemManager->DestroyObject(m_name.c_str());
+    }
 
     void GameObject::OnCollision(GameObject* HitInfo) {}
 
@@ -204,6 +203,18 @@ namespace Micro{
 
     std::string GameObject::GetName() const{
         return m_name;
+    }
+
+    int GameObject::GetLevel() const
+    {
+        return m_level;
+    }
+
+    void GameObject::SetLevel(int level)
+    {
+        if (level == m_level || level < 0)
+            return;
+        m_systemManager->ChangedLevel();
     }
 
 }

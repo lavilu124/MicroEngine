@@ -21,6 +21,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		std::string objectKey = "object" + std::to_string(i);
 		Json::Value gameObjectJson;
 		gameObjectJson["layer"] = content->GetGameObjects()[i].layer;
+		gameObjectJson["level"] = content->GetGameObjects()[i].level;
 		gameObjectJson["position"][0] = content->GetGameObjects()[i].position.x;
 		gameObjectJson["position"][1] = content->GetGameObjects()[i].position.y;
 		gameObjectJson["rotation"] = content->GetGameObjects()[i].rotation;

@@ -8,7 +8,32 @@ namespace Micro {
 
     float SystemManager::deltaTime = 0;
 
+    int partition(std::vector<std::shared_ptr<GameObject>>& vec, int low, int high) {
 
+        int pivot = vec[high]->GetLevel();
+        int i = (low - 1);
+
+        for (int j = low; j <= high - 1; j++) {
+            if (vec[j]->GetLevel() <= pivot) {
+                i++;
+                std::swap(vec[i], vec[j]);
+            }
+        }
+
+        std::swap(vec[i + 1], vec[high]);
+
+        return (i + 1);
+    }
+
+    void quickSort(std::vector<std::shared_ptr<GameObject>>& vec, int low, int high) {
+        if (low < high) {
+
+            int pi = partition(vec, low, high);
+
+            quickSort(vec, low, pi - 1);
+            quickSort(vec, pi + 1, high);
+        }
+    }
 
     SystemManager::SystemManager(sf::RenderWindow& window)
         : m_sceneManager(window, window.getSize().x, window.getSize().y), m_lighting(LightingArea::FOG, { ((float)window.getSize().x) / -2, ((float)window.getSize().y) / -2 }, { ((float)window.getSize().x), ((float)window.getSize().y) }) {
@@ -118,6 +143,7 @@ namespace Micro {
 
     void SystemManager::LoadScene(const char* scene) {
         m_sceneManager.LoadSceneFromFile(scene, this, m_fileManager);
+        quickSort(m_sceneManager.objects, 0, m_sceneManager.objects.size() - 1);
 
         Start();
     }
@@ -211,6 +237,11 @@ namespace Micro {
 
         m_drakness.create(m_windowSize.x, m_windowSize.y);
         m_drakness.update(pixels.data());
+    }
+
+    void SystemManager::ChangedLevel()
+    {
+        quickSort(m_sceneManager.objects, 0, m_sceneManager.objects.size() - 1);
     }
 
 }

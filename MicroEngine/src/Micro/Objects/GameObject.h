@@ -9,7 +9,7 @@ namespace Micro{
 	class MICRO_API GameObject
 	{
 	public:
-		GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER);
+		GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER, int level = 0);
 
 		bool IsFacingRight();
 
@@ -36,6 +36,10 @@ namespace Micro{
 
 		std::string GetName() const;
 
+		int GetLevel() const;
+
+		void SetLevel(int level);
+
 	private:
 		void SetCenter();
 
@@ -57,6 +61,8 @@ namespace Micro{
 		std::string m_name;
 
 		SystemManager* m_systemManager;
+
+		int m_level = 0;
 	};
 }
 
