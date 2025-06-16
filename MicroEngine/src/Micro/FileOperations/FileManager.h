@@ -35,6 +35,8 @@ namespace Micro{
 
 		static void Log(std::string msg);
 
+		sf::Font GetFont(std::string name);
+
 	private:
 		void GetFilesInDir(std::string Dir);
 		
