@@ -227,10 +227,6 @@ namespace Micro{
         }
     }
 
-    std::string FileManager::GetShaderPath(std::string& shadername) const  {
-        return m_mainPath + "\\Resources\\graphics\\shaders\\" + shadername;
-    }
-
     std::vector<std::shared_ptr<Micro::GameObject>> FileManager::GetObjects(std::string name, SystemManager* systemManager) {
 
         std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".McScene");
@@ -398,9 +394,8 @@ namespace Micro{
         logFile.close();
     }
 
-    sf::Font FileManager::GetFont(std::string name)
+    std::string FileManager::GetFontPath(std::string name)
     {
-        std::string path = m_mainPath + "\\Resources\\graphics\\fonts\\" + name + ".ttf";
-
+        return m_mainPath + "\\Resources\\fonts\\" + name + ".ttf";
     }
 }

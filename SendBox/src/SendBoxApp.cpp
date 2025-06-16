@@ -10,13 +10,13 @@ public:
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game", scene) {
 		m_systemManager.SetDarkness(75);
 
-		//add a light to the scene
+		////add a light to the scene
 		m_lightId = m_systemManager.AddLight(ls::lightType::radial, "testrgjgi");
 		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetRange(150);
 		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetColor(sf::Color::Blue);
 
 
-		//add a wall to block light
+		////add a wall to block light
 		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
 			sf::Vector2f(0.f, 300.f));
 	}
