@@ -90,14 +90,12 @@ namespace Micro {
 
     void SystemManager::Render(sf::RenderWindow& window) {
         for (auto it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-            window.draw((*it)->GetSprite());
+            if ((*it)->IsShowen()) window.draw((*it)->GetSprite());
 
         window.draw(m_lighting);
 
         for (auto light : m_sceneManager.lights)
-        {
-            window.draw(*light);
-        }
+            if (light->IsShowen()) window.draw(*light);
     }
 
     int SystemManager::CheckExistingObject(const char* name) {

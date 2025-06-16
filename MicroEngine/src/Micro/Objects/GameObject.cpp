@@ -217,4 +217,14 @@ namespace Micro{
         m_systemManager->ChangedLevel();
     }
 
+    bool GameObject::IsShowen() const
+    {
+        return m_showen;
+    }
+
+    void GameObject::SetShowen(bool showen)
+    {
+        m_showen = showen;
+    }
+
 }

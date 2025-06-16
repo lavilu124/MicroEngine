@@ -58,6 +58,8 @@ namespace Micro{
         virtual void draw(sf::RenderTarget& t, sf::RenderStates st) const = 0;
 
         const char* m_name;
+
+        bool m_showen = true;
   
     protected:
         sf::Color m_color;
@@ -173,6 +175,9 @@ namespace Micro{
          * @see setRange, [EdgeVector](@ref LightSource.hpp)
          */
         virtual void CastLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) = 0;
+
+        bool IsShowen() const;
+        void SetShowen(bool showen);
     };
 }
 
