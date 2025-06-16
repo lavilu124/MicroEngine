@@ -54,6 +54,10 @@ namespace Micro{
 
 		void ChangedLevel();
 
+		void AddText(const std::string& name, std::string font = "");
+		void RemoveText(const std::string& name);
+		Text* GetText(const std::string& name);
+
 	public:
 
 		static sf::Clock clock;

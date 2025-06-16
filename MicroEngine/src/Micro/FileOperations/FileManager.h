@@ -25,8 +25,6 @@ namespace Micro{
 
 		void SetPaths();
 
-		std::string GetShaderPath(std::string& shadername) const;
-
 		std::vector<std::shared_ptr<Micro::GameObject>> GetObjects(std::string name, SystemManager* systemManger);
 
 		sf::Sprite* GetSprite(std::string name);
@@ -35,7 +33,7 @@ namespace Micro{
 
 		static void Log(std::string msg);
 
-		sf::Font GetFont(std::string name);
+		std::string GetFontPath(std::string name);
 
 	private:
 		void GetFilesInDir(std::string Dir);

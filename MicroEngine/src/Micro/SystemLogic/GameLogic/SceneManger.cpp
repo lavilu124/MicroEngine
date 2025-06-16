@@ -15,6 +15,7 @@ namespace Micro{
 	void SceneManger::LoadSceneFromFile(std::string Scene, SystemManager* systemManager, FileManager& fileManager) {
 		objects.clear();
 		lights.clear();
+		texts.clear();
 		objects = std::move(fileManager.GetObjects(Scene, systemManager));
 	}
 

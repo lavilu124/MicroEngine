@@ -96,6 +96,10 @@ namespace Micro {
 
         for (auto light : m_sceneManager.lights)
             if (light->IsShowen()) window.draw(*light);
+
+        for (auto& text : m_sceneManager.texts) {
+            if (text.IsShowen()) window.draw(text.GetBase());
+        }
     }
 
     int SystemManager::CheckExistingObject(const char* name) {
@@ -240,6 +244,32 @@ namespace Micro {
     void SystemManager::ChangedLevel()
     {
         quickSort(m_sceneManager.objects, 0, m_sceneManager.objects.size() - 1);
+    }
+
+    void SystemManager::AddText(const std::string& name, std::string font)
+    {
+        for (int i = 0; i < m_sceneManager.texts.size(); i++) {
+            if (name == m_sceneManager.texts[i].GetName()) return;
+        }
+        m_sceneManager.texts.emplace_back(name, this, font);
+    }
+
+    void SystemManager::RemoveText(const std::string& name)
+    {
+        for (int i = 0; i < m_sceneManager.texts.size(); i++) {
+            if (name == m_sceneManager.texts[i].GetName()) {
+                m_sceneManager.texts.erase(m_sceneManager.texts.begin() + i);
+            }
+        }
+    }
+
+    Text* SystemManager::GetText(const std::string& name)
+    {
+        for (auto& text : m_sceneManager.texts) {
+            if (name == text.GetName()) {
+                return &text;
+            }
+        }
     }
 
 }

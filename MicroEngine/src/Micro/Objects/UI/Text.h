@@ -1,21 +1,34 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "../../Core.h"
 
-class Text 
-{
+
+namespace Micro {
 	class SystemManager;
-public:
-	Text(std::string name, SystemManager* systemManager, std::string font = "");
 
-	sf::Text& GetBase();
+	class MICRO_API Text
+	{
 
-	void Delete();
-private:
-	sf::Text m_text;
+	public:
+		Text(std::string name, SystemManager* systemManager, std::string font = "");
 
-	std::string m_name;
-	bool IsShowen = true;
+		sf::Text& GetBase();
 
-	SystemManager* m_systemManager;
-};
+		void Delete();
+
+		bool IsShowen() const;
+		void SetShowen(bool showen);
+
+		std::string GetName() const;
+	private:
+		sf::Text m_text;
+		sf::Font m_font;
+
+		std::string m_name;
+		bool m_showen = true;
+
+		SystemManager* m_systemManager;
+	};
+}
+
 
