@@ -61,7 +61,7 @@ namespace Micro {
             (*it)->Start();
     }
 
-    void SystemManager::Update(Camera* cam) {
+    void SystemManager::Update() {
         if (m_sceneManager.objects.empty()) return;
 
         for (auto light : m_sceneManager.lights)
@@ -76,7 +76,7 @@ namespace Micro {
         deltaTimeT = clock.restart();
         deltaTime = deltaTimeT.asSeconds();
 
-        cam->Update(*this);
+        m_sceneManager.camera.Update(*this);
 
         m_lighting.Clear();
 
@@ -97,9 +97,12 @@ namespace Micro {
         for (auto light : m_sceneManager.lights)
             if (light->IsShowen()) window.draw(*light);
 
-        for (auto& text : m_sceneManager.texts) {
+        for (auto& button : m_sceneManager.buttons)
+            if (button.IsShowen()) window.draw(button.GetCurrentSprite());
+
+        for (auto& text : m_sceneManager.texts) 
             if (text.IsShowen()) window.draw(text.GetBase());
-        }
+        
     }
 
     int SystemManager::CheckExistingObject(const char* name) {
@@ -132,10 +135,15 @@ namespace Micro {
     }
 
 
-    void SystemManager::RunInput(sf::Event event)  {
+    void SystemManager::RunInput(sf::Event event, sf::RenderWindow& window)  {
         for (std::map<std::string, Input::InputAction>::iterator Input = m_fileManager.inputs.begin(); Input != m_fileManager.inputs.end(); ++Input)
             (*Input).second.Active(event);
 
+        sf::Vector2f worldMousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        for (auto& button : m_sceneManager.buttons) {
+           
+            button.IsPressed(worldMousePos);
+        }
     }
 
     void SystemManager::AddInput(Micro::Input::InputAction& action)
@@ -270,6 +278,36 @@ namespace Micro {
                 return &text;
             }
         }
+
+        return nullptr;
+    }
+
+    void SystemManager::AddButton(std::string name, std::string img, std::string onClickImg, void(*onClick)())
+    {
+        for (int i = 0; i < m_sceneManager.buttons.size(); i++) {
+            if (name == m_sceneManager.buttons[i].GetName()) return;
+        }
+        m_sceneManager.buttons.emplace_back(this, name, img, onClickImg, onClick);
+    }
+
+    void SystemManager::RemoveButton(const std::string& name)
+    {
+        for (int i = 0; i < m_sceneManager.buttons.size(); i++) {
+            if (name == m_sceneManager.buttons[i].GetName()) {
+                m_sceneManager.buttons.erase(m_sceneManager.buttons.begin() + i);
+            }
+        }
+    }
+
+    Button* SystemManager::GetButton(const std::string& name)
+    {
+        for (auto& button : m_sceneManager.buttons) {
+            if (name == button.GetName()) {
+                return &button;
+            }
+        }
+
+        return nullptr;
     }
 
 }

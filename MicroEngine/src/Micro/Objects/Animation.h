@@ -12,7 +12,7 @@ namespace Micro{
 
 
         //all the pictures of the animation in order
-        std::vector <sf::Sprite> AnimationVector;
+        std::vector <sf::Sprite>& AnimationVector;
 
         //all the methods for running an animation
         void RunAnimation(float Dletatime, GameObject Object);

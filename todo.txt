@@ -8,3 +8,4 @@ events
 add easy movement of object in the viewer
 tiles
 eazy walls making
+child object

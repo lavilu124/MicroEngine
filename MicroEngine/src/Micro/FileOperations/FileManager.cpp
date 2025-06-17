@@ -22,6 +22,13 @@ namespace Micro{
 
     void FileManager::AddInputFunc(std::string name, void(*function)(Micro::Input::InputAction&)) {
         m_functionMap[name] = function;
+        LoadInput();
+    }
+
+    void FileManager::AddButtonFunc(std::string name, void(*function)())
+    {
+        m_buttonFuncMap[name] = function;
+
     }
     void FileManager::CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput, std::string OffInput) {
         if (!OnInput.empty() && !OffInput.empty()) {
@@ -130,7 +137,7 @@ namespace Micro{
                 InputType = Input::inputType::ControllerButton;
             }
             else if (Type == "KeyboardKey") {
-                InputKey = static_cast<unsigned int>(std::stoi(Key));
+                InputKey = static_cast<sf::Keyboard::Key>(std::stoi(Key));
             }
             else if (Type == "MouseMove") {
                 InputKey = static_cast<unsigned int>(std::stoi(Key));
@@ -248,6 +255,8 @@ namespace Micro{
 		int count = 0;
 
         //going over the json and reading all the data
+
+        //objects
         for (int i = 0; i < actualJson.size(); i++) {
             std::stringstream ss;
             ss << i;
@@ -285,7 +294,8 @@ namespace Micro{
                 returnVector.push_back(std::move(plain));
             }
         }
-
+        
+        //lights
         for (int i = 0; i < count; i++) {
             std::stringstream ss;
             ss << i;
@@ -331,11 +341,16 @@ namespace Micro{
 			} 
         }
 
+        //texts
         for (int i = 0; i < count; i++) {
             std::stringstream ss;
             ss << i;
             Json::Value currentObject = actualJson["text" + ss.str()];
 
+            if (currentObject.isNull()) {
+                count = count - i;
+                break;
+            }
             if (currentObject.isNull()) {
                 MC_LOG("undfined object in place " + std::to_string(i));
                 continue;
@@ -366,6 +381,41 @@ namespace Micro{
             systemManager->GetText(name)->GetBase().setScale(scale);
         }
 
+        //buttons
+        for (int i = 0; i < count; i++) {
+            std::stringstream ss;
+            ss << i;
+            Json::Value currentObject = actualJson["button" + ss.str()];
+
+
+            if (currentObject.isNull()) {
+                MC_LOG("undfined object in place " + std::to_string(i));
+                continue;
+            }
+
+            std::string name = currentObject["name"].asString();
+            std::string img = currentObject["img"].asString();
+            std::string onClickImg = currentObject["onClickImg"].asString();
+            std::string onclickfunc = currentObject["onClickFunc"].asString();
+            float rotation = currentObject["rotation"].asFloat();
+            sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+            sf::Vector2f scale = sf::Vector2f(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
+
+
+            auto it = m_buttonFuncMap.find(onclickfunc);
+            auto it2 = m_functionMap.find(onclickfunc);
+            if (it == m_buttonFuncMap.end()) {
+                MC_LOG("No function registered with name: " + onclickfunc);
+                continue; // or handle error
+            }
+
+            auto x = it->second;
+            systemManager->AddButton(name, img, onClickImg, x);
+            systemManager->GetButton(name)->SetRotation(rotation);
+            systemManager->GetButton(name)->SetPosition(position);
+            systemManager->GetButton(name)->SetScale(scale);
+        }
+
         //close the file
         inputFile.close();
 
@@ -373,6 +423,11 @@ namespace Micro{
     }
 
     sf::Sprite* FileManager::GetSprite(std::string name) {
+        if (m_sprites.find(name) == m_sprites.end()) {
+            LoadAsset(name);
+        }
+        if (m_sprites.find(name) == m_sprites.end()) return nullptr;
+
         return &m_sprites[name];
     }
 

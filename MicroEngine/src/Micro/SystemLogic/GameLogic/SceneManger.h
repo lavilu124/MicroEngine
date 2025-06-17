@@ -3,6 +3,7 @@
 #include "../../FileOperations/FileManager.h"
 #include "../../../lightInclude.h"
 #include "../../Objects/UI/Text.h"
+#include "../../Objects/UI/Button.h"
 
 
 
@@ -17,9 +18,15 @@ namespace Micro{
 
 	public:
 		Camera camera;
+
 		std::vector<std::shared_ptr<Micro::GameObject>> objects;
+
 		std::vector<std::shared_ptr<LightSource>> lights;
-		std::vector<Text> texts;
 		EdgeVector edges;
+
+		std::vector<Text> texts;
+		std::vector<Button> buttons;
+
+		
 	};
 }
