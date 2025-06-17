@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "Walnut/UI/UI.h"
 
 class Object
@@ -10,7 +9,6 @@ public:
 
 
 	ImVec2 position;
-	
 	std::string name;
 	float rotation;
 };

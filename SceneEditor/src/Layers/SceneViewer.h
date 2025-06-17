@@ -21,7 +21,10 @@ private:
 	void RenderGameObjects(ImVec2 contentRegion) const;
 	void RenderLights(ImVec2 contentRegion);
 
+	void renderTexts(ImVec2 contentRegion);
+
 	void GenerateLightImage(LightObject& light);
+	void GenerateTextImage(TextObject& text);
 
 	void ExecutePlayCommand() const;
 	

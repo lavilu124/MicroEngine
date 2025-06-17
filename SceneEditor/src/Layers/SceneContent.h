@@ -12,6 +12,8 @@ public:
 	std::vector<GameObject>& GetGameObjects();
 	std::vector<LightObject>& GetLights();
 
+	std::vector<TextObject>& GetTexts();
+
 	std::string GetCurrentScene();
 
 	std::shared_ptr<ProjectDirectory> GetDir();
@@ -23,6 +25,8 @@ private:
 
 	void RenderLightList();
 
+	void RenderUiList();
+
 	void SetNewScene(std::string NewScene);
 	
 
@@ -32,12 +36,13 @@ private:
 private:
 	std::vector<GameObject> m_gameObjects;
 	std::vector <LightObject> m_lightObjects;
+	std::vector <TextObject> m_textObjects;
 
 	int m_newLightIndex = -1;
-	int m_NewGameObIndex = -1;
+	int m_NewGameIndex = -1;
+	int m_newTextIndex = -1;
 
 	int m_indexOfCurrentOb = -1;
-	bool m_isCurrentObjectLight = false;
 
 	std::shared_ptr<ObjectViewer> m_viewer;
 	std::shared_ptr<ProjectDirectory> m_directory;

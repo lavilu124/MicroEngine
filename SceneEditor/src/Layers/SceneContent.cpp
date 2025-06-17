@@ -25,11 +25,14 @@ void SceneContent::OnUIRender()
 	Window();
 
 	if (m_viewer->Delete()) {
-		if (m_isCurrentObjectLight) {
+		if (m_viewer->GetCurrentObjectType() == currentObjectType::light) {
 			m_lightObjects.erase(m_lightObjects.begin() + m_indexOfCurrentOb);
 		}
-		else {
+		else if (m_viewer->GetCurrentObjectType() == currentObjectType::game){
 			m_gameObjects.erase(m_gameObjects.begin() + m_indexOfCurrentOb);
+		}
+		else {
+			m_textObjects.erase(m_textObjects.begin() + m_indexOfCurrentOb);
 		}
 		m_viewer->SetObject(nullptr, currentObjectType::light);
 	}
@@ -43,6 +46,11 @@ std::vector<GameObject>& SceneContent::GetGameObjects()
 std::vector<LightObject>& SceneContent::GetLights()
 {
 	return m_lightObjects;
+}
+
+std::vector<TextObject>& SceneContent::GetTexts()
+{
+	return m_textObjects;
 }
 
 void SceneContent::Window()
@@ -60,40 +68,102 @@ void SceneContent::Window()
 
 	RenderObjectList();
 	RenderLightList();
+	RenderUiList();
 
 	float footerHeight = 40.0f;
 	ImGui::SetCursorPosY(ImGui::GetWindowSize().y - footerHeight * 2);
 
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
-	if (ImGui::Button("Create GameObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
-		GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
-		m_gameObjects.push_back(newGameObject);
-		m_NewGameObIndex = m_gameObjects.size() - 1;
-		if (!m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
-			m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::game);
-	}
+	//if (ImGui::Button("Create GameObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
+	//	GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
+	//	m_gameObjects.push_back(newGameObject);
+	//	m_NewGameObIndex = m_gameObjects.size() - 1;
+	//	if (!m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
+	//		m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::game);
+	//}
 
-	if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
-		//LightObject newLightObject();
-		//newLightObject.color = ImColor(255, 255, 255, 255);
-		//m_lightObjects.push_back(newLightObject);
-		m_lightObjects.push_back(LightObject(
-			"Light " + std::to_string(m_lightObjects.size() + 1),
-			ImVec2(0, 0),
-			0,
-			360,
-			0,
-			ImVec4(255, 255, 255, 255),
-			200,
-			200
-		));
+	//if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
+	//	//LightObject newLightObject();
+	//	//newLightObject.color = ImColor(255, 255, 255, 255);
+	//	//m_lightObjects.push_back(newLightObject);
+	//	m_lightObjects.push_back(LightObject(
+	//		"Light " + std::to_string(m_lightObjects.size() + 1),
+	//		ImVec2(0, 0),
+	//		0,
+	//		360,
+	//		0,
+	//		ImVec4(255, 255, 255, 255),
+	//		200,
+	//		200
+	//	));
 
 
-		m_newLightIndex = m_lightObjects.size() - 1;
-		if (m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
-			m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::light);
+	//	m_newLightIndex = m_lightObjects.size() - 1;
+	//	if (m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
+	//		m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::light);
+	//}
+
+	if (ImGui::BeginPopupContextWindow("CreateObjectContext", ImGuiPopupFlags_MouseButtonRight))
+	{
+		if (ImGui::BeginMenu("Create Object"))
+		{
+			if (ImGui::MenuItem("Light Object"))
+			{
+				m_lightObjects.push_back(LightObject(
+					"Light " + std::to_string(m_lightObjects.size() + 1),
+					ImVec2(0, 0),
+					0,
+					360,
+					0,
+					ImVec4(255, 255, 255, 255),
+					200,
+					200
+				));
+
+				m_newLightIndex = m_lightObjects.size() - 1;
+				if (m_viewer->GetCurrentObjectType() == currentObjectType::light && m_viewer->GetObject() != nullptr)
+					m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::light);
+			}
+
+			if (ImGui::MenuItem("Game Object"))
+			{
+				GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
+				m_gameObjects.push_back(newGameObject);
+				m_NewGameIndex = m_gameObjects.size() - 1;
+				if (m_viewer->GetCurrentObjectType() == currentObjectType::game && m_viewer->GetObject() != nullptr)
+					m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::game);
+			}
+
+			if (ImGui::BeginMenu("UI"))
+			{
+				if (ImGui::MenuItem("Text"))
+				{
+					m_textObjects.push_back(TextObject(
+						"New Text",
+						"Text " + std::to_string(m_textObjects.size() + 1),
+						ImVec4(255, 255, 255, 255),
+						"default",
+						ImVec4(0, 0, 0, 255),
+						1.0f,
+						24,
+						ImVec2(1.0f, 1.0f),
+						ImVec2(0, 0),
+						0.0f
+					));
+					m_newTextIndex = m_textObjects.size() - 1;
+					if (m_viewer->GetCurrentObjectType() == currentObjectType::text && m_viewer->GetObject() != nullptr)
+						m_viewer->SetObject(&m_textObjects[m_indexOfCurrentOb], currentObjectType::text);
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndPopup();
 	}
 
 	ImGui::End();
@@ -113,24 +183,23 @@ void SceneContent::RenderObjectList()
 		if (ImGui::Button(m_gameObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
 			m_indexOfCurrentOb = i;
-			m_isCurrentObjectLight = false;
 		}
 	}
 	ImGui::Unindent();
 
-	if (m_NewGameObIndex > -1) {
+	if (m_NewGameIndex > -1) {
 		static char GameObNameInput[256] = "";
-		snprintf(GameObNameInput, sizeof(GameObNameInput), "Object %d", m_NewGameObIndex + 1);
+		snprintf(GameObNameInput, sizeof(GameObNameInput), "Object %d", m_NewGameIndex + 1);
 
 		ImGui::InputText("##Enter GameObject Name", GameObNameInput, IM_ARRAYSIZE(GameObNameInput));
 		if (ImGui::Button("Cancel")) {
-			m_gameObjects.erase(m_gameObjects.begin() + m_NewGameObIndex);
-			m_NewGameObIndex = -1;
+			m_gameObjects.erase(m_gameObjects.begin() + m_NewGameIndex);
+			m_NewGameIndex = -1;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Confirm")) {
-			m_gameObjects[m_NewGameObIndex].name = GameObNameInput;
-			m_NewGameObIndex = -1;
+			m_gameObjects[m_NewGameIndex].name = GameObNameInput;
+			m_NewGameIndex = -1;
 		}
 	}
 }
@@ -149,7 +218,6 @@ void SceneContent::RenderLightList()
 		if (ImGui::Button(m_lightObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_lightObjects[i], currentObjectType::light);
 			m_indexOfCurrentOb = i;
-			m_isCurrentObjectLight = true;
 		}
 	}
 	ImGui::Unindent();
@@ -167,6 +235,40 @@ void SceneContent::RenderLightList()
 		if (ImGui::Button("Confirm")) {
 			m_lightObjects[m_newLightIndex].name = lightNameInput;
 			m_newLightIndex = -1;
+		}
+	}
+}
+
+void SceneContent::RenderUiList() {
+	ImVec2 windowSize = ImGui::GetWindowSize();
+	if (windowSize.x > 300) windowSize.x = 300;
+	if (m_lightObjects.size() != 0) {
+		ImGui::Separator();
+		ImGui::Text("Ui Objects:");
+	}
+
+	ImGui::Indent();
+	for (int i = 0; i < m_textObjects.size(); i++) {
+		if (ImGui::Button(m_textObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
+			m_viewer->SetObject(&m_textObjects[i], currentObjectType::text);
+			m_indexOfCurrentOb = i;
+		}
+	}
+	ImGui::Unindent();
+
+	if (m_newTextIndex > -1) {
+		static char TextNameInput[256] = "";
+		snprintf(TextNameInput, sizeof(TextNameInput), "Text %d", m_newTextIndex + 1);
+
+		ImGui::InputText("##Enter Text Name", TextNameInput, IM_ARRAYSIZE(TextNameInput));
+		if (ImGui::Button("Cancel")) {
+			m_textObjects.erase(m_textObjects.begin() + m_newTextIndex);
+			m_newTextIndex = -1;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Confirm")) {
+			m_textObjects[m_newTextIndex].name = TextNameInput;
+			m_newTextIndex = -1;
 		}
 	}
 }
@@ -226,6 +328,10 @@ void SceneContent::SetNewScene(std::string NewScene)
 		ss << i;
 		Json::Value currentObject = actualJson["lightSource" + ss.str()];
 
+		if (currentObject.isNull()) {
+			count = count - i;
+			break;
+		}
 
 		int type = currentObject["LightType"].asInt();
 		std::string name = currentObject["name"].asString();
@@ -240,6 +346,27 @@ void SceneContent::SetNewScene(std::string NewScene)
 		m_lightObjects.push_back(LightObject(name, position, rotation, angle, type, color, radius));
 		m_lightObjects.back().fade = fade;
 
+	}
+
+	for (int i = 0; i < count; i++) {
+		std::stringstream ss;
+		ss << i;
+		Json::Value currentObject = actualJson["text" + ss.str()];
+
+
+		std::string name = currentObject["name"].asString();
+		std::string font = currentObject["font"].asString();
+		float rotation = currentObject["rotation"].asFloat();
+		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+		ImVec4 color = ImVec4(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), 1);
+		ImVec4 outlineColor = ImVec4(currentObject["outlineColor"][0].asFloat() /255, currentObject["outlineColor"][1].asFloat(), currentObject["outlineColor"][2].asFloat(), 1);
+		float outlineThickness = currentObject["outlineThickness"].asFloat();
+		unsigned int size = currentObject["size"].asInt();
+		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
+		std::string value = currentObject["value"].asString();
+
+
+		m_textObjects.push_back(TextObject(value, name, color, font, outlineColor, outlineThickness, size, scale, position, rotation));
 	}
 
 	//close the file

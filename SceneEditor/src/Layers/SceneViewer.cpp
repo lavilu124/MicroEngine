@@ -133,6 +133,7 @@ void SceneViewer::Window()
     ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetCursorScreenPos(), ImVec2(ImGui::GetCursorScreenPos().x + contentRegion.x, ImGui::GetCursorScreenPos().y + contentRegion.y), IM_COL32(0, 0, 0, 255));
     RenderGameObjects(contentRegion);
     RenderLights(contentRegion);
+    renderTexts(contentRegion);
     ImGui::End();
 }
 
@@ -248,6 +249,32 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
     }
 }
 
+void SceneViewer::renderTexts(ImVec2 contentRegion) {
+    for (auto& text : m_sceneContent->GetTexts()) {
+        sf::Vector2f scaledPos = sf::Vector2f(text.position.x * m_zoom, text.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
+        ImVec2 position(scaledPos.x + contentRegion.x / 2 - 1024 / 2, scaledPos.y + contentRegion.y / 2 - 1024 / 2);
+
+
+        //fix light offset
+        (position.x > 0) ? position.x += 25 : position.x -= 25;
+        (position.y > 0) ? position.y -= 25 : position.y += 25;
+
+        if (position.y <= (75.f - 512)) {
+            continue;
+        }
+
+        ImGui::SetCursorPos(position);
+
+
+        if (!text.isUpdated()) {
+            GenerateTextImage(text);
+        }
+
+        if (text.image)
+            ImGui::Image(text.image->GetDescriptorSet(), ImVec2(1024, 1024));
+    }
+}
+
 void SceneViewer::GenerateLightImage(LightObject& light)
 {
     light.Updating();
@@ -306,4 +333,42 @@ void SceneViewer::GenerateLightImage(LightObject& light)
         light.imageData.get()
     );
 
+}
+
+void SceneViewer::GenerateTextImage(TextObject& text)
+{
+    sf::Vector2u size = renderTexture.getSize();
+    //create font
+    sf::Font font;
+    font.loadFromFile(m_mainPath + "\\fonts\\" + text.font + ".ttf");
+
+    //create text and set all the data
+    sf::Text sText;
+    sText.setFont(font);
+    sText.setString(text.value);
+    sText.setCharacterSize(text.size);
+    sText.setOutlineThickness(text.outlineThickness);
+    sText.setRotation(text.rotation);
+    sText.setColor(sf::Color(text.color.x, text.color.y, text.color.z));
+    sText.setOutlineColor(sf::Color(text.outlineColor.x, text.outlineColor.y, text.outlineColor.z));
+    sText.setPosition(size.x / 2, size.y / 2);
+
+    renderTexture.clear(sf::Color::Transparent);
+    renderTexture.draw(sText);
+    renderTexture.display();
+
+    sf::Image image = renderTexture.getTexture().copyToImage();
+    const sf::Uint8* pixels = image.getPixelsPtr();
+    size_t dataSize = image.getSize().x * image.getSize().y * 4;
+
+
+    text.imageData = std::shared_ptr<uint8_t[]>(new uint8_t[dataSize], std::default_delete<uint8_t[]>());
+    std::memcpy(text.imageData.get(), pixels, dataSize);
+
+    text.image = std::make_shared<Walnut::Image>(
+        image.getSize().x,
+        image.getSize().y,
+        Walnut::ImageFormat::RGBA,
+        text.imageData.get()
+    );
 }
