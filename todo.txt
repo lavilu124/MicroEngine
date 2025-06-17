@@ -1,4 +1,5 @@
 add ui elements(text and buttons)
+non scene objects
 
 maybe:
 multiplayer and/or multiscreen(local multiplayer)

@@ -69,6 +69,15 @@ void ObjectViewer::Window()
                 ImGui::PopStyleVar();
             }
             break;
+        case currentObjectType::text:
+            if (ImGui::CollapsingHeader("Text Object", ImGuiTreeNodeFlags_DefaultOpen)) {
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                ImGui::Indent();
+                DisplayTextObject();
+                ImGui::Unindent();
+                ImGui::PopStyleVar();
+            }
+            break;
         }
     }
 
@@ -220,7 +229,6 @@ void ObjectViewer::DisplayGameObject()
     ImGui::Unindent();
 }
 
-
 void ObjectViewer::DisplayLightObject()
 {
     ImGui::Text("Object Details: ");
@@ -262,7 +270,7 @@ void ObjectViewer::DisplayLightObject()
 
     ImGui::Text("Color:");
     ImGui::Indent();
-    float colorValues[3] = { Light->color.x, Light->color.y, Light->color.z };
+    float colorValues[3] = { Light->color.x / 255.0f, Light->color.y / 255.0f, Light->color.z / 255.0f };
     if (ImGui::ColorEdit3("##LightColor", colorValues)) {
         Light->color.x = colorValues[0] * 255;
         Light->color.y = colorValues[1] * 255;
@@ -348,17 +356,134 @@ void ObjectViewer::DisplayLightObject()
         ImGui::Indent();
         float displayWi = Light->width * 1.5f;
         if (ImGui::InputFloat("##LightWidth", &displayWi)) {
-            Light->width = min<float>(displayWi / 1.5f, 512.0f);
+            Light->width = min<float>(displayWi / 1.5f, 1024.0f);
             Light->UpdateVal();
         }
         ImGui::Unindent();
     }
 }
 
+void ObjectViewer::DisplayTextObject()
+{
+    ImGui::Text("Text Object Details:");
+    ImGui::Separator();
+
+    TextObject* textObj = (TextObject*)m_currentObject;
+
+    ImGui::Text("Name:");
+    ImGui::Indent();
+    static char nameBuffer[128];
+    strcpy_s(nameBuffer, sizeof(nameBuffer), m_currentObject->name.c_str());
+    if (ImGui::InputText("##TextName", nameBuffer, sizeof(nameBuffer))) {
+        m_currentObject->name = nameBuffer;
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Value:");
+    ImGui::Indent();
+    static char valueBuffer[512];
+    strcpy_s(valueBuffer, sizeof(valueBuffer), textObj->value.c_str());
+    if (ImGui::InputTextMultiline("##TextValue", valueBuffer, sizeof(valueBuffer), ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 4))) {
+        textObj->value = valueBuffer;
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Font:");
+    ImGui::Indent();
+    static char fontBuffer[128];
+    strcpy_s(fontBuffer, sizeof(fontBuffer), textObj->font.c_str());
+    if (ImGui::InputText("##TextFont", fontBuffer, sizeof(fontBuffer))) {
+        textObj->font = fontBuffer;
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Size:");
+    ImGui::Indent();
+    if (ImGui::InputInt("##TextSize", (int*)&textObj->size)) {
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Scale:");
+    ImGui::Indent();
+    float scale[2] = { textObj->scale.x, textObj->scale.y };
+    if (ImGui::InputFloat2("##TextScale", scale)) {
+        textObj->scale = ImVec2(scale[0], scale[1]);
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Position:");
+    ImGui::Indent();
+    float pos[2] = { m_currentObject->position.x, m_currentObject->position.y };
+    if (ImGui::InputFloat2("##TextPosition", pos)) {
+        m_currentObject->position = ImVec2(pos[0], pos[1]);
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Rotation (Degrees):");
+    ImGui::Indent();
+    if (ImGui::InputFloat("##TextRotation", &m_currentObject->rotation)) {
+        m_currentObject->rotation = std::min<float>(m_currentObject->rotation, 360.0f);
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Color:");
+    ImGui::Indent();
+    float color[4] = { textObj->color.x / 255.0f, textObj->color.y / 255.0f, textObj->color.z / 255.0f, textObj->color.w / 255.0f };
+    if (ImGui::ColorEdit4("##TextColor", color)) {
+        textObj->color = ImVec4(color[0] * 255.0f, color[1] * 255.0f, color[2] * 255.0f, color[3] * 255.0f);
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Outline Color:");
+    ImGui::Indent();
+    float outlineColor[4] = { textObj->outlineColor.x / 255.0f, textObj->outlineColor.y / 255.0f, textObj->outlineColor.z / 255.0f, textObj->outlineColor.w / 255.0f };
+    if (ImGui::ColorEdit4("##TextOutlineColor", outlineColor)) {
+        textObj->outlineColor = ImVec4(outlineColor[0] * 255.0f, outlineColor[1] * 255.0f, outlineColor[2] * 255.0f, outlineColor[3] * 255.0f);
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Outline Thickness:");
+    ImGui::Indent();
+    if (ImGui::InputFloat("##TextOutlineThickness", &textObj->outlineThickness)) {
+        textObj->UpdateVal();
+    }
+    ImGui::Unindent();
+}
+
 void ObjectViewer::SetObject(Object* newObject, currentObjectType type)
 {
     m_currentObject = newObject;
     m_currentObjectType = type;
+}
+
+currentObjectType ObjectViewer::GetCurrentObjectType()
+{
+    return m_currentObjectType;
 }
 
 Object* ObjectViewer::GetObject() const

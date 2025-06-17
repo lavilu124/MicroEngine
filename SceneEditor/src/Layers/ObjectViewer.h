@@ -6,7 +6,8 @@
 
 enum currentObjectType {
 	light,
-	game
+	game,
+	text
 };
 
 class ObjectViewer : public Walnut::Layer
@@ -17,6 +18,7 @@ public:
 	void OnUIRender() override;
 
 	void SetObject(Object* newObject, currentObjectType type);
+	currentObjectType GetCurrentObjectType();
 
 	Object* GetObject() const;
 
@@ -31,6 +33,8 @@ private:
 	void DisplayGameObject();
 
 	void DisplayLightObject();
+
+	void DisplayTextObject();
 
 private:
 	Object* m_currentObject = nullptr;

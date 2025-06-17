@@ -2,3 +2,4 @@
 
 #include "LightObject.h"
 #include "GameObject.h"
+#include "TextObject.h"
