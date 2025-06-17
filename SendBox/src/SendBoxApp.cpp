@@ -1,6 +1,7 @@
 #include "Objects/Player.h"
 #include <LightInclude.h>
 #include <Micro/EnteryPoint.h>
+#include <iostream>
 
 class App : public Micro::Application
 {
@@ -14,6 +15,7 @@ public:
 		m_lightId = m_systemManager.AddLight(ls::lightType::radial, "testrgjgi");
 		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetRange(150);
 		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetColor(sf::Color::Blue);
+		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->setPosition(10, 10);
 
 
 		////add a wall to block light
@@ -44,6 +46,8 @@ public:
 			m_systemManager.Update(m_camera);
 
 			Display();
+			auto test = sf::Color::Blue;
+			std::cout << test.a;
 		}
 	}
 

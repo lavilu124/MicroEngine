@@ -76,5 +76,36 @@
 		],
 		"spriteName" : "run2.png",
 		"type" : "none"
+	},
+	"text0" : 
+	{
+		"name" : "testing",
+		"value" : "testing",
+		"position" : 
+		[
+			0.0,
+			0.0
+		],
+		"rotation" : 0.0,
+		"scale" : 
+		[
+			1.0,
+			1.0
+		],
+		"size" : 24,
+		"color" : 
+		[
+			255.0,
+			0.0,
+			0.0
+		],
+		"outlineColor" : 
+		[
+			0.0,
+			255.0,
+			0.0
+		],
+		"outlineThickness" : 1.0,
+		"font" : "Barriecito-Regular"
 	}
 }
