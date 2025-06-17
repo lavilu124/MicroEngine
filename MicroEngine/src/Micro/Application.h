@@ -8,8 +8,8 @@ namespace Micro{
 	class MICRO_API Application
 	{
 	public:
-		Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const char* scene = "");
-		Application(sf::Vector2f windowSize, float maxFps, const char* name, const char* scene = "");
+		Application(float windowWidth, float windowHeight, float maxFPS, const char* name);
+		Application(sf::Vector2f windowSize, float maxFps, const char* name);
 
 		virtual ~Application();
 		virtual void Run();

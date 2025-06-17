@@ -12,7 +12,7 @@ namespace Micro{
 	public:
 		SystemManager(sf::RenderWindow& window);
 
-		void Update(Camera* cam);
+		void Update();
 
 		void Render(sf::RenderWindow& window);
 
@@ -26,7 +26,7 @@ namespace Micro{
 
 		bool CheckForCollision(sf::Sprite sprite, const char* name, GameObject*& collideInfo , Collision::collisionLayer layerToCollideWith = Collision::ALL);
 
-		void RunInput(sf::Event event);
+		void RunInput(sf::Event event, sf::RenderWindow& window);
 
 		void AddInput(Micro::Input::InputAction& action);
 
@@ -57,6 +57,11 @@ namespace Micro{
 		void AddText(const std::string& name, std::string font = "");
 		void RemoveText(const std::string& name);
 		Text* GetText(const std::string& name);
+
+		void AddButton(std::string name, std::string img, std::string onClickImg = "", void (*onClick)() = nullptr);
+		void RemoveButton(const std::string& name);
+		Button* GetButton(const std::string& name);
+
 
 	public:
 

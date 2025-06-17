@@ -107,5 +107,15 @@
 		],
 		"outlineThickness" : 1.0,
 		"font" : "Barriecito-Regular"
+	},
+	"button0" : 
+	{
+  		"name": "testing",
+  		"img": "b1.png",
+  		"onClickImg": "b2.png",
+  		"onClickFunc": "testing1",
+  		"rotation": 0.0,
+  		"position": [0.0, 0.0],
+  		"scale": [1.0, 1.0]
 	}
 }

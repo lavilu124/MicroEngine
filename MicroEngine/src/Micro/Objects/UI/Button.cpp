@@ -1,1 +1,100 @@
 #include "Button.h"
+#include "../..//SystemLogic//SystemManager.h"
+
+
+namespace Micro {
+	Button::Button(SystemManager* systemManager, std::string name, std::string img, std::string onClickImg, void (*onClick)()) 
+		: m_name(name), m_systemManager(systemManager), m_onClick(onClick) {
+
+		m_img = systemManager->GetFileManager().GetSprite(img);
+		if (onClickImg != "") {
+			m_onClickImg = systemManager->GetFileManager().GetSprite(onClickImg);
+			m_isOnClickSet = true;
+		}
+			
+	}
+
+	std::string Button::GetName() const
+	{
+		return m_name;
+	}
+
+	bool Button::IsPressed(sf::Vector2f mousePos)
+	{
+		if (m_img->getGlobalBounds().contains(mousePos)) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				if (!m_isClicked) m_onClick();
+				m_isClicked = true;
+				return true;
+			}
+		}
+
+
+		m_isClicked = false;
+		return false;
+	}
+
+	void Button::SetPosition(sf::Vector2f pos)
+	{
+		m_img->setPosition(pos);
+		m_onClickImg->setPosition(pos);
+	}
+
+	sf::Vector2f Button::GetPosition() const
+	{
+		return m_img->getPosition();
+	}
+
+	void Button::SetScale(sf::Vector2f scale)
+	{
+		m_img->setScale(scale);
+		m_onClickImg->setScale(scale);
+	}
+
+	sf::Vector2f Button::GetScale() const
+	{
+		return m_img->getScale();
+	}
+
+	void Button::SetRotation(float Rotation)
+	{
+		m_img->setRotation(Rotation);
+		m_onClickImg->setRotation(Rotation);
+	}
+
+	float Button::GetRotation() const
+	{
+		return m_img->getRotation();
+	}
+
+	void Button::SetImg(std::string name)
+	{
+		m_img = m_systemManager->GetFileManager().GetSprite(name);
+	}
+
+	void Button::SetOnClickImg(std::string name)
+	{
+		m_onClickImg = m_systemManager->GetFileManager().GetSprite(name);
+	}
+
+	void Button::Delete()
+	{
+		m_systemManager->RemoveButton(m_name);
+	}
+
+	sf::Sprite Button::GetCurrentSprite()
+	{
+		if (!m_isClicked || !m_isOnClickSet) return *m_img;
+
+		return *m_onClickImg;
+	}
+
+	bool Button::IsShowen() const
+	{
+		return m_showen;
+	}
+	void Button::SetShowen(bool showen)
+	{
+		m_showen = showen;
+	}
+}

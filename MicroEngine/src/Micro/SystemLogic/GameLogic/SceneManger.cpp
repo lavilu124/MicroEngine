@@ -16,6 +16,7 @@ namespace Micro{
 		objects.clear();
 		lights.clear();
 		texts.clear();
+		buttons.clear();
 		objects = std::move(fileManager.GetObjects(Scene, systemManager));
 	}
 

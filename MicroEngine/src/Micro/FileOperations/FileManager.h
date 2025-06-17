@@ -18,10 +18,10 @@ namespace Micro{
 	public:
 		void LoadInput();
 		void AddInputFunc(std::string name, void(*function)(Micro::Input::InputAction&));
+		void AddButtonFunc(std::string name, void(*function)());
 		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput = "", std::string OffInput = "");
 
 		void addInput(Micro::Input::InputAction& action);
-
 
 		void SetPaths();
 
@@ -45,6 +45,7 @@ namespace Micro{
 		static void CreateLog();
 
 		std::map <std::string, void(*)(Micro::Input::InputAction&)> m_functionMap;
+		std::map <std::string, void(*)()> m_buttonFuncMap;
 		std::map < std::string, sf::Sprite> m_sprites;
 		std::map < std::string, sf::Sound> m_sounds;
 
