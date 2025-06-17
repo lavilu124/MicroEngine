@@ -14,6 +14,8 @@ public:
 
 	std::vector<TextObject>& GetTexts();
 
+	std::vector<ButtonObject>& GetButtons();
+
 	std::string GetCurrentScene();
 
 	std::shared_ptr<ProjectDirectory> GetDir();
@@ -37,10 +39,12 @@ private:
 	std::vector<GameObject> m_gameObjects;
 	std::vector <LightObject> m_lightObjects;
 	std::vector <TextObject> m_textObjects;
+	std::vector <ButtonObject> m_buttonObjects;
 
 	int m_newLightIndex = -1;
 	int m_NewGameIndex = -1;
 	int m_newTextIndex = -1;
+	int m_newButtonIndex = -1;
 
 	int m_indexOfCurrentOb = -1;
 

@@ -7,7 +7,8 @@
 enum currentObjectType {
 	light,
 	game,
-	text
+	text,
+	button
 };
 
 class ObjectViewer : public Walnut::Layer
@@ -35,6 +36,8 @@ private:
 	void DisplayLightObject();
 
 	void DisplayTextObject();
+
+	void DisplayButtonObject();
 
 private:
 	Object* m_currentObject = nullptr;

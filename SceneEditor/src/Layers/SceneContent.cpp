@@ -53,6 +53,11 @@ std::vector<TextObject>& SceneContent::GetTexts()
 	return m_textObjects;
 }
 
+std::vector<ButtonObject>& SceneContent::GetButtons()
+{
+	return m_buttonObjects;
+}
+
 void SceneContent::Window()
 {
 	ImGui::Begin("Scene Content");
@@ -156,6 +161,16 @@ void SceneContent::Window()
 					if (m_viewer->GetCurrentObjectType() == currentObjectType::text && m_viewer->GetObject() != nullptr)
 						m_viewer->SetObject(&m_textObjects[m_indexOfCurrentOb], currentObjectType::text);
 				}
+				if (ImGui::MenuItem("Button")) {
+					m_buttonObjects.push_back(ButtonObject(
+						"New Button",
+						"",
+						""
+					));
+					m_newButtonIndex = m_buttonObjects.size() - 1;
+					if (m_viewer->GetCurrentObjectType() == currentObjectType::button && m_viewer->GetObject() != nullptr)
+						m_viewer->SetObject(&m_buttonObjects[m_indexOfCurrentOb], currentObjectType::button);
+				}
 
 				ImGui::EndMenu();
 			}
@@ -242,9 +257,11 @@ void SceneContent::RenderLightList()
 void SceneContent::RenderUiList() {
 	ImVec2 windowSize = ImGui::GetWindowSize();
 	if (windowSize.x > 300) windowSize.x = 300;
-	if (m_lightObjects.size() != 0) {
+
+	// Text objects
+	if (!m_textObjects.empty()) {
 		ImGui::Separator();
-		ImGui::Text("Ui Objects:");
+		ImGui::Text("UI Texts:");
 	}
 
 	ImGui::Indent();
@@ -271,7 +288,39 @@ void SceneContent::RenderUiList() {
 			m_newTextIndex = -1;
 		}
 	}
+
+	// Button objects
+	if (!m_buttonObjects.empty()) {
+		ImGui::Separator();
+		ImGui::Text("UI Buttons:");
+	}
+
+	ImGui::Indent();
+	for (int i = 0; i < m_buttonObjects.size(); i++) {
+		if (ImGui::Button(m_buttonObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
+			m_viewer->SetObject(&m_buttonObjects[i], currentObjectType::button);
+			m_indexOfCurrentOb = i;
+		}
+	}
+	ImGui::Unindent();
+
+	if (m_newButtonIndex > -1) {
+		static char ButtonNameInput[256] = "";
+		snprintf(ButtonNameInput, sizeof(ButtonNameInput), "Button %d", m_newButtonIndex + 1);
+
+		ImGui::InputText("##Enter Button Name", ButtonNameInput, IM_ARRAYSIZE(ButtonNameInput));
+		if (ImGui::Button("Cancel##ButtonCancel")) {
+			m_buttonObjects.erase(m_buttonObjects.begin() + m_newButtonIndex);
+			m_newButtonIndex = -1;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Confirm##ButtonConfirm")) {
+			m_buttonObjects[m_newButtonIndex].name = ButtonNameInput;
+			m_newButtonIndex = -1;
+		}
+	}
 }
+
 
 void SceneContent::SetNewScene(std::string NewScene)
 {
@@ -353,6 +402,10 @@ void SceneContent::SetNewScene(std::string NewScene)
 		ss << i;
 		Json::Value currentObject = actualJson["text" + ss.str()];
 
+		if (currentObject.isNull()) {
+			count = count - i;
+			break;
+		}
 
 		std::string name = currentObject["name"].asString();
 		std::string font = currentObject["font"].asString();
@@ -367,6 +420,31 @@ void SceneContent::SetNewScene(std::string NewScene)
 
 
 		m_textObjects.push_back(TextObject(value, name, color, font, outlineColor, outlineThickness, size, scale, position, rotation));
+	}
+
+	for (int i = 0; i < count; i++) {
+		std::stringstream ss;
+		ss << i;
+		Json::Value currentObject = actualJson["button" + ss.str()];
+
+		if (currentObject.isNull()) {
+			count = count - i;
+			break;
+		}
+
+		std::string name = currentObject["name"].asString();
+		std::string img = currentObject["img"].asString();
+		std::string onClickImg = currentObject["onClickImg"].asString();
+		std::string onclickfunc = currentObject["onClickFunc"].asString();
+		float rotation = currentObject["rotation"].asFloat();
+		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
+
+		std::string pathToImg1 = GetDirForSprite(img, std::filesystem::current_path().string());
+		std::string pathToImg2 = GetDirForSprite(onClickImg, std::filesystem::current_path().string());
+
+
+		m_buttonObjects.push_back(ButtonObject(name, pathToImg1, onclickfunc, pathToImg2, rotation, position, scale));
 	}
 
 	//close the file

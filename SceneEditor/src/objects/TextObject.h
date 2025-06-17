@@ -30,5 +30,5 @@ public:
 	std::shared_ptr<uint8_t[]> imageData;
 
 private:
-	bool Updated = false;
+	bool m_updated = false;
 };

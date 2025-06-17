@@ -58,6 +58,8 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		sceneJson[lightKey] = lightObjectJson;
 	}
 
+
+
 	// Write JSON to file
 	std::ofstream outputFile(path);
 	if (outputFile.is_open()) {

@@ -10,16 +10,16 @@ LightObject::LightObject(std::string name, ImVec2 position, float rotation, floa
 void LightObject::UpdateVal()
 {
 	image.reset();
-	Updated = false;
+	m_updated = false;
 }
 
 void LightObject::Updating()
 {
-	Updated = true;
+	m_updated = true;
 }
 
 bool LightObject::isUpdated()
 {
-	return Updated;
+	return m_updated;
 }
 

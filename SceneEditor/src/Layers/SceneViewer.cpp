@@ -134,6 +134,7 @@ void SceneViewer::Window()
     RenderGameObjects(contentRegion);
     RenderLights(contentRegion);
     renderTexts(contentRegion);
+    renderButtons(contentRegion);
     ImGui::End();
 }
 
@@ -272,6 +273,28 @@ void SceneViewer::renderTexts(ImVec2 contentRegion) {
 
         if (text.image)
             ImGui::Image(text.image->GetDescriptorSet(), ImVec2(1024, 1024));
+    }
+}
+
+void SceneViewer::renderButtons(ImVec2 contentRegion) {
+    for (auto& button : m_sceneContent->GetButtons()) {
+        if (button.image) {
+            sf::Vector2f scaledPos = sf::Vector2f(button.position.x * m_zoom, button.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
+            ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
+            ImVec2 size = {
+                (button.scale.x / 2) * button.image->GetWidth() * m_zoom,
+                (button.scale.x / 2) * button.image->GetHeight() * m_zoom
+            };
+
+            if (position.y <= 75.f) {
+                continue;
+            }
+
+
+            ImGui::SetCursorPos(position);
+
+            ImGui::Image(button.image->GetDescriptorSet(), size);
+        }
     }
 }
 
