@@ -78,6 +78,14 @@ void ObjectViewer::Window()
                 ImGui::PopStyleVar();
             }
             break;
+        case currentObjectType::button:
+            if (ImGui::CollapsingHeader("Button Object", ImGuiTreeNodeFlags_DefaultOpen)) {
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                ImGui::Indent();
+                DisplayButtonObject();
+                ImGui::Unindent();
+                ImGui::PopStyleVar();
+            }
         }
     }
 
@@ -474,6 +482,130 @@ void ObjectViewer::DisplayTextObject()
     }
     ImGui::Unindent();
 }
+
+void ObjectViewer::DisplayButtonObject() {
+    ImGui::Text("Button Object Details:");
+    ImGui::Separator();
+
+    ButtonObject* buttonObj = (ButtonObject*)m_currentObject;
+
+    // Name
+    ImGui::Text("Name:");
+    ImGui::Indent();
+    static char nameBuffer[128];
+    strcpy_s(nameBuffer, sizeof(nameBuffer), m_currentObject->name.c_str());
+    if (ImGui::InputText("##ButtonName", nameBuffer, sizeof(nameBuffer))) {
+        m_currentObject->name = nameBuffer;
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    // Position
+    ImGui::Text("Position:");
+    ImGui::Indent();
+    float pos[2] = { m_currentObject->position.x, m_currentObject->position.y };
+    if (ImGui::InputFloat2("##ButtonPosition", pos)) {
+        m_currentObject->position = ImVec2(pos[0], pos[1]);
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    // Rotation
+    ImGui::Text("Rotation (Degrees):");
+    ImGui::Indent();
+    if (ImGui::InputFloat("##ButtonRotation", &m_currentObject->rotation)) {
+        m_currentObject->rotation = std::min<float>(m_currentObject->rotation, 360.0f);
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    // Scale
+    ImGui::Text("Scale:");
+    ImGui::Indent();
+    float scale[2] = { buttonObj->scale.x, buttonObj->scale.y };
+    if (ImGui::InputFloat2("##ButtonScale", scale)) {
+        buttonObj->scale = ImVec2(scale[0], scale[1]);
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("image:");
+    ImGui::Indent();
+
+    ImVec2 dropAreaSize = ImVec2(200, 200);
+    ImVec2 cursorPos = ImGui::GetCursorScreenPos();
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+    drawList->AddRectFilled(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(50, 50, 50, 100));
+    drawList->AddRect(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(255, 255, 255, 255));
+
+    ImGui::InvisibleButton("##SpriteDropArea", dropAreaSize);
+
+    if (ImGui::IsItemHovered() && m_projectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+        buttonObj->SetPathReg(m_projectDirectory->GetSelectedPath());
+    }
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        ImGui::SetTooltip("Drop a sprite from the File Explorer here");
+    }
+
+    if (buttonObj->image && buttonObj->image->GetDescriptorSet()) {
+        ImVec2 imageSize = ImVec2((float)buttonObj->image->GetWidth() /2, (float)buttonObj->image->GetHeight() /2);
+        ImVec2 imagePos = ImVec2(cursorPos.x + (dropAreaSize.x - imageSize.x) / 2, cursorPos.y + (dropAreaSize.y - imageSize.y) / 2);
+        drawList->AddImage(buttonObj->image->GetDescriptorSet(), imagePos, ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y));
+    }
+
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("on click image:");
+    ImGui::Indent();
+
+    cursorPos = ImGui::GetCursorScreenPos();
+
+    drawList->AddRectFilled(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(50, 50, 50, 100));
+    drawList->AddRect(cursorPos, ImVec2(cursorPos.x + dropAreaSize.x, cursorPos.y + dropAreaSize.y), IM_COL32(255, 255, 255, 255));
+
+    ImGui::InvisibleButton("##Sprite2DropArea", dropAreaSize);
+
+    if (ImGui::IsItemHovered() && m_projectDirectory->GetSelectedPath() != "" && ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+        buttonObj->SetPathClick(m_projectDirectory->GetSelectedPath());
+    }
+    if (ImGui::IsItemHovered()) {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+        ImGui::SetTooltip("Drop a sprite from the File Explorer here");
+    }
+    m_projectDirectory->ClearSelectedPath();
+
+    if (buttonObj->clickImage && buttonObj->clickImage->GetDescriptorSet()) {
+        ImVec2 imageSize = ImVec2((float)buttonObj->clickImage->GetWidth() / 2, (float)buttonObj->clickImage->GetHeight() / 2);
+        ImVec2 imagePos = ImVec2(cursorPos.x + (dropAreaSize.x - imageSize.x) / 2, cursorPos.y + (dropAreaSize.y - imageSize.y) / 2);
+        drawList->AddImage(buttonObj->clickImage->GetDescriptorSet(), imagePos, ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y));
+    }
+
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    // OnClick Function Name
+    ImGui::Text("OnClick Function Name:");
+    ImGui::Indent();
+    static char funcBuffer[256];
+    strcpy_s(funcBuffer, sizeof(funcBuffer), buttonObj->onclickFunc.c_str());
+    if (ImGui::InputText("##ButtonOnClickFunction", funcBuffer, sizeof(funcBuffer))) {
+        buttonObj->onclickFunc = funcBuffer;
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+}
+
+
 
 void ObjectViewer::SetObject(Object* newObject, currentObjectType type)
 {

@@ -23,8 +23,11 @@ private:
 
 	void renderTexts(ImVec2 contentRegion);
 
+	void renderButtons(ImVec2 contentRegion);
+
 	void GenerateLightImage(LightObject& light);
 	void GenerateTextImage(TextObject& text);
+
 
 	void ExecutePlayCommand() const;
 	

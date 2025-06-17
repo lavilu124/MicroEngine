@@ -1,5 +1,6 @@
 add ui elements(text and buttons)
 non scene objects
+un/visible in editor
 
 maybe:
 multiplayer and/or multiscreen(local multiplayer)
@@ -9,3 +10,4 @@ add easy movement of object in the viewer
 tiles
 eazy walls making
 child object
+save file (with encrypt?)

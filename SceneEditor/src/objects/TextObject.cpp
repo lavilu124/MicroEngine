@@ -8,15 +8,15 @@ TextObject::TextObject(std::string value, std::string name, ImVec4 color, std::s
 void TextObject::UpdateVal()
 {
 	image.reset();
-	Updated = false;
+	m_updated = false;
 }
 
 void TextObject::Updating()
 {
-	Updated = true;
+	m_updated = true;
 }
 
 bool TextObject::isUpdated()
 {
-	return Updated;
+	return m_updated;
 }
