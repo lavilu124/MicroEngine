@@ -292,9 +292,10 @@ namespace Micro{
             Json::Value currentObject = actualJson["lightSource" + ss.str()];
 
             if (currentObject.isNull()) {
-                MC_LOG("undfined object in place " + std::to_string(i));
-                continue;
+                count = count - i;
+                break;
             }
+            
 
 
             int type = currentObject["LightType"].asInt();
@@ -328,6 +329,41 @@ namespace Micro{
 				MC_LOG(((std::string)"unknown light type in " + name));
 				break;
 			} 
+        }
+
+        for (int i = 0; i < count; i++) {
+            std::stringstream ss;
+            ss << i;
+            Json::Value currentObject = actualJson["text" + ss.str()];
+
+            if (currentObject.isNull()) {
+                MC_LOG("undfined object in place " + std::to_string(i));
+                continue;
+            }
+
+
+            std::string name = currentObject["name"].asString();
+            std::string font = currentObject["font"].asString();
+            float rotation = currentObject["rotation"].asFloat();
+            sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
+            sf::Color color = sf::Color(currentObject["color"][0].asFloat(), currentObject["color"][1].asFloat(), currentObject["color"][2].asFloat(), currentObject["color"][3].asFloat());
+            color.a = 255;
+            sf::Color outlineColor = sf::Color(currentObject["outlineColor"][0].asFloat(), currentObject["outlineColor"][1].asFloat(), currentObject["outlineColor"][2].asFloat(), currentObject["outlineColor"][3].asFloat());
+            outlineColor.a = 255;
+            float outlineThickness = currentObject["outlineThickness"].asFloat();
+            unsigned int size = currentObject["size"].asInt();
+            sf::Vector2f scale = sf::Vector2f(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
+            std::string value = currentObject["value"].asString();
+
+            systemManager->AddText(name, font);
+            systemManager->GetText(name)->GetBase().setString(value);
+            systemManager->GetText(name)->GetBase().setRotation(rotation);
+            systemManager->GetText(name)->GetBase().setPosition(position);
+            systemManager->GetText(name)->GetBase().setColor(color);
+            systemManager->GetText(name)->GetBase().setOutlineColor(outlineColor);
+            systemManager->GetText(name)->GetBase().setOutlineThickness(outlineThickness);
+            systemManager->GetText(name)->GetBase().setCharacterSize(size);
+            systemManager->GetText(name)->GetBase().setScale(scale);
         }
 
         //close the file
