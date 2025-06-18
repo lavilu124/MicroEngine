@@ -2,7 +2,7 @@
 #include <filesystem>
 
 ButtonObject::ButtonObject(std::string name, std::string img, std::string onclickFunc, std::string onClickImg, float rotation, ImVec2 position, ImVec2 scale)
-	:Object(name, position, rotation), name(name), onclickFunc(onclickFunc), scale(scale)
+	:Object(name, position, rotation), name(name), onClickFunc(onclickFunc), scale(scale)
 {
 	SetPathReg(img);
 	SetPathClick(onClickImg);

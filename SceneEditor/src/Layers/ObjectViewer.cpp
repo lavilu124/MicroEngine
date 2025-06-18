@@ -596,9 +596,9 @@ void ObjectViewer::DisplayButtonObject() {
     ImGui::Text("OnClick Function Name:");
     ImGui::Indent();
     static char funcBuffer[256];
-    strcpy_s(funcBuffer, sizeof(funcBuffer), buttonObj->onclickFunc.c_str());
+    strcpy_s(funcBuffer, sizeof(funcBuffer), buttonObj->onClickFunc.c_str());
     if (ImGui::InputText("##ButtonOnClickFunction", funcBuffer, sizeof(funcBuffer))) {
-        buttonObj->onclickFunc = funcBuffer;
+        buttonObj->onClickFunc = funcBuffer;
     }
     ImGui::Unindent();
 

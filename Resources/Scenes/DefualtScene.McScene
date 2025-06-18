@@ -1,4 +1,22 @@
 {
+	"button0" : 
+	{
+		"img" : "b1.png",
+		"name" : "testing123",
+		"onClickFunc" : "testing1",
+		"onClickImg" : "b2.png",
+		"position" : 
+		[
+			100.0,
+			0.0
+		],
+		"rotation" : 0.0,
+		"scale" : 
+		[
+			1.0,
+			1.0
+		]
+	},
 	"lightSource0" : 
 	{
 		"LightType" : 0,
@@ -8,7 +26,7 @@
 			255.0,
 			0.0,
 			0.0,
-			27494199590912.0
+			7011020862128128.0
 		],
 		"fade" : true,
 		"name" : "light1",
@@ -17,7 +35,7 @@
 			200.0,
 			200.0
 		],
-		"radius" : 26.337448120117188,
+		"radius" : 17.558298110961914,
 		"rotation" : 0.0
 	},
 	"object0" : 
@@ -79,8 +97,22 @@
 	},
 	"text0" : 
 	{
+		"color" : 
+		[
+			210.39604187011719,
+			145.81904602050781,
+			145.81904602050781,
+			1.0
+		],
+		"font" : "Barriecito-Regular",
 		"name" : "testing",
-		"value" : "testing",
+		"outlineColor" : 
+		[
+			0.0,
+			65025.0,
+			0.0
+		],
+		"outlineThickness" : 1.0,
 		"position" : 
 		[
 			0.0,
@@ -93,29 +125,6 @@
 			1.0
 		],
 		"size" : 24,
-		"color" : 
-		[
-			255.0,
-			0.0,
-			0.0
-		],
-		"outlineColor" : 
-		[
-			0.0,
-			255.0,
-			0.0
-		],
-		"outlineThickness" : 1.0,
-		"font" : "Barriecito-Regular"
-	},
-	"button0" : 
-	{
-  		"name": "testing",
-  		"img": "b1.png",
-  		"onClickImg": "b2.png",
-  		"onClickFunc": "testing1",
-  		"rotation": 0.0,
-  		"position": [0.0, 0.0],
-  		"scale": [1.0, 1.0]
+		"value" : "testing"
 	}
 }

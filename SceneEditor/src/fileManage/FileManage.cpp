@@ -13,58 +13,100 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		std::remove(path.c_str());
 	}
 
-	// Serialize scene data to JSON
 	Json::Value sceneJson;
 
 	// Game Objects
 	for (int i = 0; i < content->GetGameObjects().size(); i++) {
 		std::string objectKey = "object" + std::to_string(i);
+		const auto& obj = content->GetGameObjects()[i];
 		Json::Value gameObjectJson;
-		gameObjectJson["layer"] = content->GetGameObjects()[i].layer;
-		gameObjectJson["level"] = content->GetGameObjects()[i].level;
-		gameObjectJson["position"][0] = content->GetGameObjects()[i].position.x;
-		gameObjectJson["position"][1] = content->GetGameObjects()[i].position.y;
-		gameObjectJson["rotation"] = content->GetGameObjects()[i].rotation;
-		gameObjectJson["scale"][0] = content->GetGameObjects()[i].scale.x;
-		gameObjectJson["scale"][1] = content->GetGameObjects()[i].scale.y;
-		gameObjectJson["spriteName"] = content->GetGameObjects()[i].spritename;
-		gameObjectJson["name"] = content->GetGameObjects()[i].name;
-		std::string type = content->GetGameObjects()[i].type;
-		gameObjectJson["type"] = (type == "")? "none" : type;
+		gameObjectJson["layer"] = obj.layer;
+		gameObjectJson["level"] = obj.level;
+		gameObjectJson["position"][0] = obj.position.x;
+		gameObjectJson["position"][1] = obj.position.y;
+		gameObjectJson["rotation"] = obj.rotation;
+		gameObjectJson["scale"][0] = obj.scale.x;
+		gameObjectJson["scale"][1] = obj.scale.y;
+		gameObjectJson["spriteName"] = obj.spritename;
+		gameObjectJson["name"] = obj.name;
+		gameObjectJson["type"] = (obj.type == "") ? "none" : obj.type;
 		sceneJson[objectKey] = gameObjectJson;
 	}
 
 	// Light Objects
 	for (int i = 0; i < content->GetLights().size(); i++) {
 		std::string lightKey = "lightSource" + std::to_string(i);
+		const auto& light = content->GetLights()[i];
 		Json::Value lightObjectJson;
-		lightObjectJson["LightType"] = content->GetLights()[i].type;
-		lightObjectJson["name"] = content->GetLights()[i].name;
-		lightObjectJson["position"][0] = content->GetLights()[i].position.x;
-		lightObjectJson["position"][1] = content->GetLights()[i].position.y;
-		lightObjectJson["color"][0] = content->GetLights()[i].color.x;
-		lightObjectJson["color"][1] = content->GetLights()[i].color.y;
-		lightObjectJson["color"][2] = content->GetLights()[i].color.z;
-		lightObjectJson["color"][3] = content->GetLights()[i].color.w * 255.0f; 
-		lightObjectJson["rotation"] = content->GetLights()[i].rotation;
-		if (content->GetLights()[i].type == 0) {
-			lightObjectJson["angle"] = content->GetLights()[i].beamAngle;
+		lightObjectJson["LightType"] = light.type;
+		lightObjectJson["name"] = light.name;
+		lightObjectJson["position"][0] = light.position.x;
+		lightObjectJson["position"][1] = light.position.y;
+		lightObjectJson["color"][0] = light.color.x;
+		lightObjectJson["color"][1] = light.color.y;
+		lightObjectJson["color"][2] = light.color.z;
+		lightObjectJson["color"][3] = light.color.w * 255.0f;
+		lightObjectJson["rotation"] = light.rotation;
+		lightObjectJson["radius"] = light.radius;
+		lightObjectJson["fade"] = light.fade;
+		if (light.type == 0) {
+			lightObjectJson["angle"] = light.beamAngle;
 		}
 		else {
-			lightObjectJson["width"] = content->GetLights()[i].width;
+			lightObjectJson["width"] = light.width;
 		}
-		lightObjectJson["radius"] = content->GetLights()[i].radius;
-		lightObjectJson["fade"] = content->GetLights()[i].fade;
 		sceneJson[lightKey] = lightObjectJson;
 	}
 
+	// Text Objects
+	for (int i = 0; i < content->GetTexts().size(); i++) {
+		std::string textKey = "text" + std::to_string(i);
+		const auto& text = content->GetTexts()[i];
+		Json::Value textJson;
+		textJson["name"] = text.name;
+		textJson["font"] = text.font;
+		textJson["rotation"] = text.rotation;
+		textJson["position"][0] = text.position.x;
+		textJson["position"][1] = text.position.y;
+		textJson["color"][0] = text.color.x;
+		textJson["color"][1] = text.color.y;
+		textJson["color"][2] = text.color.z;
+		textJson["color"][3] = text.color.w;
+		textJson["outlineColor"][0] = text.outlineColor.x * 255.0f;
+		textJson["outlineColor"][1] = text.outlineColor.y * 255.0f;
+		textJson["outlineColor"][2] = text.outlineColor.z * 255.0f;
+		textJson["outlineThickness"] = text.outlineThickness;
+		textJson["size"] = text.size;
+		textJson["scale"][0] = text.scale.x;
+		textJson["scale"][1] = text.scale.y;
+		textJson["value"] = text.value;
+		sceneJson[textKey] = textJson;
+	}
 
+	// Button Objects
+	for (int i = 0; i < content->GetButtons().size(); i++) {
+		std::string buttonKey = "button" + std::to_string(i);
+		const auto& button = content->GetButtons()[i];
+		Json::Value buttonJson;
+		buttonJson["name"] = button.name;
+		buttonJson["img"] = button.img;
+		buttonJson["onClickImg"] = button.onClickImg;
+		buttonJson["onClickFunc"] = button.onClickFunc;
+		buttonJson["rotation"] = button.rotation;
+		buttonJson["position"][0] = button.position.x;
+		buttonJson["position"][1] = button.position.y;
+		buttonJson["scale"][0] = button.scale.x;
+		buttonJson["scale"][1] = button.scale.y;
+		sceneJson[buttonKey] = buttonJson;
+	}
 
-	// Write JSON to file
+	// Write to file
 	std::ofstream outputFile(path);
 	if (outputFile.is_open()) {
 		outputFile << sceneJson.toStyledString();
 		outputFile.close();
 	}
+
 	content->GetDir()->HandleFile(std::filesystem::directory_entry(path));
 }
+
