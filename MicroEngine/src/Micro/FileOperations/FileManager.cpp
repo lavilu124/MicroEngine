@@ -220,7 +220,8 @@ namespace Micro{
         }
 
         for (const auto& entry : std::filesystem::recursive_directory_iterator(m_mainPath + "\\Resources\\sounds\\")) {
-            if (entry.is_regular_file() && entry.path().extension() == ".wav" && entry.path().filename().string() == FileName) {
+            if ((entry.is_regular_file() && entry.path().extension() == ".wav" || entry.is_regular_file() && entry.path().extension() == ".ogg" || entry.is_regular_file() && entry.path().extension() == ".mp3")
+                && entry.path().filename().string() == FileName) {
 
                 sf::SoundBuffer NewBuffer;
                 if (NewBuffer.loadFromFile(entry.path().string())) {

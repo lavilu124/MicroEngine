@@ -16,6 +16,7 @@ void ProjectDirectory::OnAttach()
     m_mapIcon = std::make_shared<Walnut::Image>("appGui\\mapIcon.png");
     m_reloadIcon = std::make_shared<Walnut::Image>("appGui\\reloadIcon.png");
     m_returnIcon = std::make_shared<Walnut::Image>("appGui\\returnIcon.png");
+    m_soundIcon = std::make_shared<Walnut::Image>("appGui\\soundIcon.png");
 }
 
 ProjectDirectory::~ProjectDirectory()
@@ -38,6 +39,7 @@ void ProjectDirectory::SetCurrentPath(const std::string& path)
 	m_images.clear();
     m_folders.clear();
     m_maps.clear();
+    m_sounds.clear();
 
 
     for (const auto& entry : std::filesystem::directory_iterator(m_currentPath)) {
@@ -50,6 +52,9 @@ void ProjectDirectory::HandleFile(std::filesystem::directory_entry entry)
     if (entry.is_directory())
     {
         m_folders.push_back(entry);
+    }
+    else if (entry.path().extension() == ".ogg" || entry.path().extension() == ".wav" || entry.path().extension() == ".mp3" ) {
+        m_sounds.push_back(entry);
     }
     else if (entry.path().extension() == ".png" || entry.path().extension() == ".jpg" || entry.path().extension() == ".jpeg") {
         try {
@@ -158,7 +163,7 @@ int ProjectDirectory::ShowImagesInDir(int columnIndex)
     return columnIndex;
 }
 
-void ProjectDirectory::ShowMapsInDir(int columnIndex)
+int ProjectDirectory::ShowMapsInDir(int columnIndex)
 {
     const float spacing = 10.0f;
     const float boxPadding = 5.0f;
@@ -206,6 +211,54 @@ void ProjectDirectory::ShowMapsInDir(int columnIndex)
         ImGui::SameLine();
         columnIndex++;
     }
+    
+    return columnIndex;
+}
+
+int ProjectDirectory::ShowSoundsInDir(int columnIndex)
+{
+    const float spacing = 10.0f;
+    const float boxPadding = 5.0f;
+    float windowWidth = ImGui::GetContentRegionAvail().x;
+    const float thumbnailSize = 100.0f;
+    const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
+
+    for (int i = 0; i < m_sounds.size(); i++) {
+        const auto& soundPath = m_sounds[i];
+        if (columnIndex >= imagesPerRow) {
+            columnIndex = 0;
+            ImGui::NewLine();
+        }
+
+        ImGui::BeginChild(soundPath.filename().string().c_str(), ImVec2(thumbnailSize + 2 * boxPadding, thumbnailSize + 2 * boxPadding + ImGui::GetTextLineHeightWithSpacing()));
+        {
+            ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetStyle().Colors[ImGuiCol_HeaderActive]);
+            ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
+            ImGui::SetCursorPosX(boxPadding);
+
+            // Render folder icon as a button
+            ImGui::Image(m_soundIcon->GetDescriptorSet(), ImVec2(thumbnailSize, thumbnailSize / 1.25));
+
+            if (ImGui::IsItemHovered()) {
+                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+            }
+            if (ImGui::IsItemClicked())
+            {
+                SetCurrentPath(m_currentPath + "\\" + soundPath.filename().string().c_str());
+            }
+
+            // Render folder name below the icon
+            ImGui::SetCursorPosX(boxPadding);
+            ImGui::TextWrapped(soundPath.filename().string().c_str());
+
+            ImGui::PopStyleVar();
+            ImGui::PopStyleColor();
+        }
+        ImGui::EndChild(); //check
+        ImGui::SameLine();
+        columnIndex++;
+    }
+    return columnIndex;
 }
 
 std::string ProjectDirectory::getNewScene()
@@ -276,7 +329,8 @@ void ProjectDirectory::Window()
     
     int columnIndex = ShowFoldersInDir();
     columnIndex = ShowImagesInDir(columnIndex);
-    ShowMapsInDir(columnIndex);
+    columnIndex = ShowMapsInDir(columnIndex);
+    ShowSoundsInDir(columnIndex);
 
     ImGui::End();
 }
