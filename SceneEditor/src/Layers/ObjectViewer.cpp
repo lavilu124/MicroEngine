@@ -292,8 +292,9 @@ void ObjectViewer::DisplayLightObject()
 
     ImGui::Text("Intensity:");
     ImGui::Indent();
-    if (ImGui::InputFloat("##LightIntensity", &Light->color.w)) {
-        Light->color.w ;
+    float displayedInt = Light->color.w;
+    if (ImGui::InputFloat("##LightIntensity", &displayedInt)) {
+        Light->color.w = min<float>(displayedInt, 1.0f);
         Light->UpdateVal();
     }
     ImGui::Unindent();
@@ -333,9 +334,9 @@ void ObjectViewer::DisplayLightObject()
     if (Light->type == 0) {
         ImGui::Text("Radius:");
         ImGui::Indent();
-        float displayRad = Light->radius * 1.5f;
+        float displayRad = Light->radius;
         if (ImGui::InputFloat("##LightRadius", &displayRad)) {
-            Light->radius = min<float>(displayRad / 1.5f, 512.0f);
+            Light->radius = min<float>(displayRad, 512.0f);
             Light->UpdateVal();
         }
         ImGui::Unindent();
@@ -353,18 +354,18 @@ void ObjectViewer::DisplayLightObject()
     else if (Light->type == 1) {
         ImGui::Text("Length:");
         ImGui::Indent();
-        float displayRad = Light->radius * 1.5f;
+        float displayRad = Light->radius;
         if (ImGui::InputFloat("##LightLength", &displayRad)) {
-            Light->radius = min<float>(displayRad / 1.5f, 512.0f);
+            Light->radius = min<float>(displayRad, 512.0f);
             Light->UpdateVal();
         }
         ImGui::Unindent();
 
         ImGui::Text("Width:");
         ImGui::Indent();
-        float displayWi = Light->width * 1.5f;
+        float displayWi = Light->width;
         if (ImGui::InputFloat("##LightWidth", &displayWi)) {
-            Light->width = min<float>(displayWi / 1.5f, 1024.0f);
+            Light->width = min<float>(displayWi, 1024.0f);
             Light->UpdateVal();
         }
         ImGui::Unindent();

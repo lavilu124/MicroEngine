@@ -15,7 +15,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 
 	Json::Value sceneJson;
 
-	// Game Objects
+	// Game 
 	for (int i = 0; i < content->GetGameObjects().size(); i++) {
 		std::string objectKey = "object" + std::to_string(i);
 		const auto& obj = content->GetGameObjects()[i];
@@ -33,7 +33,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		sceneJson[objectKey] = gameObjectJson;
 	}
 
-	// Light Objects
+	// Light 
 	for (int i = 0; i < content->GetLights().size(); i++) {
 		std::string lightKey = "lightSource" + std::to_string(i);
 		const auto& light = content->GetLights()[i];
@@ -45,7 +45,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		lightObjectJson["color"][0] = light.color.x;
 		lightObjectJson["color"][1] = light.color.y;
 		lightObjectJson["color"][2] = light.color.z;
-		lightObjectJson["color"][3] = light.color.w * 255.0f;
+		lightObjectJson["color"][3] = light.color.w;
 		lightObjectJson["rotation"] = light.rotation;
 		lightObjectJson["radius"] = light.radius;
 		lightObjectJson["fade"] = light.fade;
@@ -58,7 +58,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		sceneJson[lightKey] = lightObjectJson;
 	}
 
-	// Text Objects
+	// Text 
 	for (int i = 0; i < content->GetTexts().size(); i++) {
 		std::string textKey = "text" + std::to_string(i);
 		const auto& text = content->GetTexts()[i];
@@ -83,7 +83,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		sceneJson[textKey] = textJson;
 	}
 
-	// Button Objects
+	// Button 
 	for (int i = 0; i < content->GetButtons().size(); i++) {
 		std::string buttonKey = "button" + std::to_string(i);
 		const auto& button = content->GetButtons()[i];
@@ -100,7 +100,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		sceneJson[buttonKey] = buttonJson;
 	}
 
-	// Write to file
+
 	std::ofstream outputFile(path);
 	if (outputFile.is_open()) {
 		outputFile << sceneJson.toStyledString();

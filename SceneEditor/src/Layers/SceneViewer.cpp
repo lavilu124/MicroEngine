@@ -225,14 +225,17 @@ void SceneViewer::RenderGameObjects(ImVec2 contentRegion) const
 
 void SceneViewer::RenderLights(ImVec2 contentRegion)
 {
+    sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().x / 2);
     for (auto& light : m_sceneContent->GetLights()) {
-        sf::Vector2f scaledPos = sf::Vector2f(light.position.x * m_zoom, light.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
-        ImVec2 position(scaledPos.x + contentRegion.x / 2 - 1024 / 2, scaledPos.y + contentRegion.y / 2 - 1024 / 2);
-
-
-        //fix light offset
-        (position.x > 0) ? position.x += 25 : position.x -= 25;
-        (position.y > 0) ? position.y -= 25 : position.y += 25;
+        sf::Vector2f pos = sf::Vector2f(light.position.x - textureOffset.x, light.position.y - textureOffset.y);
+        (pos.x > 0) ? pos.x += 25 : pos.x -= 25;
+        (pos.y > 0) ? pos.y -= 25 : pos.y += 25;
+        sf::Vector2f scaledPos = (pos * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
+        ImVec2 position(scaledPos.x + contentRegion.x / 2 , scaledPos.y + contentRegion.y / 2);
+        ImVec2 size = {
+                renderTexture.getSize().x * m_zoom,
+                renderTexture.getSize().y * m_zoom
+        };
 
         if (position.y <= (75.f - 512)) {
             continue;
@@ -245,20 +248,23 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
            GenerateLightImage(light);
         }
 
-        if (light.image)
-            ImGui::Image(light.image->GetDescriptorSet(), ImVec2(1024, 1024));
+        if (light.image) {
+            ImVec4 brightTint = ImVec4(1.5f, 1.5f, 1.5f, 1.0f); 
+            ImGui::Image(light.image->GetDescriptorSet(), size, ImVec2(0, 0), ImVec2(1, 1), brightTint);
+        }  
     }
 }
 
 void SceneViewer::renderTexts(ImVec2 contentRegion) {
+    sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().y / 2);
     for (auto& text : m_sceneContent->GetTexts()) {
-        sf::Vector2f scaledPos = sf::Vector2f(text.position.x * m_zoom, text.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
-        ImVec2 position(scaledPos.x + contentRegion.x / 2 - 1024 / 2, scaledPos.y + contentRegion.y / 2 - 1024 / 2);
-
-
-        //fix light offset
-        (position.x > 0) ? position.x += 25 : position.x -= 25;
-        (position.y > 0) ? position.y -= 25 : position.y += 25;
+        sf::Vector2f pos = sf::Vector2f(text.position.x - textureOffset.x, text.position.y - textureOffset.y);
+        sf::Vector2f scaledPos = (pos * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
+        ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
+        ImVec2 size = {
+                renderTexture.getSize().x * m_zoom,
+                renderTexture.getSize().y * m_zoom
+        };
 
         if (position.y <= (75.f - 512)) {
             continue;
@@ -272,18 +278,18 @@ void SceneViewer::renderTexts(ImVec2 contentRegion) {
         }
 
         if (text.image)
-            ImGui::Image(text.image->GetDescriptorSet(), ImVec2(1024, 1024));
+            ImGui::Image(text.image->GetDescriptorSet(), size);
     }
 }
 
-void SceneViewer::renderButtons(ImVec2 contentRegion) {
+void SceneViewer::renderButtons(ImVec2 contentRegion) { 
     for (auto& button : m_sceneContent->GetButtons()) {
         if (button.image) {
             sf::Vector2f scaledPos = sf::Vector2f(button.position.x * m_zoom, button.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
             ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
             ImVec2 size = {
-                (button.scale.x / 2) * button.image->GetWidth() * m_zoom,
-                (button.scale.x / 2) * button.image->GetHeight() * m_zoom
+                (button.scale.x) * button.image->GetWidth() * m_zoom,
+                (button.scale.y) * button.image->GetHeight() * m_zoom
             };
 
             if (position.y <= 75.f) {
@@ -306,7 +312,7 @@ void SceneViewer::GenerateLightImage(LightObject& light)
         Micro::RadialLight radialLight(light.name.c_str(), 0);
         radialLight.SetRange(light.radius);
         radialLight.SetColor(sf::Color(static_cast<int>(light.color.x), static_cast<int>(light.color.y), static_cast<int>(light.color.z)));
-        radialLight.SetIntensity((light.color.w / 255 + 0.3 > 1)? 1 : (light.color.w / 255 + 0.3));
+        radialLight.SetIntensity((light.color.w + 0.3 > 1)? 1.0f : light.color.w + 0.3);
         radialLight.setPosition(size.x / 2.f, size.y / 2.f);
         radialLight.setRotation(light.rotation);
         radialLight.SetFade(light.fade);
@@ -327,7 +333,7 @@ void SceneViewer::GenerateLightImage(LightObject& light)
         directedLight.SetColor(sf::Color(static_cast<int>(light.color.x 
             ), static_cast<int>(light.color.y), static_cast<int>(light.color.z
                 )));
-        directedLight.SetIntensity(light.color.w);
+        directedLight.SetIntensity((light.color.w + 0.3 > 1) ? 1.0f : light.color.w + 0.3);
         directedLight.setPosition(size.x / 2.f, size.y / 2.f);
         directedLight.setRotation(light.rotation);
         directedLight.SetRange(light.radius);
