@@ -16,7 +16,7 @@ namespace Micro {
 
 		void Delete();
 
-		bool IsShowen() const;
+		bool IsShowen();
 		void SetShowen(bool showen);
 
 		std::string GetName() const;

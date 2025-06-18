@@ -52,4 +52,6 @@ private:
 	sf::Vector2f m_offset = { 0.0f, 0.0f };
 	bool m_dragging = false;
 	ImVec2 m_lastMousePos = { 0.0f, 0.0f };
+
+
 };

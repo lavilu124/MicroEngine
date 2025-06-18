@@ -1,19 +1,20 @@
 #include "Template.h"
 
-    Template (Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer) 
-    : GameObject(systemManager, sprite, name, layer){	
+Template::Template (Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer, int level)
+    : GameObject(systemManager, sprite, name, layer, level)
+{	
 
-    }
+}
 
 
 
-    void Start() override{
+void Template::Start(){
 
-    } 
+} 
 
-    void Update(float DeltaTime) override{
+void Template::Update(float DeltaTime){
     
-    }
+}
     
 	
  

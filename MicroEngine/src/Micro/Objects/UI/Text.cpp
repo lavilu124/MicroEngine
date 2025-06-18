@@ -11,6 +11,7 @@ namespace Micro {
 			}
 		}
 		m_text.setFont(m_font);
+		m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
 	}
 
 	sf::Text& Text::GetBase()
@@ -23,8 +24,9 @@ namespace Micro {
 		m_systemManager->RemoveText(m_name);
 	}
 
-	bool Text::IsShowen() const
+	bool Text::IsShowen()
 	{
+		m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
 		return m_showen;
 	}
 	void Text::SetShowen(bool showen)

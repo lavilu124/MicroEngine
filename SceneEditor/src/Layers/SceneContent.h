@@ -52,4 +52,6 @@ private:
 	std::shared_ptr<ProjectDirectory> m_directory;
 
 	std::string m_currentScene = "";
+
+	std::string m_currentObName = "";
 };

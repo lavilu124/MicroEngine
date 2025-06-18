@@ -23,6 +23,16 @@ void SceneViewer::OnAttach()
     m_saveButtonImage = std::make_shared<Walnut::Image>(saveImagePath.c_str());
 }
 
+bool IsOutsideBounds(ImVec2 position, ImVec2 size, ImVec2 contentRegionMin, ImVec2 contentRegionMax)
+{
+    return (
+        position.x + size.x < contentRegionMin.x || 
+        position.y + size.y < contentRegionMin.y || 
+        position.x > contentRegionMax.x ||          
+        position.y > contentRegionMax.y             
+        );
+}
+
 void SceneViewer::OnUIRender()
 {
     Window();
@@ -220,77 +230,91 @@ void SceneViewer::SaveWindow()
 
 void SceneViewer::RenderGameObjects(ImVec2 contentRegion) const
 {
+    ImVec2 drawOrigin = ImGui::GetCursorScreenPos();
+
+    ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
+
     for (auto& gameObject : m_sceneContent->GetGameObjects()) {
         if (gameObject.sprite && gameObject.isVisable) {
             sf::Vector2f scaledPos = sf::Vector2f(gameObject.position.x * m_zoom, gameObject.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
-            ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
+            ImVec2 position = ImVec2(drawOrigin.x + scaledPos.x + contentRegion.x / 2, drawOrigin.y + scaledPos.y + contentRegion.y / 2);
             ImVec2 size = {
                 gameObject.scale.x * gameObject.sprite->GetWidth() * m_zoom,
                 gameObject.scale.y * gameObject.sprite->GetHeight() * m_zoom
             };
 
-            if (position.y <= 75.f) {
-                continue;
-            }
-            ImGui::SetCursorPos(position);
+            position.x -= size.x / 2.0f;
+            position.y -= size.y / 2.0f;
+
+            ImGui::SetCursorScreenPos(position);
             ImGui::Image(gameObject.sprite->GetDescriptorSet(), size);
         }
     }
+
+    ImGui::PopClipRect();
 }
 
 void SceneViewer::RenderLights(ImVec2 contentRegion)
 {
-    sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().x / 2);
+    ImVec2 drawOrigin = ImGui::GetCursorScreenPos();
+
+    ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
+
+    sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().y / 2);
+
     for (auto& light : m_sceneContent->GetLights()) {
-        if (!light.isVisable) continue;
+        if (!light.isVisable)
+            continue;
 
         sf::Vector2f pos = sf::Vector2f(light.position.x - textureOffset.x, light.position.y - textureOffset.y);
-        (pos.x > 0) ? pos.x += 25 : pos.x -= 25;
-        (pos.y > 0) ? pos.y -= 25 : pos.y += 25;
         sf::Vector2f scaledPos = (pos * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
-        ImVec2 position(scaledPos.x + contentRegion.x / 2 , scaledPos.y + contentRegion.y / 2);
+        ImVec2 position(drawOrigin.x + scaledPos.x + contentRegion.x / 2, drawOrigin.y + scaledPos.y + contentRegion.y / 2);
+
         ImVec2 size = {
-                renderTexture.getSize().x * m_zoom,
-                renderTexture.getSize().y * m_zoom
+            renderTexture.getSize().x * m_zoom,
+            renderTexture.getSize().y * m_zoom
         };
 
-        if (position.y <= (75.f - 512)) {
-            continue;
-        }
 
-        ImGui::SetCursorPos(position);
-        
+        ImGui::SetCursorScreenPos(position);
 
-    	if (!light.isUpdated()) {
-           GenerateLightImage(light);
+        if (!light.isUpdated()) {
+            GenerateLightImage(light);
         }
 
         if (light.image) {
-            ImVec4 brightTint = ImVec4(1.5f, 1.5f, 1.5f, 1.0f); 
+            ImVec4 brightTint = ImVec4(1.5f, 1.5f, 1.5f, 1.0f);
             ImGui::Image(light.image->GetDescriptorSet(), size, ImVec2(0, 0), ImVec2(1, 1), brightTint);
-        }  
+        }
     }
+
+    ImGui::PopClipRect();
 }
 
 void SceneViewer::renderTexts(ImVec2 contentRegion) {
+    ImVec2 drawOrigin = ImGui::GetCursorScreenPos();
+
+    ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
+
     sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().y / 2);
+
     for (auto& text : m_sceneContent->GetTexts()) {
-        if (!text.isVisable) continue;
+        if (!text.isVisable)
+            continue;
 
         sf::Vector2f pos = sf::Vector2f(text.position.x - textureOffset.x, text.position.y - textureOffset.y);
         sf::Vector2f scaledPos = (pos * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
-        ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
+        ImVec2 position(drawOrigin.x + scaledPos.x + contentRegion.x / 2, drawOrigin.y + scaledPos.y + contentRegion.y / 2);
+
         ImVec2 size = {
-                renderTexture.getSize().x * m_zoom,
-                renderTexture.getSize().y * m_zoom
+            renderTexture.getSize().x * m_zoom,
+            renderTexture.getSize().y * m_zoom
         };
 
-        if (position.y <= (75.f - 512)) {
-            continue;
-        }
+        position.x -= size.x / 2.0f;
+        position.y -= size.y / 2.0f;
 
-        ImGui::SetCursorPos(position);
-
+        ImGui::SetCursorScreenPos(position);
 
         if (!text.isUpdated()) {
             GenerateTextImage(text);
@@ -299,29 +323,35 @@ void SceneViewer::renderTexts(ImVec2 contentRegion) {
         if (text.image)
             ImGui::Image(text.image->GetDescriptorSet(), size);
     }
+
+    ImGui::PopClipRect();
 }
 
-void SceneViewer::renderButtons(ImVec2 contentRegion) { 
+void SceneViewer::renderButtons(ImVec2 contentRegion) {
+    ImVec2 drawOrigin = ImGui::GetCursorScreenPos();
+
+    ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
+
     for (auto& button : m_sceneContent->GetButtons()) {
         if (button.image && button.isVisable) {
             sf::Vector2f scaledPos = sf::Vector2f(button.position.x * m_zoom, button.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
-            ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
+            ImVec2 position(drawOrigin.x + scaledPos.x + contentRegion.x / 2, drawOrigin.y + scaledPos.y + contentRegion.y / 2);
             ImVec2 size = {
-                (button.scale.x) * button.image->GetWidth() * m_zoom,
-                (button.scale.y) * button.image->GetHeight() * m_zoom
+                button.scale.x * button.image->GetWidth() * m_zoom,
+                button.scale.y * button.image->GetHeight() * m_zoom
             };
 
-            if (position.y <= 75.f) {
-                continue;
-            }
+            position.x -= size.x / 2.0f;
+            position.y -= size.y / 2.0f;
 
-
-            ImGui::SetCursorPos(position);
-
+            ImGui::SetCursorScreenPos(position);
             ImGui::Image(button.image->GetDescriptorSet(), size);
         }
     }
+
+    ImGui::PopClipRect();
 }
+
 
 void SceneViewer::GenerateLightImage(LightObject& light)
 {

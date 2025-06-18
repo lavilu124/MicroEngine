@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include <fstream>
+#include <iostream>
 
 Menu::Menu(std::string projectRootPath, std::shared_ptr<ObjectViewer> objectViewer) : m_rootPath(projectRootPath), m_objectViewer(objectViewer)
 {

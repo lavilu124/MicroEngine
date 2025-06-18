@@ -236,10 +236,30 @@ void ObjectViewer::DisplayGameObject()
     m_projectDirectory->ClearSelectedPath();
 
     if (GameOj->sprite && GameOj->sprite->GetDescriptorSet()) {
-        ImVec2 imageSize = ImVec2((float)GameOj->sprite->GetWidth(), (float)GameOj->sprite->GetHeight());
-        ImVec2 imagePos = ImVec2(cursorPos.x + (dropAreaSize.x - imageSize.x) / 2, cursorPos.y + (dropAreaSize.y - imageSize.y) / 2);
-        drawList->AddImage(GameOj->sprite->GetDescriptorSet(), imagePos, ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y));
+        float imgWidth = (float)GameOj->sprite->GetWidth();
+        float imgHeight = (float)GameOj->sprite->GetHeight();
+        float areaWidth = dropAreaSize.x;
+        float areaHeight = dropAreaSize.y;
+
+        // Calculate scale factor to fit the sprite within the drop area
+        float scale = std::min(areaWidth / imgWidth, areaHeight / imgHeight);
+
+        // Scaled image size
+        ImVec2 imageSize = ImVec2(imgWidth * scale, imgHeight * scale);
+
+        // Centered position
+        ImVec2 imagePos = ImVec2(
+            cursorPos.x + (areaWidth - imageSize.x) * 0.5f,
+            cursorPos.y + (areaHeight - imageSize.y) * 0.5f
+        );
+
+        drawList->AddImage(
+            GameOj->sprite->GetDescriptorSet(),
+            imagePos,
+            ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y)
+        );
     }
+
 
     ImGui::Unindent();
 }
@@ -583,10 +603,30 @@ void ObjectViewer::DisplayButtonObject() {
     }
 
     if (buttonObj->image && buttonObj->image->GetDescriptorSet()) {
-        ImVec2 imageSize = ImVec2((float)buttonObj->image->GetWidth() /2, (float)buttonObj->image->GetHeight() /2);
-        ImVec2 imagePos = ImVec2(cursorPos.x + (dropAreaSize.x - imageSize.x) / 2, cursorPos.y + (dropAreaSize.y - imageSize.y) / 2);
-        drawList->AddImage(buttonObj->image->GetDescriptorSet(), imagePos, ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y));
+        float imgWidth = (float)buttonObj->image->GetWidth();
+        float imgHeight = (float)buttonObj->image->GetHeight();
+        float areaWidth = dropAreaSize.x;
+        float areaHeight = dropAreaSize.y;
+
+        // Calculate scaling factor to fit image in drop area while keeping aspect ratio
+        float scale = std::min(areaWidth / imgWidth, areaHeight / imgHeight);
+
+        // Scaled image size
+        ImVec2 imageSize = ImVec2(imgWidth * scale, imgHeight * scale);
+
+        // Center the image in the drop area
+        ImVec2 imagePos = ImVec2(
+            cursorPos.x + (areaWidth - imageSize.x) * 0.5f,
+            cursorPos.y + (areaHeight - imageSize.y) * 0.5f
+        );
+
+        drawList->AddImage(
+            buttonObj->image->GetDescriptorSet(),
+            imagePos,
+            ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y)
+        );
     }
+
 
     ImGui::Unindent();
 
@@ -612,10 +652,30 @@ void ObjectViewer::DisplayButtonObject() {
     m_projectDirectory->ClearSelectedPath();
 
     if (buttonObj->clickImage && buttonObj->clickImage->GetDescriptorSet()) {
-        ImVec2 imageSize = ImVec2((float)buttonObj->clickImage->GetWidth() / 2, (float)buttonObj->clickImage->GetHeight() / 2);
-        ImVec2 imagePos = ImVec2(cursorPos.x + (dropAreaSize.x - imageSize.x) / 2, cursorPos.y + (dropAreaSize.y - imageSize.y) / 2);
-        drawList->AddImage(buttonObj->clickImage->GetDescriptorSet(), imagePos, ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y));
+        float imgWidth = (float)buttonObj->clickImage->GetWidth();
+        float imgHeight = (float)buttonObj->clickImage->GetHeight();
+        float areaWidth = dropAreaSize.x;
+        float areaHeight = dropAreaSize.y;
+
+        // Calculate scale to fit while preserving aspect ratio
+        float scale = std::min(areaWidth / imgWidth, areaHeight / imgHeight);
+
+        // Scaled image size
+        ImVec2 imageSize = ImVec2(imgWidth * scale, imgHeight * scale);
+
+        // Centered image position
+        ImVec2 imagePos = ImVec2(
+            cursorPos.x + (areaWidth - imageSize.x) * 0.5f,
+            cursorPos.y + (areaHeight - imageSize.y) * 0.5f
+        );
+
+        drawList->AddImage(
+            buttonObj->clickImage->GetDescriptorSet(),
+            imagePos,
+            ImVec2(imagePos.x + imageSize.x, imagePos.y + imageSize.y)
+        );
     }
+
 
     ImGui::Unindent();
 
@@ -633,8 +693,6 @@ void ObjectViewer::DisplayButtonObject() {
 
     ImGui::Spacing();
 }
-
-
 
 void ObjectViewer::SetObject(Object* newObject, currentObjectType type)
 {
