@@ -18,7 +18,7 @@ public:
 	std::string name;
 	std::string img;
 	std::string onClickImg;
-	std::string onclickFunc;
+	std::string onClickFunc;
 	ImVec2 scale;
 
 	std::shared_ptr<Walnut::Image> image = nullptr;

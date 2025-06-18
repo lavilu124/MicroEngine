@@ -78,38 +78,6 @@ void SceneContent::Window()
 	float footerHeight = 40.0f;
 	ImGui::SetCursorPosY(ImGui::GetWindowSize().y - footerHeight * 2);
 
-
-	//ImGui::Separator();
-
-	//if (ImGui::Button("Create GameObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
-	//	GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
-	//	m_gameObjects.push_back(newGameObject);
-	//	m_NewGameObIndex = m_gameObjects.size() - 1;
-	//	if (!m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
-	//		m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::game);
-	//}
-
-	//if (ImGui::Button("Create LightObject", ImVec2(ImGui::GetWindowSize().x, 30))) {
-	//	//LightObject newLightObject();
-	//	//newLightObject.color = ImColor(255, 255, 255, 255);
-	//	//m_lightObjects.push_back(newLightObject);
-	//	m_lightObjects.push_back(LightObject(
-	//		"Light " + std::to_string(m_lightObjects.size() + 1),
-	//		ImVec2(0, 0),
-	//		0,
-	//		360,
-	//		0,
-	//		ImVec4(255, 255, 255, 255),
-	//		200,
-	//		200
-	//	));
-
-
-	//	m_newLightIndex = m_lightObjects.size() - 1;
-	//	if (m_isCurrentObjectLight && m_viewer->GetObject() != nullptr)
-	//		m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::light);
-	//}
-
 	if (ImGui::BeginPopupContextWindow("CreateObjectContext", ImGuiPopupFlags_MouseButtonRight))
 	{
 		if (ImGui::BeginMenu("Create Object"))
