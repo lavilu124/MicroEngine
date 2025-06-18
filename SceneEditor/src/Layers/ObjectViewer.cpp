@@ -110,6 +110,9 @@ void ObjectViewer::DisplayGameObject()
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
     ImGui::Checkbox("Visible", &m_currentObject->isVisable);
 
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Scene Object", &m_currentObject->IsSceneObject);
+
     ImGui::Unindent();
 
     ImGui::Spacing();
@@ -163,7 +166,7 @@ void ObjectViewer::DisplayGameObject()
     ImGui::Text("Level:");
     ImGui::Indent();
     if (ImGui::InputInt("##Level", &GameOj->level)) {
-    
+        GameOj->LevelChange();
     }
     ImGui::Unindent();
 
@@ -258,6 +261,9 @@ void ObjectViewer::DisplayLightObject()
 
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
     ImGui::Checkbox("Visible", &m_currentObject->isVisable);
+
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Scene Object", &m_currentObject->IsSceneObject);
 
     ImGui::Unindent();
 
@@ -398,6 +404,9 @@ void ObjectViewer::DisplayTextObject()
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
     ImGui::Checkbox("Visible", &m_currentObject->isVisable);
 
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Scene Object", &m_currentObject->IsSceneObject);
+
     ImGui::Unindent();
 
     ImGui::Spacing();
@@ -513,6 +522,9 @@ void ObjectViewer::DisplayButtonObject() {
 
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
     ImGui::Checkbox("Visible", &m_currentObject->isVisable);
+
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Scene Object", &m_currentObject->IsSceneObject);
 
     ImGui::Unindent();
 

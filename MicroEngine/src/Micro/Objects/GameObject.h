@@ -44,6 +44,9 @@ namespace Micro{
 
 		void SetShowen(bool showen);
 
+		bool IsSceneObject() const;
+		void SetIsSceneObject(bool val);
+
 	private:
 		void SetCenter();
 
@@ -69,6 +72,8 @@ namespace Micro{
 		int m_level = 0;
 
 		bool m_showen = true;
+
+		bool m_isSceneObject;
 	};
 }
 

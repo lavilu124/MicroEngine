@@ -34,6 +34,9 @@ namespace Micro {
 		bool IsShowen() const;
 		void SetShowen(bool showen);
 
+		bool IsSceneObject() const;
+		void SetIsSceneObject(bool val);
+
 	private:
 		std::string m_name;
 		sf::Sprite* m_img;
@@ -46,6 +49,8 @@ namespace Micro {
 		bool m_isClicked;
 
 		bool m_showen = true;
+
+		bool m_isSceneObject;
 	};
 }
 

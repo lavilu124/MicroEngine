@@ -66,6 +66,16 @@ namespace Micro{
     {
         m_showen = showen;
     }
+
+    bool LightSource::IsSceneObject() const
+    {
+        return m_isSceneObject;
+    }
+
+    void LightSource::SetIsSceneObject(bool val)
+    {
+        m_isSceneObject = val;
+    }
     
 
     const char* LightSource::GetName() const {

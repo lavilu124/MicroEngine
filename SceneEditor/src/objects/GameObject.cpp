@@ -9,6 +9,16 @@ GameObject::GameObject(std::string name, std::string imagePath, ImVec2 position,
 	
 }
 
+void GameObject::LevelChange()
+{
+	m_levelChanged = true;
+}
+
+bool GameObject::IsLevelChanged()
+{
+	return true;
+}
+
 void GameObject::SetPath(std::string newPath) {
 	if (newPath.empty()) return;
 
@@ -17,7 +27,7 @@ void GameObject::SetPath(std::string newPath) {
 	}
 
 	spritename = std::filesystem::path(newPath).filename().string();
-	path = newPath;
+	m_path = newPath;
 	sprite = std::make_shared<Walnut::Image>(newPath);
 	
 }

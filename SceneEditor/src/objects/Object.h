@@ -12,6 +12,8 @@ public:
 	std::string name;
 	float rotation;
 
-	bool isVisable = true;;
+	bool isVisable = true;
+
+	bool IsSceneObject = true;
 };
 

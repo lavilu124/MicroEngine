@@ -58,6 +58,33 @@ std::vector<ButtonObject>& SceneContent::GetButtons()
 	return m_buttonObjects;
 }
 
+int partition(std::vector<GameObject>& vec, int low, int high) {
+
+	int pivot = vec[high].level;
+	int i = (low - 1);
+
+	for (int j = low; j <= high - 1; j++) {
+		if (vec[j].level <= pivot) {
+			i++;
+			std::swap(vec[i], vec[j]);
+		}
+	}
+
+	std::swap(vec[i + 1], vec[high]);
+
+	return (i + 1);
+}
+
+void quickSort(std::vector<GameObject>& vec, int low, int high) {
+	if (low < high) {
+
+		int pi = partition(vec, low, high);
+
+		quickSort(vec, low, pi - 1);
+		quickSort(vec, pi + 1, high);
+	}
+}
+
 void SceneContent::Window()
 {
 	ImGui::Begin("Scene Content");
@@ -69,6 +96,10 @@ void SceneContent::Window()
 	std::string newScene = m_directory->getNewScene();
 	if (newScene != "") {
 		SetNewScene(newScene);
+	}
+
+	for (auto& ob : m_gameObjects) {
+		if (ob.IsLevelChanged()) quickSort(m_gameObjects, 0, m_gameObjects.size() -1);
 	}
 
 	RenderObjectList();
@@ -293,8 +324,17 @@ void SceneContent::RenderUiList() {
 void SceneContent::SetNewScene(std::string NewScene)
 {
 	m_viewer->SetObject(nullptr, currentObjectType::game);
-	m_gameObjects.clear();
-	m_lightObjects.clear();
+	m_gameObjects.erase(std::remove_if(m_gameObjects.begin(), m_gameObjects.end(),
+		[](const auto& obj) { return obj.IsSceneObject; }), m_gameObjects.end());
+
+	m_lightObjects.erase(std::remove_if(m_lightObjects.begin(), m_lightObjects.end(),
+		[](const auto& light) { return light.IsSceneObject; }), m_lightObjects.end());
+
+	m_textObjects.erase(std::remove_if(m_textObjects.begin(), m_textObjects.end(),
+		[](const auto& text) { return text.IsSceneObject; }), m_textObjects.end());
+
+	m_buttonObjects.erase(std::remove_if(m_buttonObjects.begin(), m_buttonObjects.end(),
+		[](const auto& button) { return button.IsSceneObject; }), m_buttonObjects.end());
 
 	std::ifstream inputFile(NewScene);
 	Json::Value actualJson;
@@ -333,13 +373,15 @@ void SceneContent::SetNewScene(std::string NewScene)
 		std::string spriteName = currentObject["spriteName"].asString();
 		std::string name = currentObject["name"].asString();
 		int level = currentObject["level"].asInt();
+		bool isSceneObject = currentObject["isSceneObject"].asBool();
 
 		std::string pathToSprite = GetDirForSprite(spriteName, std::filesystem::current_path().string());
 
 		m_gameObjects.push_back(GameObject(name, pathToSprite, position, scale, rotation, layer, level));
-
+		m_gameObjects.back().IsSceneObject = isSceneObject;
 
 	}
+	quickSort(m_gameObjects, 0, m_gameObjects.size() -1);
 
 	//lights
 	for (int i = 0; i < count; i++) {
@@ -360,10 +402,12 @@ void SceneContent::SetNewScene(std::string NewScene)
 		float rotation = currentObject["rotation"].asFloat();
 		float angle = currentObject["angle"].asFloat();
 		bool fade = currentObject["fade"].asBool();
+		bool isSceneObject = currentObject["isSceneObject"].asBool();
 		ls::LightId light;
 
 		m_lightObjects.push_back(LightObject(name, position, rotation, angle, type, color, radius));
 		m_lightObjects.back().fade = fade;
+		m_lightObjects.back().IsSceneObject = isSceneObject;
 
 	}
 
@@ -388,9 +432,11 @@ void SceneContent::SetNewScene(std::string NewScene)
 		unsigned int size = currentObject["size"].asInt();
 		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
 		std::string value = currentObject["value"].asString();
+		bool isSceneObject = currentObject["isSceneObject"].asBool();
 
 
 		m_textObjects.push_back(TextObject(value, name, color, font, outlineColor, outlineThickness, size, scale, position, rotation));
+		m_textObjects.back().IsSceneObject = isSceneObject;
 	}
 
 	//buttons
@@ -411,12 +457,14 @@ void SceneContent::SetNewScene(std::string NewScene)
 		float rotation = currentObject["rotation"].asFloat();
 		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
 		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
+		bool isSceneObject = currentObject["isSceneObject"].asBool();
 
 		std::string pathToImg1 = GetDirForSprite(img, std::filesystem::current_path().string());
 		std::string pathToImg2 = GetDirForSprite(onClickImg, std::filesystem::current_path().string());
 
 
 		m_buttonObjects.push_back(ButtonObject(name, pathToImg1, onclickfunc, pathToImg2, rotation, position, scale));
+		m_buttonObjects.back().IsSceneObject = isSceneObject;
 	}
 
 	//close the file

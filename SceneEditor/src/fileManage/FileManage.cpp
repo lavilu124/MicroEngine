@@ -30,6 +30,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		gameObjectJson["spriteName"] = obj.spritename;
 		gameObjectJson["name"] = obj.name;
 		gameObjectJson["type"] = (obj.type == "") ? "none" : obj.type;
+		gameObjectJson["isSceneObject"] = obj.IsSceneObject;
 		sceneJson[objectKey] = gameObjectJson;
 	}
 
@@ -55,6 +56,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		else {
 			lightObjectJson["width"] = light.width;
 		}
+		lightObjectJson["isSceneObject"] = light.IsSceneObject;
 		sceneJson[lightKey] = lightObjectJson;
 	}
 
@@ -80,6 +82,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		textJson["scale"][0] = text.scale.x;
 		textJson["scale"][1] = text.scale.y;
 		textJson["value"] = text.value;
+		textJson["isSceneObject"] = text.IsSceneObject;
 		sceneJson[textKey] = textJson;
 	}
 
@@ -97,6 +100,7 @@ void FileManage::SaveScene(std::string path, SceneContent* content)
 		buttonJson["position"][1] = button.position.y;
 		buttonJson["scale"][0] = button.scale.x;
 		buttonJson["scale"][1] = button.scale.y;
+		buttonJson["isSceneObject"] = button.IsSceneObject;
 		sceneJson[buttonKey] = buttonJson;
 	}
 

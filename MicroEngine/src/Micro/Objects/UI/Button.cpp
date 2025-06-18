@@ -97,4 +97,14 @@ namespace Micro {
 	{
 		m_showen = showen;
 	}
+
+	bool Button::IsSceneObject() const
+	{
+		return m_isSceneObject;
+	}
+
+	void Button::SetIsSceneObject(bool val)
+	{
+		m_isSceneObject = val;
+	}
 }
