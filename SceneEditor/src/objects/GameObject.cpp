@@ -16,7 +16,12 @@ void GameObject::LevelChange()
 
 bool GameObject::IsLevelChanged()
 {
-	return true;
+	if (m_levelChanged) {
+		m_levelChanged = false;
+		return true;
+	}
+
+	return false;
 }
 
 void GameObject::SetPath(std::string newPath) {

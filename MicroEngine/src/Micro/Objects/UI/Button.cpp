@@ -7,9 +7,11 @@ namespace Micro {
 		: m_name(name), m_systemManager(systemManager), m_onClick(onClick) {
 
 		m_img = systemManager->GetFileManager().GetSprite(img);
+		m_img->setOrigin(m_img->getGlobalBounds().width / 2, m_img->getGlobalBounds().height / 2);
 		if (onClickImg != "") {
 			m_onClickImg = systemManager->GetFileManager().GetSprite(onClickImg);
 			m_isOnClickSet = true;
+			m_onClickImg->setOrigin(m_onClickImg->getGlobalBounds().width / 2, m_onClickImg->getGlobalBounds().height / 2);
 		}
 			
 	}
@@ -70,11 +72,13 @@ namespace Micro {
 	void Button::SetImg(std::string name)
 	{
 		m_img = m_systemManager->GetFileManager().GetSprite(name);
+		m_img->setOrigin(m_img->getGlobalBounds().width / 2, m_img->getGlobalBounds().height / 2);
 	}
 
 	void Button::SetOnClickImg(std::string name)
 	{
 		m_onClickImg = m_systemManager->GetFileManager().GetSprite(name);
+		m_onClickImg->setOrigin(m_onClickImg->getGlobalBounds().width / 2, m_onClickImg->getGlobalBounds().height / 2);
 	}
 
 	void Button::Delete()

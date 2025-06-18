@@ -5,7 +5,7 @@
 class Template : public Micro::GameObject 
 {
 public:
-    Template (Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer)
+    Template (Micro::SystemManager* systemManager, const sf::Sprite& sprite, const std::string& name, Micro::Collision::collisionLayer layer = Micro::Collision::collisionLayer::COLLIDER, int level = 0)
 ; 
 
 

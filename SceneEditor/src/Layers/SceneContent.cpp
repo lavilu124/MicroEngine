@@ -35,6 +35,7 @@ void SceneContent::OnUIRender()
 			m_textObjects.erase(m_textObjects.begin() + m_indexOfCurrentOb);
 		}
 		m_viewer->SetObject(nullptr, currentObjectType::light);
+		m_currentObName = "";
 	}
 }
 
@@ -98,8 +99,18 @@ void SceneContent::Window()
 		SetNewScene(newScene);
 	}
 
-	for (auto& ob : m_gameObjects) {
-		if (ob.IsLevelChanged()) quickSort(m_gameObjects, 0, m_gameObjects.size() -1);
+	if (m_NewGameIndex == -1) {
+		for (auto& ob : m_gameObjects) {
+			if (ob.IsLevelChanged()) {
+				quickSort(m_gameObjects, 0, m_gameObjects.size() - 1);
+				if (!m_currentObName.empty() && m_viewer->GetCurrentObjectType() == currentObjectType::game) {
+					for (int i = 0; i < m_gameObjects.size(); i++) {
+						m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
+					}
+				}
+			}
+		}
+		
 	}
 
 	RenderObjectList();
@@ -127,8 +138,10 @@ void SceneContent::Window()
 				));
 
 				m_newLightIndex = m_lightObjects.size() - 1;
-				if (m_viewer->GetCurrentObjectType() == currentObjectType::light && m_viewer->GetObject() != nullptr)
-					m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::light);
+				if (m_viewer->GetCurrentObjectType() == currentObjectType::light && m_viewer->GetObject() != nullptr) {
+					m_viewer->SetObject(&m_lightObjects[m_indexOfCurrentOb], currentObjectType::light);
+					m_currentObName = m_lightObjects[m_indexOfCurrentOb].name;
+				}
 			}
 
 			if (ImGui::MenuItem("Game Object"))
@@ -136,8 +149,11 @@ void SceneContent::Window()
 				GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
 				m_gameObjects.push_back(newGameObject);
 				m_NewGameIndex = m_gameObjects.size() - 1;
-				if (m_viewer->GetCurrentObjectType() == currentObjectType::game && m_viewer->GetObject() != nullptr)
+				if (m_viewer->GetCurrentObjectType() == currentObjectType::game && m_viewer->GetObject() != nullptr) {
 					m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::game);
+					m_currentObName = m_gameObjects[m_indexOfCurrentOb].name;
+				}
+					
 			}
 
 			if (ImGui::BeginMenu("UI"))
@@ -157,8 +173,11 @@ void SceneContent::Window()
 						0.0f
 					));
 					m_newTextIndex = m_textObjects.size() - 1;
-					if (m_viewer->GetCurrentObjectType() == currentObjectType::text && m_viewer->GetObject() != nullptr)
+					if (m_viewer->GetCurrentObjectType() == currentObjectType::text && m_viewer->GetObject() != nullptr) {
 						m_viewer->SetObject(&m_textObjects[m_indexOfCurrentOb], currentObjectType::text);
+						m_currentObName = m_textObjects[m_indexOfCurrentOb].name;
+					}
+						
 				}
 				if (ImGui::MenuItem("Button")) {
 					m_buttonObjects.push_back(ButtonObject(
@@ -167,8 +186,11 @@ void SceneContent::Window()
 						""
 					));
 					m_newButtonIndex = m_buttonObjects.size() - 1;
-					if (m_viewer->GetCurrentObjectType() == currentObjectType::button && m_viewer->GetObject() != nullptr)
+					if (m_viewer->GetCurrentObjectType() == currentObjectType::button && m_viewer->GetObject() != nullptr) {
 						m_viewer->SetObject(&m_buttonObjects[m_indexOfCurrentOb], currentObjectType::button);
+						m_currentObName = m_buttonObjects[m_indexOfCurrentOb].name;
+					}
+						
 				}
 
 				ImGui::EndMenu();
@@ -201,21 +223,36 @@ void SceneContent::RenderObjectList()
 	}
 	ImGui::Unindent();
 
-	if (m_NewGameIndex > -1) {
-		static char GameObNameInput[256] = "";
-		snprintf(GameObNameInput, sizeof(GameObNameInput), "Object %d", m_NewGameIndex + 1);
+	
+	static char GameObNameInput[256] = "";
+	static int lastNewGameIndex = -1;
 
-		ImGui::InputText("##Enter GameObject Name", GameObNameInput, IM_ARRAYSIZE(GameObNameInput));
+	if (m_NewGameIndex > -1) {
+		if (m_NewGameIndex != lastNewGameIndex) {
+			
+			snprintf(GameObNameInput, sizeof(GameObNameInput), "Object %d", m_NewGameIndex + 1);
+			lastNewGameIndex = m_NewGameIndex;
+		}
+
+		ImGui::Text("Enter new GameObject name:");
+		if (ImGui::InputText("##EnterGameObjectName", GameObNameInput, IM_ARRAYSIZE(GameObNameInput))) {
+			
+		}
+
 		if (ImGui::Button("Cancel")) {
 			m_gameObjects.erase(m_gameObjects.begin() + m_NewGameIndex);
 			m_NewGameIndex = -1;
+			lastNewGameIndex = -1;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Confirm")) {
 			m_gameObjects[m_NewGameIndex].name = GameObNameInput;
 			m_NewGameIndex = -1;
+			lastNewGameIndex = -1;
 		}
 	}
+
+
 }
 
 void SceneContent::RenderLightList()
@@ -236,21 +273,31 @@ void SceneContent::RenderLightList()
 	}
 	ImGui::Unindent();
 
+
+	static char lightNameInput[256] = "";
+	static int lastNewLightIndex = -1;
+
 	if (m_newLightIndex > -1) {
-		static char lightNameInput[256] = "";
-		snprintf(lightNameInput, sizeof(lightNameInput), "Light %d", m_newLightIndex + 1);
+		if (m_newLightIndex != lastNewLightIndex) {
+			snprintf(lightNameInput, sizeof(lightNameInput), "Light %d", m_newLightIndex + 1);
+			lastNewLightIndex = m_newLightIndex;
+		}
 
 		ImGui::InputText("##Enter Light Name", lightNameInput, IM_ARRAYSIZE(lightNameInput));
+
 		if (ImGui::Button("Cancel")) {
 			m_lightObjects.erase(m_lightObjects.begin() + m_newLightIndex);
 			m_newLightIndex = -1;
+			lastNewLightIndex = -1;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Confirm")) {
 			m_lightObjects[m_newLightIndex].name = lightNameInput;
 			m_newLightIndex = -1;
+			lastNewLightIndex = -1;
 		}
 	}
+
 }
 
 void SceneContent::RenderUiList() {
@@ -268,25 +315,35 @@ void SceneContent::RenderUiList() {
 		if (ImGui::Button(m_textObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_textObjects[i], currentObjectType::text);
 			m_indexOfCurrentOb = i;
+			m_currentObName = m_textObjects[i].name;
 		}
 	}
 	ImGui::Unindent();
 
+	static char TextNameInput[256] = "";
+	static int lastNewTextIndex = -1;
+
 	if (m_newTextIndex > -1) {
-		static char TextNameInput[256] = "";
-		snprintf(TextNameInput, sizeof(TextNameInput), "Text %d", m_newTextIndex + 1);
+		if (m_newTextIndex != lastNewTextIndex) {
+			snprintf(TextNameInput, sizeof(TextNameInput), "Text %d", m_newTextIndex + 1);
+			lastNewTextIndex = m_newTextIndex;
+		}
 
 		ImGui::InputText("##Enter Text Name", TextNameInput, IM_ARRAYSIZE(TextNameInput));
+
 		if (ImGui::Button("Cancel")) {
 			m_textObjects.erase(m_textObjects.begin() + m_newTextIndex);
 			m_newTextIndex = -1;
+			lastNewTextIndex = -1;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Confirm")) {
 			m_textObjects[m_newTextIndex].name = TextNameInput;
 			m_newTextIndex = -1;
+			lastNewTextIndex = -1;
 		}
 	}
+
 
 	// Button objects
 	if (!m_buttonObjects.empty()) {
@@ -299,31 +356,42 @@ void SceneContent::RenderUiList() {
 		if (ImGui::Button(m_buttonObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_buttonObjects[i], currentObjectType::button);
 			m_indexOfCurrentOb = i;
+			m_currentObName = m_buttonObjects[i].name;
 		}
 	}
 	ImGui::Unindent();
 
+	static char ButtonNameInput[256] = "";
+	static int lastNewButtonIndex = -1;
+
 	if (m_newButtonIndex > -1) {
-		static char ButtonNameInput[256] = "";
-		snprintf(ButtonNameInput, sizeof(ButtonNameInput), "Button %d", m_newButtonIndex + 1);
+		if (m_newButtonIndex != lastNewButtonIndex) {
+			snprintf(ButtonNameInput, sizeof(ButtonNameInput), "Button %d", m_newButtonIndex + 1);
+			lastNewButtonIndex = m_newButtonIndex;
+		}
 
 		ImGui::InputText("##Enter Button Name", ButtonNameInput, IM_ARRAYSIZE(ButtonNameInput));
+
 		if (ImGui::Button("Cancel##ButtonCancel")) {
 			m_buttonObjects.erase(m_buttonObjects.begin() + m_newButtonIndex);
 			m_newButtonIndex = -1;
+			lastNewButtonIndex = -1;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Confirm##ButtonConfirm")) {
 			m_buttonObjects[m_newButtonIndex].name = ButtonNameInput;
 			m_newButtonIndex = -1;
+			lastNewButtonIndex = -1;
 		}
 	}
+
 }
 
 
 void SceneContent::SetNewScene(std::string NewScene)
 {
 	m_viewer->SetObject(nullptr, currentObjectType::game);
+	m_currentObName = "";
 	m_gameObjects.erase(std::remove_if(m_gameObjects.begin(), m_gameObjects.end(),
 		[](const auto& obj) { return obj.IsSceneObject; }), m_gameObjects.end());
 
@@ -375,7 +443,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 		int level = currentObject["level"].asInt();
 		bool isSceneObject = currentObject["isSceneObject"].asBool();
 
-		std::string pathToSprite = GetDirForSprite(spriteName, std::filesystem::current_path().string());
+		std::string pathToSprite = GetDirForSprite(spriteName, m_directory->getMainPath());
 
 		m_gameObjects.push_back(GameObject(name, pathToSprite, position, scale, rotation, layer, level));
 		m_gameObjects.back().IsSceneObject = isSceneObject;
@@ -478,9 +546,8 @@ std::string SceneContent::GetCurrentScene()
 
 std::string SceneContent::GetDirForSprite(std::string sprite, std::string dir)
 {
-	if (dir.find("SceneEditor") != std::string::npos) {
-		dir = dir.substr(0, dir.find_last_of('\\'));
-		dir += "\\Resources";
+	if (dir.find("\\Resources") == std::string::npos) {
+		dir += "\\Resources\\graphics";
 	}
 
 	for (const auto& entry : std::filesystem::directory_iterator(dir)) {
