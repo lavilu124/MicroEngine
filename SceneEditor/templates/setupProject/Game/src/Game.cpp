@@ -5,17 +5,17 @@
 class App : public Micro::Application
 {
 public:
-	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game", scene) {
+	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game") {
 	}
 
-	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game", scene) {
+	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game") {
 	}
 
 	void Run() override {
 		while (m_window.isOpen()) {
 			InputFunc();
 
-			m_systemManager.Update(m_camera);
+			m_systemManager.Update();
 
 			Display();
 		}
