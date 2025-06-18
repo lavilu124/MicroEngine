@@ -11,5 +11,7 @@ public:
 	ImVec2 position;
 	std::string name;
 	float rotation;
+
+	bool isVisable = true;;
 };
 

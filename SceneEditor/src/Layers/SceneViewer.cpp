@@ -206,7 +206,7 @@ void SceneViewer::SaveWindow()
 void SceneViewer::RenderGameObjects(ImVec2 contentRegion) const
 {
     for (auto& gameObject : m_sceneContent->GetGameObjects()) {
-        if (gameObject.sprite) {
+        if (gameObject.sprite && gameObject.isVisable) {
             sf::Vector2f scaledPos = sf::Vector2f(gameObject.position.x * m_zoom, gameObject.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
             ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
             ImVec2 size = {
@@ -227,6 +227,8 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
 {
     sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().x / 2);
     for (auto& light : m_sceneContent->GetLights()) {
+        if (!light.isVisable) continue;
+
         sf::Vector2f pos = sf::Vector2f(light.position.x - textureOffset.x, light.position.y - textureOffset.y);
         (pos.x > 0) ? pos.x += 25 : pos.x -= 25;
         (pos.y > 0) ? pos.y -= 25 : pos.y += 25;
@@ -258,6 +260,8 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
 void SceneViewer::renderTexts(ImVec2 contentRegion) {
     sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().y / 2);
     for (auto& text : m_sceneContent->GetTexts()) {
+        if (!text.isVisable) continue;
+
         sf::Vector2f pos = sf::Vector2f(text.position.x - textureOffset.x, text.position.y - textureOffset.y);
         sf::Vector2f scaledPos = (pos * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
         ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
@@ -284,7 +288,7 @@ void SceneViewer::renderTexts(ImVec2 contentRegion) {
 
 void SceneViewer::renderButtons(ImVec2 contentRegion) { 
     for (auto& button : m_sceneContent->GetButtons()) {
-        if (button.image) {
+        if (button.image && button.isVisable) {
             sf::Vector2f scaledPos = sf::Vector2f(button.position.x * m_zoom, button.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
             ImVec2 position(scaledPos.x + contentRegion.x / 2, scaledPos.y + contentRegion.y / 2);
             ImVec2 size = {

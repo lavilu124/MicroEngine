@@ -106,6 +106,10 @@ void ObjectViewer::DisplayGameObject()
     if (ImGui::InputText("##GameName", nameBuffer, sizeof(nameBuffer))) {
         m_currentObject->name = nameBuffer;
     }
+
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Visible", &m_currentObject->isVisable);
+
     ImGui::Unindent();
 
     ImGui::Spacing();
@@ -251,6 +255,10 @@ void ObjectViewer::DisplayLightObject()
     if (ImGui::InputText("##LightName", nameBuffer, sizeof(nameBuffer))) {
         m_currentObject->name = nameBuffer;
     }
+
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Visible", &m_currentObject->isVisable);
+
     ImGui::Unindent();
 
     ImGui::Spacing();
@@ -386,6 +394,10 @@ void ObjectViewer::DisplayTextObject()
     if (ImGui::InputText("##TextName", nameBuffer, sizeof(nameBuffer))) {
         m_currentObject->name = nameBuffer;
     }
+
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Visible", &m_currentObject->isVisable);
+
     ImGui::Unindent();
 
     ImGui::Spacing();
@@ -498,6 +510,10 @@ void ObjectViewer::DisplayButtonObject() {
     if (ImGui::InputText("##ButtonName", nameBuffer, sizeof(nameBuffer))) {
         m_currentObject->name = nameBuffer;
     }
+
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    ImGui::Checkbox("Visible", &m_currentObject->isVisable);
+
     ImGui::Unindent();
 
     ImGui::Spacing();
