@@ -1,23 +1,4 @@
 {
-	"button0" : 
-	{
-		"img" : "b1.png",
-		"name" : "testing123",
-		"onClickFunc" : "testing1",
-		"onClickImg" : "b2.png",
-		"position" : 
-		[
-			100.0,
-			0.0
-		],
-		"rotation" : 0.0,
-		"scale" : 
-		[
-			1.0,
-			1.0
-		],
-		"isSceneObject" : true
-	},
 	"lightSource0" : 
 	{
 		"LightType" : 0,
@@ -38,7 +19,7 @@
 		],
 		"radius" : 100.0,
 		"rotation" : 0.0,
-		"isSceneObject" : true
+		"isSceneObject" : false
 	},
 	"object0" : 
 	{

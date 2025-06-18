@@ -35,4 +35,14 @@ namespace Micro {
 	{
 		return m_name;
 	}
+
+	bool Text::IsSceneObject() const
+	{
+		return m_isSceneObject;
+	}
+
+	void Text::SetIsSceneObject(bool val)
+	{
+		m_isSceneObject = val;
+	}
 }

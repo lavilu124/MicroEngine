@@ -13,10 +13,15 @@ public:
 	std::string type;
 	int level;
 
+	void LevelChange();
+	bool IsLevelChanged();
+
 	void SetPath(std::string newPath);
 private:
-	std::string path;
+	std::string m_path;
 
 	static int counter;
+
+	bool m_levelChanged = false;
 };
 

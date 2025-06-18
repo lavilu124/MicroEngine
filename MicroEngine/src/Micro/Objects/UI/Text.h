@@ -20,6 +20,9 @@ namespace Micro {
 		void SetShowen(bool showen);
 
 		std::string GetName() const;
+
+		bool IsSceneObject() const;
+		void SetIsSceneObject(bool val);
 	private:
 		sf::Text m_text;
 		sf::Font m_font;
@@ -28,6 +31,8 @@ namespace Micro {
 		bool m_showen = true;
 
 		SystemManager* m_systemManager;
+
+		bool m_isSceneObject;
 	};
 }
 

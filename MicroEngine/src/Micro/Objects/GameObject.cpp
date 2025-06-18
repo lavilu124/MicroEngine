@@ -227,4 +227,15 @@ namespace Micro{
         m_showen = showen;
     }
 
+    bool GameObject::IsSceneObject() const
+    {
+        return m_isSceneObject;
+    }
+
+    void GameObject::SetIsSceneObject(bool val)
+    {
+        m_isSceneObject = val;
+    }
+
+
 }

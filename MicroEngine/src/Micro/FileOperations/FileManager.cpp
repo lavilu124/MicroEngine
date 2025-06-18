@@ -276,6 +276,7 @@ namespace Micro{
             std::string name = currentObject["name"].asString();
             int level = currentObject["level"].asInt();
             LoadAsset(spriteName);
+            bool isSceneObject = currentObject["isSceneObject"].asBool();
 
             std::string type = currentObject["type"].asString();
             if (type != "none") {
@@ -293,6 +294,7 @@ namespace Micro{
                 plain->SetRotation(rotation);
                 returnVector.push_back(std::move(plain));
             }
+            returnVector.back()->SetIsSceneObject(isSceneObject);
         }
         
         //lights
@@ -316,6 +318,7 @@ namespace Micro{
             float radius = currentObject["radius"].asFloat();
             bool fade = currentObject["fade"].asBool();
             ls::LightId light;
+            bool isSceneObject = currentObject["isSceneObject"].asBool();
 
 			switch (type) {
 			case 0: //Radial light
@@ -326,6 +329,7 @@ namespace Micro{
                 systemManager->GetLight<ls::lightType::radial>(light)->setRotation(rotation);
                 systemManager->GetLight<ls::lightType::radial>(light)->SetBeamAngle(currentObject["angle"].asFloat());
                 systemManager->GetLight<ls::lightType::radial>(light)->SetFade(fade);
+                systemManager->GetLight<ls::lightType::radial>(light)->SetIsSceneObject(isSceneObject);
 				break;
 			case 1: //Directional light
                 light = systemManager->AddLight(ls::directed, name.c_str());
@@ -334,6 +338,7 @@ namespace Micro{
 				systemManager->GetLight<ls::lightType::directed>(light)->setRotation(rotation);
                 systemManager->GetLight<ls::lightType::directed>(light)->SetBeamWidth(currentObject["width"].asFloat());
                 systemManager->GetLight<ls::lightType::directed>(light)->SetFade(fade);
+                systemManager->GetLight<ls::lightType::directed>(light)->SetIsSceneObject(isSceneObject);
 				break;
 			default:
 				MC_LOG(((std::string)"unknown light type in " + name));
@@ -369,6 +374,7 @@ namespace Micro{
             unsigned int size = currentObject["size"].asInt();
             sf::Vector2f scale = sf::Vector2f(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
             std::string value = currentObject["value"].asString();
+            bool isSceneObject = currentObject["isSceneObject"].asBool();
 
             systemManager->AddText(name, font);
             systemManager->GetText(name)->GetBase().setString(value);
@@ -379,6 +385,7 @@ namespace Micro{
             systemManager->GetText(name)->GetBase().setOutlineThickness(outlineThickness);
             systemManager->GetText(name)->GetBase().setCharacterSize(size);
             systemManager->GetText(name)->GetBase().setScale(scale);
+            systemManager->GetText(name)->SetIsSceneObject(isSceneObject);
         }
 
         //buttons
@@ -400,6 +407,7 @@ namespace Micro{
             float rotation = currentObject["rotation"].asFloat();
             sf::Vector2f position = sf::Vector2f(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
             sf::Vector2f scale = sf::Vector2f(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
+            bool isSceneObject = currentObject["isSceneObject"].asBool();
 
 
             auto it = m_buttonFuncMap.find(onclickfunc);
@@ -414,6 +422,7 @@ namespace Micro{
             systemManager->GetButton(name)->SetRotation(rotation);
             systemManager->GetButton(name)->SetPosition(position);
             systemManager->GetButton(name)->SetScale(scale);
+            systemManager->GetButton(name)->SetIsSceneObject(isSceneObject);
         }
 
         //close the file

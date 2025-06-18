@@ -60,6 +60,8 @@ namespace Micro{
         const char* m_name;
 
         bool m_showen = true;
+
+        bool m_isSceneObject = true;
   
     protected:
         sf::Color m_color;
@@ -178,6 +180,9 @@ namespace Micro{
 
         bool IsShowen() const;
         void SetShowen(bool showen);
+
+        bool IsSceneObject() const;
+        void SetIsSceneObject(bool val);
     };
 }
 
