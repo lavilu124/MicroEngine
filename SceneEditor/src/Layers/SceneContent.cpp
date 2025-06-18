@@ -313,6 +313,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 	int count = 0;
 
 	//going over the json and reading all the data
+	//game
 	for (int i = 0; i < actualJson.size(); i++) {
 		std::stringstream ss;
 		ss << i;
@@ -340,6 +341,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 
 	}
 
+	//lights
 	for (int i = 0; i < count; i++) {
 		std::stringstream ss;
 		ss << i;
@@ -354,7 +356,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 		std::string name = currentObject["name"].asString();
 		ImVec2 position = ImVec2(currentObject["position"][0].asFloat(), currentObject["position"][1].asFloat());
 		ImColor color = ImColor(currentObject["color"][0].asFloat() , currentObject["color"][1].asFloat() , currentObject["color"][2].asFloat() , currentObject["color"][3].asFloat());
-		float radius = currentObject["radius"].asFloat() /1.5;
+		float radius = currentObject["radius"].asFloat();
 		float rotation = currentObject["rotation"].asFloat();
 		float angle = currentObject["angle"].asFloat();
 		bool fade = currentObject["fade"].asBool();
@@ -365,6 +367,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 
 	}
 
+	//text
 	for (int i = 0; i < count; i++) {
 		std::stringstream ss;
 		ss << i;
@@ -390,6 +393,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 		m_textObjects.push_back(TextObject(value, name, color, font, outlineColor, outlineThickness, size, scale, position, rotation));
 	}
 
+	//buttons
 	for (int i = 0; i < count; i++) {
 		std::stringstream ss;
 		ss << i;
