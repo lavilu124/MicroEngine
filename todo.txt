@@ -1,4 +1,3 @@
-add ui elements(text and buttons)
 non scene objects
 un/visible in editor
 
