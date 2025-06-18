@@ -82,18 +82,33 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
 
 void SceneViewer::ExecutePlayCommand() const {
     std::string command = std::filesystem::current_path().string();
-
-
-    if (command.find("SceneEditor") != std::string::npos) 
-        command = command.substr(0, command.find_last_of('\\'));
-    command += "\\binaries\\windows-x86_64\\Release\\sendbox\\sendbox.exe ";
-
-    std::string scene = m_sceneContent->GetCurrentScene();
-    scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
-    command += scene;
-
-    system(command.c_str());
     
+
+    if (command.find("SceneEditor") != std::string::npos)
+        command = command.substr(0, command.find_last_of('\\'));
+    std::string command2 = command;
+
+    command += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
+    command2 += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
+
+    if (std::filesystem::exists(command)) {
+        std::string scene = m_sceneContent->GetCurrentScene();
+        scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
+        command += scene;
+
+
+
+        system(command.c_str());
+    }
+    else if (std::filesystem::exists(command2)) {
+        std::string scene = m_sceneContent->GetCurrentScene();
+        scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
+        command2 += scene;
+
+
+
+        system(command2.c_str());
+    }
 }
 
 void SceneViewer::Window()
