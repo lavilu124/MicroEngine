@@ -54,9 +54,9 @@ namespace Micro{
 		}
 	}
 
-	SystemManager& Application::GetSystemManager()
+	SystemManager* Application::GetSystemManager()
 	{
-		return m_systemManager;
+		return &m_systemManager;
 	}
 
 	void Application::SetWindowSize(sf::Vector2u newSize)

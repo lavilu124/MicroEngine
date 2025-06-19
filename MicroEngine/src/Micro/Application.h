@@ -21,7 +21,7 @@ namespace Micro{
 
 		virtual void InputFunc();
 
-		SystemManager& GetSystemManager();
+		SystemManager* GetSystemManager();
 
 
 		void SetWindowSize(sf::Vector2u newSize);
