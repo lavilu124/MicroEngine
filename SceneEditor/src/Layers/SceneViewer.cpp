@@ -91,19 +91,20 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
 }
 
 void SceneViewer::ExecutePlayCommand() const {
-    std::string command = std::filesystem::current_path().string();
+    std::string command = m_mainPath;
     
 
-    if (command.find("SceneEditor") != std::string::npos)
+    if (command.find("\\Resources") != std::string::npos)
         command = command.substr(0, command.find_last_of('\\'));
     std::string command2 = command;
 
     command += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
     command2 += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
-
+    
     if (std::filesystem::exists(command)) {
         std::string scene = m_sceneContent->GetCurrentScene();
         scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
+        command += " ";
         command += scene;
 
 
@@ -113,6 +114,7 @@ void SceneViewer::ExecutePlayCommand() const {
     else if (std::filesystem::exists(command2)) {
         std::string scene = m_sceneContent->GetCurrentScene();
         scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
+        command2 += " ";
         command2 += scene;
 
 
