@@ -1,4 +1,4 @@
-
+cam(the object) control in editor
 
 maybe:
 multiplayer and/or multiscreen(local multiplayer)
@@ -9,3 +9,4 @@ tiles
 eazy walls making
 child object
 save file (with encrypt?)
+particle system
