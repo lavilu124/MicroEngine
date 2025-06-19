@@ -1,11 +1,16 @@
 #include "Application.h"
 #include <SFML/Graphics.hpp>
 
+static Micro::Application* s_Instance = nullptr;
+
+
 namespace Micro{
 	Application::Application(float windowWidth, float windowHeight, float maxFPS, const char* name) : m_window(sf::VideoMode(windowWidth, windowHeight), name,
 		sf::Style::Default), m_systemManager(m_window) {
 		
 		m_window.setFramerateLimit(maxFPS);
+
+		s_Instance = this;
 		 
 		m_camera = &m_systemManager.GetCamera();
 	}
@@ -18,6 +23,11 @@ namespace Micro{
 	}
 
 	Application::~Application() {}
+
+	Application& Application::Get() {
+		return *s_Instance;
+	}
+
 	void Application::Run() {
 		while (m_window.isOpen()) {
 			InputFunc();
@@ -27,6 +37,8 @@ namespace Micro{
 			Display();
 		}
 	}
+
+
 
 	void Application::InputFunc() {
 		sf::Event event;
@@ -40,6 +52,11 @@ namespace Micro{
 
 			m_systemManager.RunInput(event, m_window);
 		}
+	}
+
+	SystemManager& Application::GetSystemManager()
+	{
+		return m_systemManager;
 	}
 
 	void Application::SetWindowSize(sf::Vector2u newSize)
