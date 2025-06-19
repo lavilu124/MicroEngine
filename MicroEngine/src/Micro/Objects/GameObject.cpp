@@ -23,30 +23,7 @@ namespace Micro{
 
         sf::Vector2u textureSize = texture->getSize();
 
-        int minX = textureSize.x;
-        int minY = textureSize.y;
-        int maxX = -1;
-        int maxY = -1;
-
-        // Iterate through pixels to find non-transparent coordinates
-        for (unsigned int x = 0; x < textureSize.x; ++x) {
-            for (unsigned int y = 0; y < textureSize.y; ++y) {
-                sf::Color pixelColor = texture->copyToImage().getPixel(x, y);
-                if (pixelColor.a > 0) {
-                    // Update min and max coordinates
-                    minX = std::min(minX, static_cast<int>(x));
-                    minY = std::min(minY, static_cast<int>(y));
-                    maxX = std::max(maxX, static_cast<int>(x));
-                    maxY = std::max(maxY, static_cast<int>(y));
-                }
-            }
-        }
-
-        // Calculate the center based on the non-transparent coordinates
-        float centerX = static_cast<float>(minX + maxX) / 2.0f;
-        float centerY = static_cast<float>(minY + maxY) / 2.0f;
-
-        m_objectSprite.setOrigin(sf::Vector2f(centerX, centerY));
+        m_objectSprite.setOrigin(sf::Vector2f(texture->getSize().x / 2, texture->getSize().y / 2));
     }
 
     void GameObject::Delete() {

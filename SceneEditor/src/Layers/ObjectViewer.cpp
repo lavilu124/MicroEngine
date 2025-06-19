@@ -154,10 +154,9 @@ void ObjectViewer::DisplayGameObject()
         "0:collider", "1:custom", "2:custom", "3:custom", "4:custom", "5:custom", "6:trigger", "7:ignore",
         "8:custom", "9:custom", "10:custom", "11:custom", "12:custom", "13:all"
     };
-    static int currentLayerIndex = GameOj->layer;
 
-    if (ImGui::Combo("##LayerCombo", &currentLayerIndex, layerItems, IM_ARRAYSIZE(layerItems))) {
-        GameOj->layer = currentLayerIndex;
+    if (ImGui::Combo("##LayerCombo", &GameOj->layer, layerItems, IM_ARRAYSIZE(layerItems))) {
+      
     }
     ImGui::Unindent();
 
