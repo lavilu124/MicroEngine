@@ -105,7 +105,8 @@ void SceneContent::Window()
 				quickSort(m_gameObjects, 0, m_gameObjects.size() - 1);
 				if (!m_currentObName.empty() && m_viewer->GetCurrentObjectType() == currentObjectType::game) {
 					for (int i = 0; i < m_gameObjects.size(); i++) {
-						m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
+						if (m_gameObjects[i].name == m_currentObName) 
+							m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
 					}
 				}
 			}
@@ -219,6 +220,7 @@ void SceneContent::RenderObjectList()
 		if (ImGui::Button(m_gameObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
 			m_indexOfCurrentOb = i;
+			m_currentObName = m_gameObjects[i].name;
 		}
 	}
 	ImGui::Unindent();
@@ -249,6 +251,14 @@ void SceneContent::RenderObjectList()
 			m_gameObjects[m_NewGameIndex].name = GameObNameInput;
 			m_NewGameIndex = -1;
 			lastNewGameIndex = -1;
+
+			quickSort(m_gameObjects, 0, m_gameObjects.size() - 1);
+			if (!m_currentObName.empty() && m_viewer->GetCurrentObjectType() == currentObjectType::game) {
+				for (int i = 0; i < m_gameObjects.size(); i++) {
+					if (m_gameObjects[i].name == m_currentObName) 
+						m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
+				}
+			}
 		}
 	}
 

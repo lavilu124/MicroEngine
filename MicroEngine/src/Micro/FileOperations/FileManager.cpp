@@ -283,18 +283,15 @@ namespace Micro{
             if (type != "none") {
                
                 auto obj = ObjectManager::Instance().Create(type, systemManager, m_sprites[spriteName], name, layer, level);
-                obj->SetPosition(position);
-                obj->SetScale(scale);
-                obj->SetRotation(rotation);
                 returnVector.push_back(std::move(obj)); 
             }
             else {
                 auto plain = std::make_unique<GameObject>(systemManager, m_sprites[spriteName], name, layer, level);
-                plain->SetPosition(position);
-                plain->SetScale(scale);
-                plain->SetRotation(rotation);
                 returnVector.push_back(std::move(plain));
             }
+            returnVector.back()->SetPosition(position);
+            returnVector.back()->SetScale(scale);
+            returnVector.back()->SetRotation(rotation);
             returnVector.back()->SetIsSceneObject(isSceneObject);
         }
         
