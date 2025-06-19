@@ -12,11 +12,16 @@ namespace Micro{
 		Application(sf::Vector2f windowSize, float maxFps, const char* name);
 
 		virtual ~Application();
+
+
+		static Application& Get();
 		virtual void Run();
 
 		virtual void Display();
 
 		virtual void InputFunc();
+
+		SystemManager& GetSystemManager();
 
 
 		void SetWindowSize(sf::Vector2u newSize);
