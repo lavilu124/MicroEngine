@@ -70,8 +70,8 @@ namespace Micro {
         }
 
 
-        for (auto it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-            (*it)->Update(deltaTime);
+        for (int i = 0; i < m_sceneManager.objects.size(); i++)
+            m_sceneManager.objects[i]->Update(deltaTime);
 
         deltaTimeT = clock.restart();
         deltaTime = deltaTimeT.asSeconds();
@@ -161,8 +161,11 @@ namespace Micro {
     Camera& SystemManager::GetCamera() { return m_sceneManager.camera; }
 
     void SystemManager::CreateGameObject(std::shared_ptr<GameObject> ob) {
-        if (CheckExistingObject(ob->GetName().c_str()) == -1)
+        if (CheckExistingObject(ob->GetName().c_str()) == -1) {
             m_sceneManager.objects.push_back(std::move(ob));
+            quickSort(m_sceneManager.objects, 0, m_sceneManager.objects.size() - 1);
+        }
+            
     }
 
     std::vector<std::shared_ptr<GameObject>>& SystemManager::GetObjects() {
