@@ -12,5 +12,6 @@ public:
 
     void Start() override;
     void Update(float DeltaTime) override;
- 
+    void OnCollision(GameObject* HitInfo) override;
+    void OnTrigger(GameObject* HitInfo) override;
 };

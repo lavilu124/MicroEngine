@@ -54,18 +54,18 @@ namespace Micro{
 		void HandleRotationChange(float NewRotation);
 		void HandleScaleChange(sf::Vector2f NewScale);
 
-	private:
-		Collision::collisionLayer m_layer;
+		std::string m_name;
 		sf::Vector2f m_position;
 		sf::Vector2f m_scale;
 		float m_rotation;
-
 		sf::Sprite m_objectSprite;
 
+	protected:
 		virtual void OnCollision(GameObject* HitInfo);
 		virtual void OnTrigger(GameObject* HitInfo);
 
-		std::string m_name;
+		Collision::collisionLayer m_layer;
+
 
 		SystemManager* m_systemManager;
 

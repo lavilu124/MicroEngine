@@ -18,5 +18,11 @@ void Template::Update(float DeltaTime){
     
 }
     
-	
+void Template::OnCollision(GameObject* HitInfo)
+{
+}
+
+void Template::OnTrigger(GameObject* HitInfo)
+{
+}
  
