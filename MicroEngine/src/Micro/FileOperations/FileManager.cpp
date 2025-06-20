@@ -76,7 +76,23 @@ namespace Micro{
         inputs.emplace(action.GetName(), action);
     }
     void FileManager::LoadInput() {
-        std::ifstream file("../Resources\\settings\\Input.cfg");
+        std::string path;
+
+        std::filesystem::path dir = "../";
+
+        while (!dir.empty()) {
+            std::filesystem::path resourcesPath = dir / "Resources";
+
+            if (std::filesystem::exists(resourcesPath) && std::filesystem::is_directory(resourcesPath)) {
+                path = resourcesPath.string();
+                break;
+            }
+
+            dir = dir.parent_path();
+        }
+
+        path += "\\settings\\Input.cfg";
+        std::ifstream file(path);
         std::string line;
 
         while (std::getline(file, line)) {
