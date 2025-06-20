@@ -13,7 +13,7 @@ namespace Micro{
         m_scale = sf::Vector2f(m_scale.x * -1, m_scale.y);
     }
 
-    bool GameObject::IsFacingRight() {
+    bool GameObject::IsFacingRight() const{
         return m_scale.x >= 0;
     }
 
@@ -190,6 +190,7 @@ namespace Micro{
     {
         if (level == m_level || level < 0)
             return;
+        m_level = level;
         m_systemManager->ChangedLevel();
     }
 

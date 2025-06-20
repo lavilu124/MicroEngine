@@ -9,6 +9,7 @@ struct InputDefinition {
     std::string part;       // "pressed", "started", "released"
     std::string onInput;    // function name to call on input
     std::string offInput;   // function name to call when input is off
+    std::string keyName;
 };
 
 

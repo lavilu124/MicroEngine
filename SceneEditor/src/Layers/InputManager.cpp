@@ -2,6 +2,9 @@
 #include <fstream>
 #include "../json/json.h"
 #include <SFML/Window/Joystick.hpp>
+#include <SFML/Window/Keyboard.hpp>
+
+#include "../defines/sfmlImguiKeys.h"
 
 InputManager::InputManager(std::string pathToinput)
     : m_path(pathToinput)
@@ -112,19 +115,16 @@ void InputManager::OnUIRender() {
                     m_listeningForKey = false;
                 }
 
-
                 for (int key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; ++key)
                 {
                     if (ImGui::IsKeyPressed((ImGuiKey)key))
                     {
-                        
-                        int keyOffset = (int)ImGuiKey_A; 
-                        int customKeyValue = key - keyOffset;
-
-                        if (customKeyValue >= 0 && customKeyValue < 101)
+                        if (ImGuiToSFMLKeyMap.find((ImGuiKey)key) != ImGuiToSFMLKeyMap.end())
                         {
+                            // Key exists in the map
+                            int sfKey = (int) ImGuiToSFMLKeyMap.at((ImGuiKey)key);
                             def.type = "KeyboardKey";
-                            def.key = std::to_string(customKeyValue); 
+                            def.key = std::to_string(sfKey);
                             m_listeningForKey = false;
                             break;
                         }
