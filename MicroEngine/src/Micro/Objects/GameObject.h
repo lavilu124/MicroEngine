@@ -11,7 +11,7 @@ namespace Micro{
 	public:
 		GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER, int level = 0);
 
-		bool IsFacingRight();
+		bool IsFacingRight() const;
 
 		void Flip();
 
