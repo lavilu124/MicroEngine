@@ -452,12 +452,13 @@ void SceneContent::SetNewScene(std::string NewScene)
 		std::string name = currentObject["name"].asString();
 		int level = currentObject["level"].asInt();
 		bool isSceneObject = currentObject["isSceneObject"].asBool();
+		std::string type = currentObject["type"].asString();
 
 		std::string pathToSprite = GetDirForSprite(spriteName, m_directory->getMainPath());
 
 		m_gameObjects.push_back(GameObject(name, pathToSprite, position, scale, rotation, layer, level));
 		m_gameObjects.back().IsSceneObject = isSceneObject;
-
+		m_gameObjects.back().type = type;
 	}
 	quickSort(m_gameObjects, 0, m_gameObjects.size() -1);
 
