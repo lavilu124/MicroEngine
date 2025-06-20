@@ -101,26 +101,48 @@ void SceneViewer::ExecutePlayCommand() const {
     command += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
     command2 += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
     
+    
+
+    auto originalPath = std::filesystem::current_path();
+    
+    
+
     if (std::filesystem::exists(command)) {
-        std::string scene = m_sceneContent->GetCurrentScene();
+        std::string workingDir = command.substr(0, command.find_last_of('\\'));
+        // Save the current path
+        
+
+        // Change to the game's directory
+        std::filesystem::current_path(workingDir);
+
+        /*std::string scene = m_sceneContent->GetCurrentScene();
         scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
         command += " ";
-        command += scene;
+        command += scene;*/
 
 
 
-        system(command.c_str());
+        system("Game.exe");
     }
     else if (std::filesystem::exists(command2)) {
-        std::string scene = m_sceneContent->GetCurrentScene();
+        std::string workingDir = command2.substr(0, command2.find_last_of('\\'));
+        // Save the current path
+
+
+        // Change to the game's directory
+        std::filesystem::current_path(workingDir);
+
+        /*std::string scene = m_sceneContent->GetCurrentScene();
         scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
         command2 += " ";
-        command2 += scene;
+        command2 += scene;*/
 
 
 
-        system(command2.c_str());
+        system("Game.exe");
     }
+
+    std::filesystem::current_path(originalPath);
 }
 
 void SceneViewer::Window()
