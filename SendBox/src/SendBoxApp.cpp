@@ -19,7 +19,7 @@ public:
 
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game") {
 		m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
-		(((std::string)scene).empty()) ? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
+		m_systemManager.LoadScene("DefualtScene");
 
 		m_systemManager.SetDarkness(75);
 
@@ -40,7 +40,7 @@ public:
 
 	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game") {
 		m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
-		(((std::string)scene).empty()) ? m_systemManager.LoadScene("DefualtScene") : m_systemManager.LoadScene(scene);
+		m_systemManager.LoadScene("DefualtScene");
 
 		m_systemManager.SetDarkness(75);
 
