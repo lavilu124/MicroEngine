@@ -8,7 +8,7 @@ namespace Micro {
 
 		m_img = systemManager->GetFileManager().GetSprite(img);
 		m_img->setOrigin(m_img->getGlobalBounds().width / 2, m_img->getGlobalBounds().height / 2);
-		if (onClickImg.empty()) {
+		if (!onClickImg.empty()) {
 			m_onClickImg = systemManager->GetFileManager().GetSprite(onClickImg);
 			m_isOnClickSet = true;
 			m_onClickImg->setOrigin(m_onClickImg->getGlobalBounds().width / 2, m_onClickImg->getGlobalBounds().height / 2);
