@@ -1,6 +1,5 @@
 #include "GameObject.h"
 #include "..//SystemLogic//SystemManager.h"
-
 namespace Micro{
     GameObject::GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer, int level)
         : m_objectSprite(ObjectSprite), m_layer(Layer), m_rotation(ObjectSprite.getRotation()), m_position(ObjectSprite.getPosition()), m_scale(ObjectSprite.getScale()), m_name(name), m_systemManager(systemManager), m_level(level)
@@ -175,6 +174,10 @@ namespace Micro{
     }
 
     void GameObject::Update(float DeltaTime) {
+        if (m_physicsBody.has_value())
+        {
+	        m_physicsBody.value().update(DeltaTime);
+        }
     }
 
     std::string GameObject::GetName() const{
@@ -214,5 +217,12 @@ namespace Micro{
         m_isSceneObject = val;
     }
 
-
+    void GameObject::SetPhysicsBody(float mass, bool hasGravity)
+    {
+        m_physicsBody.emplace(mass, m_position, [this](sf::Vector2f newPos)
+        {
+        	this->SetPosition(newPos);
+        });
+        m_physicsBody.value().hasGravitation = hasGravity;
+    }
 }

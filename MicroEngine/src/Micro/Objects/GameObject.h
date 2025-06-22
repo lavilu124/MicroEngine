@@ -1,9 +1,11 @@
  #pragma once
+#include <optional>
 #include <SFML/Graphics.hpp>
 #include "../SystemLogic/GameLogic/Collision.hpp"
 #include "../Core.h"
+#include "../SystemLogic/Physics/PhysicsBody.h"
 
-namespace Micro{
+ namespace Micro{
 	class SystemManager;
 
 	class MICRO_API GameObject
@@ -47,6 +49,8 @@ namespace Micro{
 		bool IsSceneObject() const;
 		void SetIsSceneObject(bool val);
 
+		void SetPhysicsBody(float mass, bool hasGravity);
+
 	private:
 		void SetCenter();
 
@@ -63,6 +67,8 @@ namespace Micro{
 	protected:
 		virtual void OnCollision(GameObject* HitInfo);
 		virtual void OnTrigger(GameObject* HitInfo);
+
+		std::optional<Physics::PhysicsBody> m_physicsBody;
 
 		Collision::collisionLayer m_layer;
 
