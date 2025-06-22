@@ -42,7 +42,7 @@ Here is a list of the features that exist in this game engine, and the features 
 | **project setup** | ✔️ |
 | **logging system** | ✔️ |
 | **input system** | ✔️ |
-| **ui elements** | ❌ |
+| **ui elements** | ✔️ |
 | **multiplayer (local and online)** | ❌ |
 | **physics engine** | ❌ |
 | **eazy level design** | ❌ |
