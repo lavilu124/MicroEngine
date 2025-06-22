@@ -7,8 +7,7 @@ namespace ls{
     /**
      * PI constant.
      */
-    MICRO_API extern const float PI;
-
+	inline constexpr float PI = 3.1415926f;
     enum lightType { directed, radial };
 
 	struct LightId

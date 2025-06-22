@@ -36,6 +36,7 @@ public:
 
 		m_systemManager.GetFileManager().AddInputFunc("test", test);
 
+		m_systemManager.GetObjectByName("hi")->SetPhysicsBody(5, true);
 	}
 
 	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game") {
