@@ -33,7 +33,7 @@ namespace Micro{
 
     void GameObject::OnTrigger(GameObject* hitInfo) {}
 
-    void GameObject::HandlePositionChange(sf::Vector2f newPosition) {
+    void GameObject::HandlePositionChange(const sf::Vector2f& newPosition) {
         m_objectSprite.setPosition(newPosition);
 
         GameObject* HitInfo = this;
@@ -111,7 +111,7 @@ namespace Micro{
     	m_rotation = newRotation;
     }
 
-    void GameObject::HandleScaleChange(sf::Vector2f newScale) {
+    void GameObject::HandleScaleChange(const sf::Vector2f& newScale) {
         m_objectSprite.setScale(newScale);
 
         GameObject* HitInfo = this;

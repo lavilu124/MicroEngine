@@ -29,10 +29,10 @@ private:
 
 	void RenderUiList();
 
-	void SetNewScene(std::string NewScene);
+	void SetNewScene(const std::string& newScene);
 	
 
-	std::string GetDirForSprite(std::string sprite, std::string dir);
+	std::string GetDirForSprite(const std::string& sprite, const std::string& dir);
 
 	
 private:

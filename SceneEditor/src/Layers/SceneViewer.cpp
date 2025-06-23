@@ -23,16 +23,6 @@ void SceneViewer::OnAttach()
     m_saveButtonImage = std::make_shared<Walnut::Image>(saveImagePath.c_str());
 }
 
-static bool IsOutsideBounds(ImVec2 position, ImVec2 size, ImVec2 contentRegionMin, ImVec2 contentRegionMax)
-{
-    return (
-        position.x + size.x < contentRegionMin.x || 
-        position.y + size.y < contentRegionMin.y || 
-        position.x > contentRegionMax.x ||          
-        position.y > contentRegionMax.y             
-        );
-}
-
 void SceneViewer::OnUIRender()
 {
     Window();
@@ -189,10 +179,10 @@ void SceneViewer::Window()
     RenderLights(contentRegion);
     ImGui::SetCursorScreenPos(pos);
 
-    renderTexts(contentRegion);
+    renderButtons(contentRegion);
     ImGui::SetCursorScreenPos(pos);
 
-    renderButtons(contentRegion);
+	renderTexts(contentRegion);
 
     ImGui::End();
 }
@@ -294,8 +284,6 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
 
     ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
 
-    sf::Vector2f textureOffset = sf::Vector2f(renderTexture.getSize().x / 2, renderTexture.getSize().y / 2);
-
     for (auto& light : m_sceneContent->GetLights()) {
         if (!light.isVisable)
             continue;
@@ -347,6 +335,9 @@ void SceneViewer::renderTexts(ImVec2 contentRegion) {
             text.image->GetWidth() * m_zoom,
             text.image->GetHeight() * m_zoom
         };
+
+        position.x -= size.x / 2.0f;
+        position.y -= size.y / 2.0f;
 
         ImGui::SetCursorScreenPos(position);
 
@@ -461,6 +452,13 @@ void SceneViewer::GenerateTextImage(TextObject& text)
     sText.setRotation(text.rotation);
     sText.setColor(sf::Color(text.color.x, text.color.y, text.color.z));
     sText.setOutlineColor(sf::Color(text.outlineColor.x, text.outlineColor.y, text.outlineColor.z));
+
+    // Center the text by adjusting the origin
+    sf::FloatRect bounds = sText.getLocalBounds();
+    sText.setOrigin(bounds.left + bounds.width / 2.f, bounds.top + bounds.height / 2.f);
+
+    // Set the position to center of the render texture
+    sText.setPosition(size.x / 2.f, size.y / 2.f);
 
     renderTexture.clear(sf::Color::Transparent);
     renderTexture.draw(sText);
