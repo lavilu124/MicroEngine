@@ -6,7 +6,7 @@
 class SceneViewer : public Walnut::Layer
 {
 public:
-	SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath);
+	SceneViewer(const std::shared_ptr<SceneContent>& sceneContent, const char* mainPath);
 
 	void OnDetach() override;
 

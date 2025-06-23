@@ -10,7 +10,7 @@ T min(T x, T y)
     return (x < y) ? x : y;
 }
 
-ObjectViewer::ObjectViewer(std::shared_ptr<ProjectDirectory> projectDirectory)
+ObjectViewer::ObjectViewer(const std::shared_ptr<ProjectDirectory>& projectDirectory)
     : m_projectDirectory(projectDirectory)
 {
 }
@@ -263,7 +263,7 @@ void ObjectViewer::DisplayGameObject()
     ImGui::Unindent();
 }
 
-void ObjectViewer::DisplayLightObject()
+void ObjectViewer::DisplayLightObject() const
 {
     ImGui::Text("Object Details: ");
     ImGui::Separator();
@@ -405,7 +405,7 @@ void ObjectViewer::DisplayLightObject()
     }
 }
 
-void ObjectViewer::DisplayTextObject()
+void ObjectViewer::DisplayTextObject() const
 {
     ImGui::Text("Text Object Details:");
     ImGui::Separator();
@@ -524,7 +524,8 @@ void ObjectViewer::DisplayTextObject()
     ImGui::Unindent();
 }
 
-void ObjectViewer::DisplayButtonObject() {
+void ObjectViewer::DisplayButtonObject() const
+{
     ImGui::Text("Button Object Details:");
     ImGui::Separator();
 
@@ -699,7 +700,7 @@ void ObjectViewer::SetObject(Object* newObject, currentObjectType type)
     m_currentObjectType = type;
 }
 
-currentObjectType ObjectViewer::GetCurrentObjectType()
+currentObjectType ObjectViewer::GetCurrentObjectType() const
 {
     return m_currentObjectType;
 }

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-Menu::Menu(std::string projectRootPath, std::shared_ptr<ObjectViewer> objectViewer) : m_rootPath(projectRootPath), m_objectViewer(objectViewer)
+Menu::Menu(const std::string& projectRootPath, std::shared_ptr<ObjectViewer> objectViewer) : m_rootPath(projectRootPath), m_objectViewer(objectViewer)
 {
     memset(m_ClassNameBuffer, 0, sizeof(m_ClassNameBuffer));
 }

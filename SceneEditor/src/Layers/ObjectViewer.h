@@ -14,12 +14,11 @@ enum currentObjectType {
 class ObjectViewer : public Walnut::Layer
 {
 public:
-	ObjectViewer(std::shared_ptr<ProjectDirectory> projectDirectory);
-
+	ObjectViewer(const std::shared_ptr<ProjectDirectory>& projectDirectory);
 	void OnUIRender() override;
 
 	void SetObject(Object* newObject, currentObjectType type);
-	currentObjectType GetCurrentObjectType();
+	currentObjectType GetCurrentObjectType() const;
 
 	Object* GetObject() const;
 
@@ -33,11 +32,11 @@ private:
 	void Window();
 	void DisplayGameObject();
 
-	void DisplayLightObject();
+	void DisplayLightObject() const;
 
-	void DisplayTextObject();
+	void DisplayTextObject() const;
 
-	void DisplayButtonObject();
+	void DisplayButtonObject() const;
 
 private:
 	Object* m_currentObject = nullptr;
@@ -53,5 +52,5 @@ private:
 	std::vector<std::string> m_typeList;
 
 
-	float m_lightint = 0;
+	float m_lightInt = 0;
 };

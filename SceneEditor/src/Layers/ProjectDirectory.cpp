@@ -47,18 +47,26 @@ void ProjectDirectory::SetCurrentPath(const std::string& path)
     }
 }
 
-void ProjectDirectory::HandleFile(std::filesystem::directory_entry entry)
+void ProjectDirectory::HandleFile(const std::filesystem::directory_entry& entry)
 {
+    
+
     if (entry.is_directory())
     {
+        for (auto folder : m_folders)
+            if (folder == entry) return;
         m_folders.push_back(entry);
     }
     else if (entry.path().extension() == ".ogg" || entry.path().extension() == ".wav" || entry.path().extension() == ".mp3" ) {
+        for (auto sound : m_sounds)
+            if (sound == entry) return;
         m_sounds.push_back(entry);
     }
     else if (entry.path().extension() == ".png" || entry.path().extension() == ".jpg" || entry.path().extension() == ".jpeg") {
+        for (auto img : m_images)
+            if (img.second == entry) return;
         try {
-            m_images.push_back({ std::make_shared<Walnut::Image>(entry.path().string()), entry.path() });
+            m_images.emplace_back(std::make_shared<Walnut::Image>(entry.path().string()), entry.path());
         }
         catch (const std::exception& e) {
             // Handle image loading failure
@@ -273,7 +281,7 @@ std::string ProjectDirectory::getMainPath() const
     return m_mainPath;
 }
 
-void ProjectDirectory::UploadFile(std::string path)
+void ProjectDirectory::UploadFile(const std::string& path)
 {
     if (m_copySize > 30)
         return;

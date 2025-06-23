@@ -6,7 +6,7 @@
 
 #include "../defines/sfmlImguiKeys.h"
 
-InputManager::InputManager(std::string pathToinput)
+InputManager::InputManager(const std::string& pathToinput)
     : m_path(pathToinput)
 {
 }
@@ -48,7 +48,8 @@ void InputManager::LoadInputs() {
 }
 
 
-void InputManager::SaveInputs() {
+void InputManager::SaveInputs() const
+{
     std::ofstream file(m_path);
     if (!file.is_open()) return;
     

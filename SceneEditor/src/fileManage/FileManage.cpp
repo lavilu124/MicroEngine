@@ -7,7 +7,7 @@
 
 namespace fs = std::filesystem;
 
-void FileManage::SaveScene(std::string path, SceneContent* content)
+void FileManage::SaveScene(const std::string& path, SceneContent* content)
 {
 	if (fs::exists(path)) {
 		std::remove(path.c_str());

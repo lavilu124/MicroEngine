@@ -3,7 +3,7 @@
 
 #include "../fileManage/FileManage.h"
 
-SceneViewer::SceneViewer(std::shared_ptr<SceneContent> sceneContent, const char* mainPath) : m_sceneContent(sceneContent), m_mainPath(mainPath)
+SceneViewer::SceneViewer(const std::shared_ptr<SceneContent>& sceneContent, const char* mainPath) : m_sceneContent(sceneContent), m_mainPath(mainPath)
 {
 }
 

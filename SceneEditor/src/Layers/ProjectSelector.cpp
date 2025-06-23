@@ -21,9 +21,9 @@ static std::vector<std::string> LoadRecentProjects()
     return paths;
 }
 
-ProjectSelector::ProjectSelector(Walnut::Application* app) : m_App(app)
+ProjectSelector::ProjectSelector(Walnut::Application* app) : m_app(app)
 {
-    m_RecentProjects = LoadRecentProjects();
+    m_recentProjects = LoadRecentProjects();
 }
 
 static bool CopyDirectory(const std::filesystem::path& source, const std::filesystem::path& destination)
@@ -87,7 +87,7 @@ static void RemoveRecentProject(const std::string& path)
         out << p << '\n';
 }
 
-void OnFileDrop(GLFWwindow* window, int count, const char** paths)
+static void OnFileDrop(GLFWwindow* window, int count, const char** paths)
 {
     for (int i = 0; i < count; i++)
     {
@@ -107,7 +107,7 @@ static void SaveRecentProject(const std::string& path)
         out << p << '\n';
 }
 
-void InitMainLayers(Walnut::Application* app, const std::string& path)
+static void InitMainLayers(Walnut::Application* app, const std::string& path)
 {
     std::shared_ptr<ProjectDirectory> dir = std::make_shared<ProjectDirectory>(path + "\\Resources");
     app->PushLayer(dir);
@@ -150,7 +150,7 @@ void ProjectSelector::OnUIRender()
 {
     bool openConfirmDeletePopup = false;
 
-    if (m_State == AppState::ProjectSelection)
+    if (m_state == AppState::ProjectSelection)
     {
         ImGui::SetNextWindowSize(ImVec2(SELECTOR_WIDTH, SELECTOR_HEIGHT), ImGuiCond_Always);
         ImGui::Begin("Select Project", nullptr,
@@ -164,45 +164,45 @@ void ProjectSelector::OnUIRender()
         {
             const char* selectedFolder = tinyfd_selectFolderDialog("Select Project Folder", "");
             if (selectedFolder) {
-                m_ProjectPath = selectedFolder;
-                m_NeedsResize = true;
+                m_projectPath = selectedFolder;
+                m_needsResize = true;
             }
         }
 
         ImGui::SameLine();
         if (ImGui::Button("Create New Project"))
         {
-            m_CreateProjectPath.clear();
-            m_CreateProjectName.clear();
-            memset(m_BasePathBuffer, 0, sizeof(m_BasePathBuffer));
-            memset(m_ProjectNameBuffer, 0, sizeof(m_ProjectNameBuffer));
+            m_createProjectPath.clear();
+            m_createProjectName.clear();
+            memset(m_basePathBuffer, 0, sizeof(m_basePathBuffer));
+            memset(m_projectNameBuffer, 0, sizeof(m_projectNameBuffer));
             ImGui::OpenPopup("Create New Project");
         }
 
         ImGui::Separator();
         ImGui::Text("Recent Projects:");
 
-        for (size_t i = 0; i < m_RecentProjects.size(); ++i)
+        for (size_t i = 0; i < m_recentProjects.size(); ++i)
         {
-            const std::string& path = m_RecentProjects[i];
+            const std::string& path = m_recentProjects[i];
             ImGui::PushID(static_cast<int>(i));
             if (ImGui::Button(path.c_str()))
             {
-                m_ProjectPath = path;
-                m_NeedsResize = true;
+                m_projectPath = path;
+                m_needsResize = true;
             }
             ImGui::SameLine();
             if (ImGui::Button("X"))
             {
-                m_ProjectToDeleteIndex = static_cast<int>(i);
-                m_ProjectToDeletePath = path;
+                m_projectToDeleteIndex = static_cast<int>(i);
+                m_projectToDeletePath = path;
                 openConfirmDeletePopup = true;
             }
             ImGui::PopID();
         }
 
-        if (!m_ProjectPath.empty())
-            ImGui::Text("Selected: %s", m_ProjectPath.c_str());
+        if (!m_projectPath.empty())
+            ImGui::Text("Selected: %s", m_projectPath.c_str());
 
         if (openConfirmDeletePopup)
             ImGui::OpenPopup("Confirm Delete");
@@ -216,55 +216,55 @@ void ProjectSelector::OnUIRender()
                 const char* folder = tinyfd_selectFolderDialog("Select Base Folder", "");
                 if (folder)
                 {
-                    strncpy(m_BasePathBuffer, folder, sizeof(m_BasePathBuffer) - 1);
-                    m_CreateProjectPath = folder;
+                    strncpy(m_basePathBuffer, folder, sizeof(m_basePathBuffer) - 1);
+                    m_createProjectPath = folder;
                 }
             }
-            ImGui::InputText("Base Path", m_BasePathBuffer, sizeof(m_BasePathBuffer));
-            ImGui::InputText("Project Name", m_ProjectNameBuffer, sizeof(m_ProjectNameBuffer));
+            ImGui::InputText("Base Path", m_basePathBuffer, sizeof(m_basePathBuffer));
+            ImGui::InputText("Project Name", m_projectNameBuffer, sizeof(m_projectNameBuffer));
 
             if (ImGui::Button("Create"))
             {
-                m_CreateProjectPath = m_BasePathBuffer;
-                m_CreateProjectName = m_ProjectNameBuffer;
+                m_createProjectPath = m_basePathBuffer;
+                m_createProjectName = m_projectNameBuffer;
 
-                if (!m_CreateProjectPath.empty() && !m_CreateProjectName.empty())
+                if (!m_createProjectPath.empty() && !m_createProjectName.empty())
                 {
-                    bool success = CreateNewProjectStructure(m_CreateProjectPath, m_CreateProjectName);
+                    bool success = CreateNewProjectStructure(m_createProjectPath, m_createProjectName);
                     if (success)
                     {
-                        m_ProjectPath = (std::filesystem::path(m_CreateProjectPath) / m_CreateProjectName).string();
-                        m_NeedsResize = true;
+                        m_projectPath = (std::filesystem::path(m_createProjectPath) / m_createProjectName).string();
+                        m_needsResize = true;
                         ImGui::CloseCurrentPopup();
                     }
-                    else m_ErrorMessage = "Failed to create project (folder may already exist).";
+                    else m_errorMessage = "Failed to create project (folder may already exist).";
                 }
-                else m_ErrorMessage = "Please specify both base path and project name.";
+                else m_errorMessage = "Please specify both base path and project name.";
             }
 
             ImGui::SameLine();
             if (ImGui::Button("Cancel"))
             {
                 ImGui::CloseCurrentPopup();
-                m_ErrorMessage.clear();
+                m_errorMessage.clear();
             }
 
-            if (!m_ErrorMessage.empty())
-                ImGui::TextColored(ImVec4(1, 0, 0, 1), "%s", m_ErrorMessage.c_str());
+            if (!m_errorMessage.empty())
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "%s", m_errorMessage.c_str());
 
             ImGui::EndPopup();
         }
 
         if (ImGui::BeginPopupModal("Confirm Delete", NULL, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGui::Text("Are you sure you want to delete this project?\n%s", m_ProjectToDeletePath.c_str());
+            ImGui::Text("Are you sure you want to delete this project?\n%s", m_projectToDeletePath.c_str());
             ImGui::Separator();
 
             if (ImGui::Button("Yes"))
             {
-                std::filesystem::remove_all(m_ProjectToDeletePath);
-                RemoveRecentProject(m_ProjectToDeletePath);
-                m_RecentProjects = LoadRecentProjects();
+                std::filesystem::remove_all(m_projectToDeletePath);
+                RemoveRecentProject(m_projectToDeletePath);
+                m_recentProjects = LoadRecentProjects();
                 ImGui::CloseCurrentPopup();
             }
 
@@ -280,14 +280,14 @@ void ProjectSelector::OnUIRender()
         ImGui::End();
     }
 
-    if (m_NeedsResize)
+    if (m_needsResize)
     {
-        SaveRecentProject(m_ProjectPath);
-        InitMainLayers(m_App, m_ProjectPath);
-        m_State = AppState::MainApp;
-        m_NeedsResize = false;
+        SaveRecentProject(m_projectPath);
+        InitMainLayers(m_app, m_projectPath);
+        m_state = AppState::MainApp;
+        m_needsResize = false;
 
-        GLFWwindow* window = static_cast<GLFWwindow*>(m_App->GetWindowHandle());
+        GLFWwindow* window = static_cast<GLFWwindow*>(m_app->GetWindowHandle());
         int newWidth = 1280, newHeight = 720;
         glfwSetWindowSize(window, newWidth, newHeight);
 
