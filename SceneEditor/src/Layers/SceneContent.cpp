@@ -398,7 +398,7 @@ void SceneContent::RenderUiList() {
 }
 
 
-void SceneContent::SetNewScene(std::string NewScene)
+void SceneContent::SetNewScene(const std::string& newScene)
 {
 	m_viewer->SetObject(nullptr, currentObjectType::game);
 	m_currentObName = "";
@@ -414,7 +414,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 	m_buttonObjects.erase(std::remove_if(m_buttonObjects.begin(), m_buttonObjects.end(),
 		[](const auto& button) { return button.IsSceneObject; }), m_buttonObjects.end());
 
-	std::ifstream inputFile(NewScene);
+	std::ifstream inputFile(newScene);
 	Json::Value actualJson;
 	Json::Reader Reader;
 
@@ -426,7 +426,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 	if (!Reader.parse(inputFile, actualJson))
 		return;
 
-	m_currentScene = NewScene;
+	m_currentScene = newScene;
 
 	int count = 0;
 
@@ -456,7 +456,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 
 		std::string pathToSprite = GetDirForSprite(spriteName, m_directory->getMainPath());
 
-		m_gameObjects.push_back(GameObject(name, pathToSprite, position, scale, rotation, layer, level));
+		m_gameObjects.emplace_back(name, pathToSprite, position, scale, rotation, layer, level);
 		m_gameObjects.back().IsSceneObject = isSceneObject;
 		m_gameObjects.back().type = type;
 	}
@@ -482,9 +482,8 @@ void SceneContent::SetNewScene(std::string NewScene)
 		float angle = currentObject["angle"].asFloat();
 		bool fade = currentObject["fade"].asBool();
 		bool isSceneObject = currentObject["isSceneObject"].asBool();
-		ls::LightId light;
 
-		m_lightObjects.push_back(LightObject(name, position, rotation, angle, type, color, radius));
+		m_lightObjects.emplace_back(name, position, rotation, angle, type, color, radius);
 		m_lightObjects.back().fade = fade;
 		m_lightObjects.back().IsSceneObject = isSceneObject;
 
@@ -514,7 +513,7 @@ void SceneContent::SetNewScene(std::string NewScene)
 		bool isSceneObject = currentObject["isSceneObject"].asBool();
 
 
-		m_textObjects.push_back(TextObject(value, name, color, font, outlineColor, outlineThickness, size, scale, position, rotation));
+		m_textObjects.emplace_back(value, name, color, font, outlineColor, outlineThickness, size, scale, position, rotation);
 		m_textObjects.back().IsSceneObject = isSceneObject;
 	}
 
@@ -538,11 +537,11 @@ void SceneContent::SetNewScene(std::string NewScene)
 		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
 		bool isSceneObject = currentObject["isSceneObject"].asBool();
 
-		std::string pathToImg1 = GetDirForSprite(img, std::filesystem::current_path().string());
-		std::string pathToImg2 = GetDirForSprite(onClickImg, std::filesystem::current_path().string());
+		std::string pathToImg1 = GetDirForSprite(img, m_directory->getMainPath());
+		std::string pathToImg2 = GetDirForSprite(onClickImg, m_directory->getMainPath());
 
 
-		m_buttonObjects.push_back(ButtonObject(name, pathToImg1, onclickfunc, pathToImg2, rotation, position, scale));
+		m_buttonObjects.emplace_back(name, pathToImg1, onclickfunc, pathToImg2, rotation, position, scale);
 		m_buttonObjects.back().IsSceneObject = isSceneObject;
 	}
 
@@ -555,26 +554,37 @@ std::string SceneContent::GetCurrentScene()
 	return m_currentScene;
 }
 
-std::string SceneContent::GetDirForSprite(std::string sprite, std::string dir)
-{
-	if (dir.find("\\Resources") == std::string::npos) {
-		dir += "\\Resources\\graphics";
+std::string SceneContent::GetDirForSprite(const std::string& sprite, const std::string& dirStr) {
+	std::filesystem::path dirPath = dirStr;
+
+
+	if (dirPath.string().find("Resources") == std::string::npos) {
+		dirPath /= "Resources";
 	}
 
-	for (const auto& entry : std::filesystem::directory_iterator(dir)) {
-		if (entry.is_directory())
-		{
-			std::string returnVal = GetDirForSprite(sprite, entry.path().string());
-			if (returnVal != "") {
-				return returnVal;
+	
+	if (!std::filesystem::exists(dirPath) || !std::filesystem::is_directory(dirPath)) {
+		return "";
+	}
+
+	for (const auto& entry : std::filesystem::directory_iterator(dirPath)) {
+		if (entry.is_directory()) {
+			std::string result = GetDirForSprite(sprite, entry.path().string());
+			if (!result.empty()) {
+				return result;
 			}
 		}
-		else if (entry.path().filename().string().find(sprite) != std::string::npos) {
-			return entry.path().string();
+		else {
+			std::string filename = entry.path().filename().string();
+			if (filename.find(sprite) != std::string::npos) {
+				return entry.path().string();
+			}
 		}
 	}
+
 	return "";
 }
+
 
 std::shared_ptr<ProjectDirectory> SceneContent::GetDir()
 {

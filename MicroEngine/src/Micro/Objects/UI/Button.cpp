@@ -7,11 +7,16 @@ namespace Micro {
 		: m_name(name), m_systemManager(systemManager), m_onClick(onClick) {
 
 		m_img = systemManager->GetFileManager().GetSprite(img);
-		m_img->setOrigin(m_img->getGlobalBounds().width / 2, m_img->getGlobalBounds().height / 2);
+		sf::Vector2u size = m_img->getTexture()->getSize();
+		m_img->setOrigin(size.x / 2, size.y / 2);
+
+
+
 		if (!onClickImg.empty()) {
 			m_onClickImg = systemManager->GetFileManager().GetSprite(onClickImg);
 			m_isOnClickSet = true;
-			m_onClickImg->setOrigin(m_onClickImg->getGlobalBounds().width / 2, m_onClickImg->getGlobalBounds().height / 2);
+			sf::Vector2u size2 = m_onClickImg->getTexture()->getSize();
+			m_onClickImg->setOrigin(size2.x / 2, size2.y / 2);
 		}
 			
 	}
