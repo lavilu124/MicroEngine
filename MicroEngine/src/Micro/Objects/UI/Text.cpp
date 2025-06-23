@@ -2,7 +2,7 @@
 #include "../..//SystemLogic//SystemManager.h"
 
 namespace Micro {
-	Text::Text(std::string name, SystemManager* systemManager, std::string font) : m_name(name), m_systemManager(systemManager)
+	Text::Text(const std::string& name, SystemManager* systemManager, const std::string& font) : m_name(name), m_systemManager(systemManager)
 	{
 
 		if (font != "") {
@@ -24,14 +24,14 @@ namespace Micro {
 		m_systemManager->RemoveText(m_name);
 	}
 
-	bool Text::IsShowen()
+	bool Text::IsShown()
 	{
 		m_text.setOrigin(m_text.getGlobalBounds().width / 2, m_text.getGlobalBounds().height / 2);
-		return m_showen;
+		return m_shown;
 	}
-	void Text::SetShowen(bool showen)
+	void Text::SetShown(bool shown)
 	{
-		m_showen = showen;
+		m_shown = shown;
 	}
 	std::string Text::GetName() const
 	{

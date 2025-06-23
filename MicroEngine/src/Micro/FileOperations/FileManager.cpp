@@ -14,64 +14,64 @@
 using std::filesystem::directory_iterator;
 
 
-int Micro::FileManager::m_currentLog = 0;
-std::string Micro::FileManager::m_mainPath = "";
+int Micro::FileManager::s_currentLog = 0;
+std::string Micro::FileManager::s_mainPath = "";
 
 namespace Micro{
 
 
-    void FileManager::AddInputFunc(std::string name, void(*function)(Micro::Input::InputAction&)) {
+    void FileManager::AddInputFunc(const std::string& name, void(*function)(Input::InputAction&)) {
         m_functionMap[name] = function;
         LoadInput();
     }
 
-    void FileManager::AddButtonFunc(std::string name, void(*function)())
+    void FileManager::AddButtonFunc(const std::string& name, void(*function)())
     {
         m_buttonFuncMap[name] = function;
 
     }
-    void FileManager::CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput, std::string OffInput) {
-        if (!OnInput.empty() && !OffInput.empty()) {
-            inputs.emplace(Name, Input::InputAction(
-                Type,
-                Key,
-                Name,
-                Part,
-                m_functionMap[OnInput],
-                m_functionMap[OffInput]
+    void FileManager::CreateInput(const std::string& name, Input::inputType type, Input::KeyType key, Input::inputPart part, const std::string& onInput, const std::string& offInput) {
+        if (!onInput.empty() && !offInput.empty()) {
+            inputs.emplace(name, Input::InputAction(
+                type,
+                key,
+                name,
+                part,
+                m_functionMap[onInput],
+                m_functionMap[offInput]
             ));
         }
-        else if (!OnInput.empty()) {
-            inputs.emplace(Name, Input::InputAction(
-                Type,
-                Key,
-                Name,
-                Part,
-                m_functionMap[OnInput]
+        else if (!onInput.empty()) {
+            inputs.emplace(name, Input::InputAction(
+                type,
+                key,
+                name,
+                part,
+                m_functionMap[onInput]
             ));
         }
-        else if (!OffInput.empty()){
-            inputs.emplace(Name, Input::InputAction(
-                Type,
-                Key,
-                Name,
-                Part,
+        else if (!offInput.empty()){
+            inputs.emplace(name, Input::InputAction(
+                type,
+                key,
+                name,
+                part,
                 nullptr,
-                m_functionMap[OffInput]
+                m_functionMap[offInput]
             ));
         }
         else {
-            inputs.emplace(Name, Input::InputAction(
-                Type,
-                Key,
-                Name,
-                Part
+            inputs.emplace(name, Input::InputAction(
+                type,
+                key,
+                name,
+                part
             ));
         }
         
     }
 
-    void FileManager::addInput(Micro::Input::InputAction& action)
+    void FileManager::addInput(Input::InputAction& action)
     {
         inputs.emplace(action.GetName(), action);
     }
@@ -188,15 +188,15 @@ namespace Micro{
                 continue;
             }
 
-            m_mainPath = path;
+            s_mainPath = path;
             GetFilesInDir(path + Folders[i]);
         }
     }
 
-    int GetFileCount(std::string Directory) {
+    int GetFileCount(const std::string& directory) {
 
         int FileCount = 0;
-        for (const auto& entry : std::filesystem::directory_iterator(Directory)) {
+        for (const auto& entry : std::filesystem::directory_iterator(directory)) {
             if (entry.is_regular_file()) {
                 FileCount++;
             }
@@ -205,9 +205,9 @@ namespace Micro{
         return FileCount;
     }
 
-    void FileManager::GetFilesInDir(std::string Dir) {
+    void FileManager::GetFilesInDir(const std::string& dir) {
 
-        for (const auto& File : directory_iterator(Dir)) {
+        for (const auto& File : directory_iterator(dir)) {
             std::string pathString{ File.path().u8string() };
 
             std::string fileName = pathString.substr(pathString.find_last_of("\\") + 1, pathString.length() - 1);
@@ -215,45 +215,45 @@ namespace Micro{
         }
     }
 
-    void FileManager::LoadAsset(std::string FileName) {
-        if (m_sprites.find(FileName) != m_sprites.end() || m_sounds.find(FileName) != m_sounds.end()) {
+    void FileManager::LoadAsset(const std::string& fileName) {
+        if (m_sprites.find(fileName) != m_sprites.end() || m_sounds.find(fileName) != m_sounds.end()) {
             return;
         }
 
-        for (const auto& entry : std::filesystem::recursive_directory_iterator(m_mainPath + "\\Resources\\graphics\\")) {
-            if (entry.is_regular_file() && entry.path().extension() == ".png" && entry.path().filename().string() == FileName) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(s_mainPath + "\\Resources\\graphics\\")) {
+            if (entry.is_regular_file() && entry.path().extension() == ".png" && entry.path().filename().string() == fileName) {
 
                 sf::Texture NewTexture;
                 if (NewTexture.loadFromFile(entry.path().string())) {
-                    m_textures[FileName] = NewTexture;
+                    m_textures[fileName] = NewTexture;
 
                     sf::Sprite NewSprite;
-                    NewSprite.setTexture(m_textures[FileName]);
-                    m_sprites[FileName] = NewSprite;
+                    NewSprite.setTexture(m_textures[fileName]);
+                    m_sprites[fileName] = NewSprite;
                 }
 
             }
         }
 
-        for (const auto& entry : std::filesystem::recursive_directory_iterator(m_mainPath + "\\Resources\\sounds\\")) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(s_mainPath + "\\Resources\\sounds\\")) {
             if ((entry.is_regular_file() && entry.path().extension() == ".wav" || entry.is_regular_file() && entry.path().extension() == ".ogg" || entry.is_regular_file() && entry.path().extension() == ".mp3")
-                && entry.path().filename().string() == FileName) {
+                && entry.path().filename().string() == fileName) {
 
                 sf::SoundBuffer NewBuffer;
                 if (NewBuffer.loadFromFile(entry.path().string())) {
-                    m_buffers[FileName] = NewBuffer;
+                    m_buffers[fileName] = NewBuffer;
 
                     sf::Sound newSound;
-                    newSound.setBuffer(m_buffers[FileName]);
-                    m_sounds[FileName] = newSound;
+                    newSound.setBuffer(m_buffers[fileName]);
+                    m_sounds[fileName] = newSound;
                 }
             }
         }
     }
 
-    std::vector<std::shared_ptr<Micro::GameObject>> FileManager::GetObjects(std::string name, SystemManager* systemManager) {
+    std::vector<std::shared_ptr<GameObject>> FileManager::GetObjects(const std::string& name, SystemManager* systemManager) {
 
-        std::ifstream inputFile(m_mainPath + "\\Resources\\Scenes\\" + name + ".McScene");
+        std::ifstream inputFile(s_mainPath + "\\Resources\\Scenes\\" + name + ".McScene");
         Json::Value actualJson;
         Json::Reader Reader;
 
@@ -445,7 +445,7 @@ namespace Micro{
         return returnVector;
     }
 
-    sf::Sprite* FileManager::GetSprite(std::string name) {
+    sf::Sprite* FileManager::GetSprite(const std::string& name) {
         if (m_sprites.find(name) == m_sprites.end()) {
             LoadAsset(name);
         }
@@ -454,12 +454,12 @@ namespace Micro{
         return &m_sprites[name];
     }
 
-    sf::Sound* FileManager::GetSound(std::string name) {
+    sf::Sound* FileManager::GetSound(const std::string& name) {
         return &m_sounds[name];
     }
 
     void FileManager::CreateLog() {
-        std::string logDir = m_mainPath + "\\Logs";
+        std::string logDir = s_mainPath + "\\Logs";
 
         if (!std::filesystem::exists(logDir)) {
             return;
@@ -479,8 +479,8 @@ namespace Micro{
             }
         }
 
-        m_currentLog = maxLogNumber + 1;
-        std::string logFileName = logDir + "\\log" + std::to_string(m_currentLog) + ".log";
+        s_currentLog = maxLogNumber + 1;
+        std::string logFileName = logDir + "\\log" + std::to_string(s_currentLog) + ".log";
         std::ofstream logFile(logFileName);
 
         if (!logFile) {
@@ -490,12 +490,12 @@ namespace Micro{
         logFile.close();
     }
 
-    void FileManager::Log(std::string msg) {
-		if (m_currentLog == 0) 
+    void FileManager::Log(const std::string& msg) {
+		if (s_currentLog == 0) 
 			CreateLog();
 		
 
-        std::string logFileName = m_mainPath + "\\logs\\log" + std::to_string(m_currentLog) + ".log";
+        std::string logFileName = s_mainPath + "\\logs\\log" + std::to_string(s_currentLog) + ".log";
 
         std::ofstream logFile(logFileName, std::ios::app);
 
@@ -508,8 +508,8 @@ namespace Micro{
         logFile.close();
     }
 
-    std::string FileManager::GetFontPath(std::string name)
+    std::string FileManager::GetFontPath(const std::string& name)
     {
-        return m_mainPath + "\\Resources\\fonts\\" + name + ".ttf";
+        return s_mainPath + "\\Resources\\fonts\\" + name + ".ttf";
     }
 }

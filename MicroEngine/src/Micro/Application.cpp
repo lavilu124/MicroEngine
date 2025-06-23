@@ -15,14 +15,13 @@ namespace Micro{
 		m_camera = &m_systemManager.GetCamera();
 	}
 
-	Application::Application(sf::Vector2f windowSize, float maxFPS, const char* name) :m_window(sf::VideoMode(windowSize.x, windowSize.y), name,
+	Application::Application(const sf::Vector2f& windowSize, float maxFPS, const char* name) :m_window(sf::VideoMode(windowSize.x, windowSize.y), name,
 		sf::Style::Default), m_systemManager(m_window){
 		m_window.setFramerateLimit(maxFPS);
 
 		m_camera = &m_systemManager.GetCamera();
 	}
 
-	Application::~Application() {}
 
 	Application& Application::Get() {
 		return *s_Instance;
@@ -59,7 +58,7 @@ namespace Micro{
 		return &m_systemManager;
 	}
 
-	void Application::SetWindowSize(sf::Vector2u newSize)
+	void Application::SetWindowSize(const sf::Vector2u& newSize)
 	{
 		m_window.setSize(newSize);
 	}
@@ -69,7 +68,7 @@ namespace Micro{
 		m_window.setTitle(name);
 	}
 
-	void Application::SetResolution(sf::Vector2f newRes)
+	void Application::SetResolution(const sf::Vector2f& newRes)
 	{
 		if (newRes.x > m_window.getSize().x || newRes.y > m_window.getSize().y)
 			m_window.setSize({ static_cast<unsigned int>(newRes.x), static_cast<unsigned int>(newRes.y) });

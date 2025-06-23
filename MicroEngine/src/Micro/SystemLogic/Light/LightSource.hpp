@@ -59,7 +59,7 @@ namespace Micro{
 
         const char* m_name;
 
-        bool m_showen = true;
+        bool m_shown = true;
 
         bool m_isSceneObject = true;
   
@@ -178,8 +178,8 @@ namespace Micro{
          */
         virtual void CastLight(const EdgeVector::iterator& begin, const EdgeVector::iterator& end) = 0;
 
-        bool IsShowen() const;
-        void SetShowen(bool showen);
+        bool IsShown() const;
+        void SetShown(bool shown);
 
         bool IsSceneObject() const;
         void SetIsSceneObject(bool val);
