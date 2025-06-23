@@ -7,32 +7,41 @@ namespace Micro{
 	class MICRO_API Camera
 	{
 	public:
-		Camera(const sf::Vector2f winodwSize);
+		Camera(const sf::Vector2f& winodwSize);
 
-		Camera(const float winodwWidth, const float windowHight);
+		Camera(float winodwWidth, float windowHight);
 
-		void Follow(std::string ObjectName);
+		void Follow(const std::string& objectName);
 		void Unfollow();
 
 		void SetCam(sf::RenderWindow& win);
 
 		void ClearCam();
 
-		void Update(SystemManager& systemManager);
+		void Update() const;
 
-		void SetWindowSize(sf::Vector2f NewSize);
+		void SetWindowSize(sf::Vector2f newSize);
 
 		sf::View GetView() const;
 		void SetView(sf::View newView);
 
-	public:
-		sf::Vector2f position;
-		float rotation;
-		float zoom;
+
+		void SetPosition(sf::Vector2f newPos, SystemManager& systemManager);
+		sf::Vector2f GetPosition() const;
 
 
+		void SetRotation(float newRot);
+		float GetRotation() const;
+
+		void SetZoom(float newZoom);
+		float GetZoom() const;
 
 	private:
+		sf::Vector2f m_position;
+		float m_rotation;
+		float m_zoom;
+
+
 		std::string m_objectName;
 		sf::RenderWindow* m_window;
 		sf::Vector2f m_windowSize;

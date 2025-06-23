@@ -29,17 +29,23 @@ namespace Micro{
         m_systemManager->DestroyObject(m_name.c_str());
     }
 
-    void GameObject::OnCollision(GameObject* HitInfo) {}
+    void GameObject::OnCollision(GameObject* hitInfo) {}
 
-    void GameObject::OnTrigger(GameObject* HitInfo) {}
+    void GameObject::OnTrigger(GameObject* hitInfo) {}
 
-    void GameObject::HandlePositionChange(sf::Vector2f NewPosition) {
-        m_objectSprite.setPosition(NewPosition);
+    void GameObject::HandlePositionChange(sf::Vector2f newPosition) {
+        m_objectSprite.setPosition(newPosition);
 
         GameObject* HitInfo = this;
 
         //checking if the new position collides with anything
         if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
+            if (!HitInfo->IsShown())
+            {
+                m_position = newPosition;
+                return;
+            }
+
             if ((m_layer < 6 && HitInfo->m_layer < 6) || m_layer == 13 || HitInfo->m_layer == 13) { //13 is collison with all 6 is trigger 7 is none and 7-13 is custom
                 OnCollision(HitInfo);
                 HitInfo->OnCollision(this);
@@ -48,13 +54,13 @@ namespace Micro{
             else if (m_layer == 6 && HitInfo->m_layer == 6) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
-                m_position = NewPosition;
+                m_position = newPosition;
                 return;
             }
 
 
             //testing if the object can move only along the x axies
-            sf::Vector2f TestX = sf::Vector2f(NewPosition.x, NewPosition.y);
+            sf::Vector2f TestX = sf::Vector2f(newPosition.x, m_position.y);
             m_objectSprite.setPosition(TestX);
 
             //checking collison for the movement along the x axies
@@ -64,77 +70,84 @@ namespace Micro{
             }
 
             //testing if the object can move only along the y axies
-            sf::Vector2f TestY = sf::Vector2f(m_position.x, NewPosition.y);
+            sf::Vector2f TestY = sf::Vector2f(m_position.x, newPosition.y);
             m_objectSprite.setPosition(TestY);
 
             //checking collison for the movement along the y axies
             if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
                 m_position = m_objectSprite.getPosition();
+                return;
             }
         }
-        else {
-            m_position = NewPosition;
-        }
+    	m_position = newPosition;
     }
 
-    void GameObject::HandleRotationChange(float NewRotation) {
-        m_objectSprite.setRotation(NewRotation);
+    void GameObject::HandleRotationChange(float newRotation) {
+        m_objectSprite.setRotation(newRotation);
 
         GameObject* HitInfo = this;
 
         //checking if the new position collides with anything
         if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
-            if (HitInfo == this) {}
-            else if (m_layer < 6 && HitInfo->m_layer < 6) {
+            if (!HitInfo->IsShown())
+            {
+                m_rotation = newRotation;
+                return;
+            }
+        	if (m_layer < 6 && HitInfo->m_layer < 6) {
                 OnCollision(HitInfo);
                 HitInfo->OnCollision(this);
                 m_objectSprite.setRotation(m_rotation);
+                return;
             }
-            else if (m_layer > 6) {
+        	if (m_layer > 6) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
-                m_rotation = NewRotation;
+                m_rotation = newRotation;
+                return;
             }
         }
-        else {
-            m_rotation = NewRotation;
-        }
+
+    	m_rotation = newRotation;
     }
 
-    void GameObject::HandleScaleChange(sf::Vector2f NewScale) {
-        m_objectSprite.setScale(NewScale);
+    void GameObject::HandleScaleChange(sf::Vector2f newScale) {
+        m_objectSprite.setScale(newScale);
 
         GameObject* HitInfo = this;
 
         //checking if the new position collides with anything
         if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
-            if (HitInfo == this) {}
-            else if (m_layer < 6 && HitInfo->m_layer < 6) {
+            if (!HitInfo->IsShown())
+            {
+                m_scale = newScale;
+                return;
+            }
+        	if (m_layer < 6 && HitInfo->m_layer < 6) {
                 OnCollision(HitInfo);
                 HitInfo->OnCollision(this);
                 m_objectSprite.setScale(m_scale);
+                return;
             }
-            else if (m_layer > 6) {
+        	if (m_layer > 6) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
-                m_scale = NewScale;
+                m_scale = newScale;
                 return;
             }
 
 
         }
-        else {
-            m_scale = NewScale;
-        }
+    	m_scale = newScale;
     }
 
     sf::Vector2f GameObject::GetPosition() const {
         return m_position;
     }
 
-    void GameObject::SetPosition(sf::Vector2f NewPosition) {
-        if (NewPosition != m_position) {
-            HandlePositionChange(NewPosition);
+    void GameObject::SetPosition(const sf::Vector2f& newPosition) {
+        if (newPosition != m_position) {
+            HandlePositionChange(newPosition);
         }
     }
 
@@ -142,9 +155,9 @@ namespace Micro{
         return m_scale;
     }
 
-    void GameObject::SetScale(sf::Vector2f NewScale) {
-        if (NewScale != m_scale) {
-            HandleScaleChange(NewScale);
+    void GameObject::SetScale(const sf::Vector2f& newScale) {
+        if (newScale != m_scale) {
+            HandleScaleChange(newScale);
         }
     }
 
@@ -152,14 +165,14 @@ namespace Micro{
         return m_rotation;
     }
 
-    void GameObject::SetRotation(float NewRotation) {
-        if (NewRotation != m_rotation) {
-            HandleRotationChange(NewRotation);
+    void GameObject::SetRotation(float newRotation) {
+        if (newRotation != m_rotation) {
+            HandleRotationChange(newRotation);
         }
     }
 
-    void GameObject::SetSprite(const sf::Sprite& Sprite) {
-        m_objectSprite = Sprite;
+    void GameObject::SetSprite(const sf::Sprite& sprite) {
+        m_objectSprite = sprite;
     }
 
     const sf::Sprite& GameObject::GetSprite() const {
@@ -174,7 +187,7 @@ namespace Micro{
 
     }
 
-    void GameObject::Update(float DeltaTime) {
+    void GameObject::Update(float deltaTime) {
     }
 
     std::string GameObject::GetName() const{
@@ -194,14 +207,14 @@ namespace Micro{
         m_systemManager->ChangedLevel();
     }
 
-    bool GameObject::IsShowen() const
+    bool GameObject::IsShown() const
     {
-        return m_showen;
+        return m_shown;
     }
 
-    void GameObject::SetShowen(bool showen)
+    void GameObject::SetShown(bool shown)
     {
-        m_showen = showen;
+        m_shown = shown;
     }
 
     bool GameObject::IsSceneObject() const

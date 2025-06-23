@@ -2,37 +2,37 @@
 #include "../SystemLogic/SystemManager.h"
 
 namespace Micro{
-	Camera::Camera(const sf::Vector2f WinodwSize) : m_windowSize(WinodwSize) {
-		zoom = 1;
+	Camera::Camera(const sf::Vector2f& winodwSize) : m_windowSize(winodwSize) {
+		m_zoom = 1;
 
-		position = sf::Vector2f(0, 0);
-		m_view.setCenter(position);
+		m_position = sf::Vector2f(0, 0);
+		m_view.setCenter(m_position);
 
-		rotation = 0;
-		m_view.setRotation(rotation);
+		m_rotation = 0;
+		m_view.setRotation(m_rotation);
 
-		m_view.setSize(sf::Vector2f(m_windowSize.x / zoom, m_windowSize.y / zoom));
-
-		m_window = nullptr;
-	}
-
-	Camera::Camera(const float winodwWidth, const float windowHight) : m_windowSize(sf::Vector2f(winodwWidth, windowHight)) {
-		zoom = 1;
-
-		position = sf::Vector2f(0, 0);
-		m_view.setCenter(position);
-
-		rotation = 0;
-		m_view.setRotation(rotation);
-
-		m_view.setSize(sf::Vector2f(m_windowSize.x / zoom, m_windowSize.y / zoom));
+		m_view.setSize(sf::Vector2f(m_windowSize.x / m_zoom, m_windowSize.y / m_zoom));
 
 		m_window = nullptr;
 	}
 
+	Camera::Camera(float windowWidth, float windowHight) : m_windowSize(sf::Vector2f(windowWidth, windowHight)) {
+		m_zoom = 1;
 
-	void Camera::Follow(std::string ObjectName) {
-		m_objectName = ObjectName;
+		m_position = sf::Vector2f(0, 0);
+		m_view.setCenter(m_position);
+
+		m_rotation = 0;
+		m_view.setRotation(m_rotation);
+
+		m_view.setSize(sf::Vector2f(m_windowSize.x / m_zoom, m_windowSize.y / m_zoom));
+
+		m_window = nullptr;
+	}
+
+
+	void Camera::Follow(const std::string& objectName) {
+		m_objectName = objectName;
 	}
 
 	void Camera::Unfollow() {
@@ -50,20 +50,7 @@ namespace Micro{
 
 
 
-	void Camera::Update(SystemManager& systemManager) {
-		if (m_objectName != "") {
-			//if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName.c_str())->GetPosition())
-			//	m_view.setCenter(systemManager.GetObjectByName(m_objectName.c_str())->GetPosition());
-		}
-		else if (m_view.getCenter() != position) {
-			m_view.setCenter(position);
-		}
-
-		m_view.setRotation(rotation);
-		if (zoom < 1) {
-			zoom = 1;
-		}
-		m_view.setSize(sf::Vector2f(m_windowSize.x / zoom, m_windowSize.y / zoom));
+	void Camera::Update() const{
 
 		if (m_window != nullptr) {
 			m_window->setView(m_view);
@@ -84,5 +71,44 @@ namespace Micro{
 		m_view = newView;
 	}
 
+	void Camera::SetPosition(sf::Vector2f newPos, SystemManager& systemManager)
+	{
+		if (m_objectName != "") {
+			if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName.c_str())->GetPosition())
+				m_view.setCenter(systemManager.GetObjectByName(m_objectName.c_str())->GetPosition());
+		}
+		else if (m_view.getCenter() != m_position) {
+			m_view.setCenter(m_position);
+		}
 
+	}
+
+	sf::Vector2f Camera::GetPosition() const
+	{
+		return m_position;
+	}
+
+	void Camera::SetRotation(float newRot)
+	{
+		m_view.setRotation(newRot);
+		m_rotation = newRot;
+	}
+
+	float Camera::GetRotation() const
+	{
+		return m_rotation;
+	}
+
+	void Camera::SetZoom(float newZoom)
+	{
+		if (newZoom < 1 && newZoom > 0) {
+			m_zoom = newZoom;
+			m_view.setSize(sf::Vector2f(m_windowSize.x / m_zoom, m_windowSize.y / m_zoom));
+		}
+	}
+
+	float Camera::GetZoom() const
+	{
+		return m_zoom;
+	}
 }

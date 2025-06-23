@@ -3,7 +3,7 @@
 
 
 namespace Micro {
-	Button::Button(SystemManager* systemManager, std::string name, std::string img, std::string onClickImg, void (*onClick)()) 
+	Button::Button(SystemManager* systemManager, const std::string& name, const std::string& img, const std::string& onClickImg, void (*onClick)())
 		: m_name(name), m_systemManager(systemManager), m_onClick(onClick) {
 
 		m_img = systemManager->GetFileManager().GetSprite(img);
@@ -93,13 +93,13 @@ namespace Micro {
 		return *m_onClickImg;
 	}
 
-	bool Button::IsShowen() const
+	bool Button::IsShown() const
 	{
-		return m_showen;
+		return m_shown;
 	}
-	void Button::SetShowen(bool showen)
+	void Button::SetShown(bool showen)
 	{
-		m_showen = showen;
+		m_shown = showen;
 	}
 
 	bool Button::IsSceneObject() const

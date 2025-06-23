@@ -9,7 +9,7 @@ namespace Micro{
 	class MICRO_API GameObject
 	{
 	public:
-		GameObject(SystemManager* systemManager, const sf::Sprite& ObjectSprite, const std::string& name, Collision::collisionLayer Layer = Collision::collisionLayer::COLLIDER, int level = 0);
+		GameObject(SystemManager* systemManager, const sf::Sprite& objectSprite, const std::string& name, Collision::collisionLayer layer = Collision::collisionLayer::COLLIDER, int level = 0);
 
 		bool IsFacingRight() const;
 
@@ -18,21 +18,21 @@ namespace Micro{
 		void Delete();
 
 		sf::Vector2f GetPosition() const;
-		void SetPosition(sf::Vector2f NewPosition);
+		void SetPosition(const sf::Vector2f& newPosition);
 
 		sf::Vector2f GetScale() const;
-		void SetScale(sf::Vector2f NewScale);
+		void SetScale(const sf::Vector2f& newScale);
 
 		float GetRotation() const;
-		void SetRotation(float Rotation);
+		void SetRotation(float rotation);
 
 		const sf::Sprite& GetSprite() const;
-		void SetSprite(const sf::Sprite& Sprite);
+		void SetSprite(const sf::Sprite& sprite);
 
 		Collision::collisionLayer GetLayer() const;
 
 		virtual void Start();
-		virtual void Update(float DeltaTime);
+		virtual void Update(float deltaTime);
 
 		std::string GetName() const;
 
@@ -40,9 +40,9 @@ namespace Micro{
 
 		void SetLevel(int level);
 
-		bool IsShowen() const;
+		bool IsShown() const;
 
-		void SetShowen(bool showen);
+		void SetShown(bool shown);
 
 		bool IsSceneObject() const;
 		void SetIsSceneObject(bool val);
@@ -50,9 +50,9 @@ namespace Micro{
 	private:
 		void SetCenter();
 
-		void HandlePositionChange(sf::Vector2f NewPosition);
-		void HandleRotationChange(float NewRotation);
-		void HandleScaleChange(sf::Vector2f NewScale);
+		void HandlePositionChange(sf::Vector2f newPosition);
+		void HandleRotationChange(float newRotation);
+		void HandleScaleChange(sf::Vector2f newScale);
 
 		std::string m_name;
 		sf::Vector2f m_position;
@@ -61,8 +61,8 @@ namespace Micro{
 		sf::Sprite m_objectSprite;
 
 	protected:
-		virtual void OnCollision(GameObject* HitInfo);
-		virtual void OnTrigger(GameObject* HitInfo);
+		virtual void OnCollision(GameObject* hitInfo);
+		virtual void OnTrigger(GameObject* hitInfo);
 
 		Collision::collisionLayer m_layer;
 
@@ -71,7 +71,7 @@ namespace Micro{
 
 		int m_level = 0;
 
-		bool m_showen = true;
+		bool m_shown = true;
 
 		bool m_isSceneObject;
 	};

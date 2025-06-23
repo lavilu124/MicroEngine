@@ -26,16 +26,16 @@ namespace Micro {
         };
 
 
-        bool MICRO_API PixelPerfectCollision(const sf::Sprite& Object1, const sf::Sprite& Object2, sf::Uint8 AlphaLimit = 0);
+        bool MICRO_API PixelPerfectCollision(const sf::Sprite& object1, const sf::Sprite& object2, sf::Uint8 alphaLimit = 0);
 
 
-        bool MICRO_API CreateTextureAndBitmask(sf::Texture& LoadInto, const std::string& Filename);
+        bool MICRO_API CreateTextureAndBitmask(sf::Texture& loadInto, const std::string& filename);
 
 
-        bool MICRO_API CircleTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
+        bool MICRO_API CircleTest(const sf::Sprite& object1, const sf::Sprite& object2);
 
 
-        bool MICRO_API BoundingBoxTest(const sf::Sprite& Object1, const sf::Sprite& Object2);
+        bool MICRO_API BoundingBoxTest(const sf::Sprite& object1, const sf::Sprite& object2);
 
         MICRO_API std::array<int, 4> GetcollisonPosition();
     }

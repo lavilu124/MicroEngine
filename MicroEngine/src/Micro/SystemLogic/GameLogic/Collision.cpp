@@ -58,29 +58,29 @@ namespace Micro{
 
         BitmaskManager Bitmasks;
 
-        bool PixelPerfectCollision(const sf::Sprite& Object1, const sf::Sprite& Object2, sf::Uint8 AlphaLimit) {
+        bool PixelPerfectCollision(const sf::Sprite& object1, const sf::Sprite& object2, sf::Uint8 alphaLimit) {
             sf::FloatRect Intersection;
-            if (Object1.getGlobalBounds().intersects(Object2.getGlobalBounds(), Intersection)) {
-                sf::IntRect O1SubRect = Object1.getTextureRect();
-                sf::IntRect O2SubRect = Object2.getTextureRect();
+            if (object1.getGlobalBounds().intersects(object2.getGlobalBounds(), Intersection)) {
+                sf::IntRect O1SubRect = object1.getTextureRect();
+                sf::IntRect O2SubRect = object2.getTextureRect();
 
-                sf::Uint8* mask1 = Bitmasks.GetMask(Object1.getTexture());
-                sf::Uint8* mask2 = Bitmasks.GetMask(Object2.getTexture());
+                sf::Uint8* mask1 = Bitmasks.GetMask(object1.getTexture());
+                sf::Uint8* mask2 = Bitmasks.GetMask(object2.getTexture());
 
                 // Loop through our pixels
                 for (int i = Intersection.left; i < Intersection.left + Intersection.width; i++) {
                     for (int j = Intersection.top; j < Intersection.top + Intersection.height; j++) {
 
-                        sf::Vector2f o1v = Object1.getInverseTransform().transformPoint(i, j);
-                        sf::Vector2f o2v = Object2.getInverseTransform().transformPoint(i, j);
+                        sf::Vector2f o1v = object1.getInverseTransform().transformPoint(i, j);
+                        sf::Vector2f o2v = object2.getInverseTransform().transformPoint(i, j);
 
                         // Make sure pixels fall within the sprite's subrect
                         if (o1v.x > 0 && o1v.y > 0 && o2v.x > 0 && o2v.y > 0 &&
                             o1v.x < O1SubRect.width && o1v.y < O1SubRect.height &&
                             o2v.x < O2SubRect.width && o2v.y < O2SubRect.height) {
 
-                            if (Bitmasks.GetPixel(mask1, Object1.getTexture(), (int)(o1v.x) + O1SubRect.left, (int)(o1v.y) + O1SubRect.top) > AlphaLimit &&
-                                Bitmasks.GetPixel(mask2, Object2.getTexture(), (int)(o2v.x) + O2SubRect.left, (int)(o2v.y) + O2SubRect.top) > AlphaLimit) {
+                            if (Bitmasks.GetPixel(mask1, object1.getTexture(), (int)(o1v.x) + O1SubRect.left, (int)(o1v.y) + O1SubRect.top) > alphaLimit &&
+                                Bitmasks.GetPixel(mask2, object2.getTexture(), (int)(o2v.x) + O2SubRect.left, (int)(o2v.y) + O2SubRect.top) > alphaLimit) {
                                 pixelPositionObject1 = sf::Vector2i((int)(o1v.x) + O1SubRect.left, (int)(o1v.y) + O1SubRect.top);
                                 pixelPositionObject2 = sf::Vector2i((int)(o2v.x) + O2SubRect.left, (int)(o2v.y) + O2SubRect.top);
                                 return true;
@@ -92,38 +92,38 @@ namespace Micro{
             return false;
         }
 
-        bool CreateTextureAndBitmask(sf::Texture& LoadInto, const std::string& Filename)
+        bool CreateTextureAndBitmask(sf::Texture& loadInto, const std::string& filename)
         {
             sf::Image img;
-            if (!img.loadFromFile(Filename))
+            if (!img.loadFromFile(filename))
                 return false;
-            if (!LoadInto.loadFromImage(img))
+            if (!loadInto.loadFromImage(img))
                 return false;
 
-            Bitmasks.CreateMask(&LoadInto, img);
+            Bitmasks.CreateMask(&loadInto, img);
             return true;
         }
 
-        sf::Vector2f GetSpriteCenter(const sf::Sprite& Object)
+        sf::Vector2f GetSpriteCenter(const sf::Sprite& object)
         {
-            sf::FloatRect AABB = Object.getGlobalBounds();
+            sf::FloatRect AABB = object.getGlobalBounds();
             return sf::Vector2f(AABB.left + AABB.width / 2.f, AABB.top + AABB.height / 2.f);
         }
 
-        sf::Vector2f GetSpriteSize(const sf::Sprite& Object)
+        sf::Vector2f GetSpriteSize(const sf::Sprite& object)
         {
-            sf::IntRect OriginalSize = Object.getTextureRect();
-            sf::Vector2f Scale = Object.getScale();
+            sf::IntRect OriginalSize = object.getTextureRect();
+            sf::Vector2f Scale = object.getScale();
             return sf::Vector2f(OriginalSize.width * Scale.x, OriginalSize.height * Scale.y);
         }
 
-        bool CircleTest(const sf::Sprite& Object1, const sf::Sprite& Object2) {
-            sf::Vector2f Obj1Size = GetSpriteSize(Object1);
-            sf::Vector2f Obj2Size = GetSpriteSize(Object2);
+        bool CircleTest(const sf::Sprite& object1, const sf::Sprite& object2) {
+            sf::Vector2f Obj1Size = GetSpriteSize(object1);
+            sf::Vector2f Obj2Size = GetSpriteSize(object2);
             float Radius1 = (Obj1Size.x + Obj1Size.y) / 4;
             float Radius2 = (Obj2Size.x + Obj2Size.y) / 4;
 
-            sf::Vector2f Distance = GetSpriteCenter(Object1) - GetSpriteCenter(Object2);
+            sf::Vector2f Distance = GetSpriteCenter(object1) - GetSpriteCenter(object2);
 
             return (Distance.x * Distance.x + Distance.y * Distance.y <= (Radius1 + Radius2) * (Radius1 + Radius2));
         }
@@ -131,10 +131,10 @@ namespace Micro{
         class OrientedBoundingBox // Used in the BoundingBoxTest
         {
         public:
-            OrientedBoundingBox(const sf::Sprite& Object) // Calculate the four points of the OBB from a transformed (scaled, rotated...) sprite
+            OrientedBoundingBox(const sf::Sprite& object) // Calculate the four points of the OBB from a transformed (scaled, rotated...) sprite
             {
-                sf::Transform trans = Object.getTransform();
-                sf::IntRect local = Object.getTextureRect();
+                sf::Transform trans = object.getTransform();
+                sf::IntRect local = object.getTextureRect();
                 Points[0] = trans.transformPoint(0.f, 0.f);
                 Points[1] = trans.transformPoint(local.width, 0.f);
                 Points[2] = trans.transformPoint(local.width, local.height);
@@ -143,18 +143,18 @@ namespace Micro{
 
             sf::Vector2f Points[4];
 
-            void ProjectOntoAxis(const sf::Vector2f& Axis, float& Min, float& Max) // Project all four points of the OBB onto the given axis and return the dotproducts of the two outermost points
+            void ProjectOntoAxis(const sf::Vector2f& axis, float& min, float& max) // Project all four points of the OBB onto the given axis and return the dotproducts of the two outermost points
             {
-                Min = (Points[0].x * Axis.x + Points[0].y * Axis.y);
-                Max = Min;
+                min = (Points[0].x * axis.x + Points[0].y * axis.y);
+                max = sf::BlendMode::Min;
                 for (int j = 1; j < 4; j++)
                 {
-                    float Projection = (Points[j].x * Axis.x + Points[j].y * Axis.y);
+                    float Projection = (Points[j].x * axis.x + Points[j].y * axis.y);
 
-                    if (Projection < Min)
-                        Min = Projection;
-                    if (Projection > Max)
-                        Max = Projection;
+                    if (Projection < min)
+                        min = Projection;
+                    if (Projection > max)
+                        max = Projection;
                 }
             }
         };
