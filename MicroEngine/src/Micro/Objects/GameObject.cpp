@@ -32,7 +32,7 @@ namespace Micro{
 
     void GameObject::OnTrigger(GameObject* hitInfo) {}
 
-    void GameObject::HandlePositionChange(sf::Vector2f newPosition) {
+    void GameObject::HandlePositionChange(const sf::Vector2f& newPosition) {
         m_objectSprite.setPosition(newPosition);
 
         GameObject* HitInfo = this;
@@ -59,7 +59,7 @@ namespace Micro{
 
 
             //testing if the object can move only along the x axies
-            sf::Vector2f TestX = sf::Vector2f(NewPosition.x, m_position.y);
+            sf::Vector2f TestX = sf::Vector2f(newPosition.x, m_position.y);
             m_objectSprite.setPosition(TestX);
 
             //checking collison for the movement along the x axies
@@ -110,7 +110,7 @@ namespace Micro{
     	m_rotation = newRotation;
     }
 
-    void GameObject::HandleScaleChange(sf::Vector2f newScale) {
+    void GameObject::HandleScaleChange(const sf::Vector2f& newScale) {
         m_objectSprite.setScale(newScale);
 
         GameObject* HitInfo = this;
@@ -144,9 +144,9 @@ namespace Micro{
         return m_position;
     }
 
-    void GameObject::SetPosition(sf::Vector2f NewPosition) {
-        if (NewPosition != m_position && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
-            HandlePositionChange(NewPosition);
+    void GameObject::SetPosition(const sf::Vector2f& newPosition) {
+        if (newPosition != m_position && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
+            HandlePositionChange(newPosition);
         }
     }
 
@@ -154,9 +154,9 @@ namespace Micro{
         return m_scale;
     }
 
-    void GameObject::SetScale(sf::Vector2f NewScale) {
-        if (NewScale != m_scale && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
-            HandleScaleChange(NewScale);
+    void GameObject::SetScale(const sf::Vector2f& newScale) {
+        if (newScale != m_scale && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
+            HandleScaleChange(newScale);
         }
     }
 
@@ -164,9 +164,9 @@ namespace Micro{
         return m_rotation;
     }
 
-    void GameObject::SetRotation(float NewRotation ) {
-        if (NewRotation != m_rotation && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
-            HandleRotationChange(NewRotation);
+    void GameObject::SetRotation(float newRotation ) {
+        if (newRotation != m_rotation && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
+            HandleRotationChange(newRotation);
         }
     }
 
@@ -186,10 +186,10 @@ namespace Micro{
 
     }
 
-    void GameObject::Update(float DeltaTime) {
+    void GameObject::Update(float deltaTime) {
         if (m_physicsBody.has_value())
         {
-	        m_physicsBody.value().update(DeltaTime);
+	        m_physicsBody.value().update(deltaTime);
         }
     }
 
