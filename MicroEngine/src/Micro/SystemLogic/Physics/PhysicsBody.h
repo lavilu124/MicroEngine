@@ -14,10 +14,12 @@ namespace Micro
 		public:
 			PhysicsBody(float mass, sf::Vector2f& position, std::function<void(sf::Vector2f newPos)> handlePositionChange);
 			void update(float dt);
+			void onCollision(const PhysicsBody& other);
 			void addForce(sf::Vector2f force);
 			void addImpulse(sf::Vector2f impulse);
 		public:
 			bool hasGravitation;
+			bool isMoveable;
 		private:
 			float m_mass;
 			sf::Vector2f& m_position;

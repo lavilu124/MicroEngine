@@ -28,7 +28,14 @@ namespace Micro{
         m_systemManager->DestroyObject(m_name.c_str());
     }
 
-    void GameObject::OnCollision(GameObject* HitInfo) {}
+    void GameObject::OnCollision(GameObject* hitInfo)
+    {
+		if (m_physicsBody.has_value() && hitInfo->GetPhysicsBody().has_value())
+		{
+			m_physicsBody.value().onCollision(hitInfo->GetPhysicsBody().value());
+		}
+		
+    }
 
     void GameObject::OnTrigger(GameObject* HitInfo) {}
 
@@ -53,7 +60,7 @@ namespace Micro{
 
 
             //testing if the object can move only along the x axies
-            sf::Vector2f TestX = sf::Vector2f(NewPosition.x, NewPosition.y);
+            sf::Vector2f TestX = sf::Vector2f(NewPosition.x, m_position.y);
             m_objectSprite.setPosition(TestX);
 
             //checking collison for the movement along the x axies
@@ -132,7 +139,7 @@ namespace Micro{
     }
 
     void GameObject::SetPosition(sf::Vector2f NewPosition) {
-        if (NewPosition != m_position) {
+        if (NewPosition != m_position && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
             HandlePositionChange(NewPosition);
         }
     }
@@ -142,7 +149,7 @@ namespace Micro{
     }
 
     void GameObject::SetScale(sf::Vector2f NewScale) {
-        if (NewScale != m_scale) {
+        if (NewScale != m_scale && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
             HandleScaleChange(NewScale);
         }
     }
@@ -151,8 +158,8 @@ namespace Micro{
         return m_rotation;
     }
 
-    void GameObject::SetRotation(float NewRotation) {
-        if (NewRotation != m_rotation) {
+    void GameObject::SetRotation(float NewRotation ) {
+        if (NewRotation != m_rotation && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
             HandleRotationChange(NewRotation);
         }
     }
@@ -224,5 +231,10 @@ namespace Micro{
         	this->SetPosition(newPos);
         });
         m_physicsBody.value().hasGravitation = hasGravity;
+    }
+
+    std::optional<Physics::PhysicsBody> GameObject::GetPhysicsBody()
+    {
+        return m_physicsBody;
     }
 }

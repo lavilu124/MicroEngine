@@ -51,6 +51,7 @@
 
 		void SetPhysicsBody(float mass, bool hasGravity);
 
+		std::optional<Physics::PhysicsBody> GetPhysicsBody();
 	private:
 		void SetCenter();
 
