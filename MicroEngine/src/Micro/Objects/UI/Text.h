@@ -10,14 +10,14 @@ namespace Micro {
 	{
 
 	public:
-		Text(std::string name, SystemManager* systemManager, std::string font = "");
+		Text(const std::string& name, SystemManager* systemManager, const std::string& font = "");
 
 		sf::Text& GetBase();
 
 		void Delete();
 
-		bool IsShowen();
-		void SetShowen(bool showen);
+		bool IsShown();
+		void SetShown(bool shown);
 
 		std::string GetName() const;
 
@@ -28,7 +28,7 @@ namespace Micro {
 		sf::Font m_font;
 
 		std::string m_name;
-		bool m_showen = true;
+		bool m_shown = true;
 
 		SystemManager* m_systemManager;
 

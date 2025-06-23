@@ -15,7 +15,7 @@ namespace Micro {
 	public:
 		using CreatorFunc = std::function<std::unique_ptr<GameObject>(
 			SystemManager* systemManager,
-			const sf::Sprite& ObjectSprite,
+			const sf::Sprite& objectSprite,
 			const std::string& name,
 			Collision::collisionLayer layer,
 			int level
@@ -28,7 +28,7 @@ namespace Micro {
 		std::unique_ptr<GameObject> Create(
 			const std::string& className,
 			SystemManager* systemManager,
-			const sf::Sprite& ObjectSprite,
+			const sf::Sprite& objectSprite,
 			const std::string& name,
 			Collision::collisionLayer layer = Collision::collisionLayer::COLLIDER,
 			int level = 0

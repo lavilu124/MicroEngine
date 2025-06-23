@@ -76,7 +76,7 @@ namespace Micro {
         deltaTimeT = clock.restart();
         deltaTime = deltaTimeT.asSeconds();
 
-        m_sceneManager.camera.Update(*this);
+        m_sceneManager.camera.Update();
 
         m_lighting.Clear();
 
@@ -90,18 +90,18 @@ namespace Micro {
 
     void SystemManager::Render(sf::RenderWindow& window) {
         for (auto it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
-            if ((*it)->IsShowen()) window.draw((*it)->GetSprite());
+            if ((*it)->IsShown()) window.draw((*it)->GetSprite());
 
         window.draw(m_lighting);
 
         for (auto light : m_sceneManager.lights)
-            if (light->IsShowen()) window.draw(*light);
+            if (light->IsShown()) window.draw(*light);
 
         for (auto& button : m_sceneManager.buttons)
-            if (button.IsShowen()) window.draw(button.GetCurrentSprite());
+            if (button.IsShown()) window.draw(button.GetCurrentSprite());
 
         for (auto& text : m_sceneManager.texts) 
-            if (text.IsShowen()) window.draw(text.GetBase());
+            if (text.IsShown()) window.draw(text.GetBase());
         
     }
 
@@ -115,7 +115,8 @@ namespace Micro {
     }
 
 
-    bool SystemManager::CheckForCollision(sf::Sprite sprite, const char* name, GameObject*& collideInfo, Collision::collisionLayer layerToCollideWith) {
+    bool SystemManager::CheckForCollision(const sf::Sprite& sprite, const char* name, GameObject*& collideInfo, Collision::collisionLayer layerToCollideWith, const sf::Uint8& alpahLimit) const
+    {
         if (layerToCollideWith == 7)
             return false;
 
@@ -257,7 +258,7 @@ namespace Micro {
         quickSort(m_sceneManager.objects, 0, m_sceneManager.objects.size() - 1);
     }
 
-    void SystemManager::AddText(const std::string& name, std::string font)
+    void SystemManager::AddText(const std::string& name, const std::string& font)
     {
         for (int i = 0; i < m_sceneManager.texts.size(); i++) {
             if (name == m_sceneManager.texts[i].GetName()) return;
@@ -285,7 +286,7 @@ namespace Micro {
         return nullptr;
     }
 
-    void SystemManager::AddButton(std::string name, std::string img, std::string onClickImg, void(*onClick)())
+    void SystemManager::AddButton(const std::string& name, const std::string& img, const std::string& onClickImg, void(*onClick)())
     {
         for (int i = 0; i < m_sceneManager.buttons.size(); i++) {
             if (name == m_sceneManager.buttons[i].GetName()) return;

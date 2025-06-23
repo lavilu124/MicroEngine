@@ -8,7 +8,7 @@ namespace Micro {
 	class MICRO_API Button
 	{
 	public:
-		Button(SystemManager* systemManager, std::string name, std::string img, std::string onClickImg = "", void (*onClick)() = nullptr);
+		Button(SystemManager* systemManager, const std::string& name, const std::string& img, const std::string& onClickImg = "", void (*onClick)() = nullptr);
 
 		std::string GetName() const;
 
@@ -31,8 +31,8 @@ namespace Micro {
 
 		sf::Sprite GetCurrentSprite();
 
-		bool IsShowen() const;
-		void SetShowen(bool showen);
+		bool IsShown() const;
+		void SetShown(bool shown);
 
 		bool IsSceneObject() const;
 		void SetIsSceneObject(bool val);
@@ -47,8 +47,8 @@ namespace Micro {
 		SystemManager* m_systemManager;
 		
 		bool m_isClicked;
-
-		bool m_showen = true;
+		
+		bool m_shown = true;
 
 		bool m_isSceneObject;
 	};
