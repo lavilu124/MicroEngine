@@ -59,7 +59,7 @@ std::vector<ButtonObject>& SceneContent::GetButtons()
 	return m_buttonObjects;
 }
 
-int partition(std::vector<GameObject>& vec, int low, int high) {
+static int partition(std::vector<GameObject>& vec, int low, int high) {
 
 	int pivot = vec[high].level;
 	int i = (low - 1);
@@ -76,7 +76,7 @@ int partition(std::vector<GameObject>& vec, int low, int high) {
 	return (i + 1);
 }
 
-void quickSort(std::vector<GameObject>& vec, int low, int high) {
+static void quickSort(std::vector<GameObject>& vec, int low, int high) {
 	if (low < high) {
 
 		int pi = partition(vec, low, high);

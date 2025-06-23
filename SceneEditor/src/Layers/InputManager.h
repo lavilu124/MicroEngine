@@ -9,14 +9,13 @@ struct InputDefinition {
     std::string part;       // "pressed", "started", "released"
     std::string onInput;    // function name to call on input
     std::string offInput;   // function name to call when input is off
-    std::string keyName;
 };
 
 
 class InputManager : public Walnut::Layer
 {
 public:
-    InputManager(std::string pathToinput);
+    InputManager(const std::string& pathToinput);
     void OnUIRender() override;
     void OnAttach() override;
 
@@ -29,7 +28,7 @@ private:
     bool m_shouldSave = false;
     bool m_listeningForKey = false;
 
-    void SaveInputs();
+    void SaveInputs() const;
     void LoadInputs();
 };
 

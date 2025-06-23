@@ -5,7 +5,7 @@
 class Menu : public Walnut::Layer
 {
 public:
-	Menu(std::string projectRootPath, std::shared_ptr<ObjectViewer> objectViewer);
+	Menu(const std::string& projectRootPath, std::shared_ptr<ObjectViewer> objectViewer);
 
 	void NewObjectPressed();
 

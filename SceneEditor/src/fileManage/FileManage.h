@@ -5,6 +5,6 @@
 class FileManage
 {
 public:
-	static void SaveScene(std::string path, SceneContent* content);
+	static void SaveScene(const std::string& path, SceneContent* content);
 };
 

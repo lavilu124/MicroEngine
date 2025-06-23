@@ -32,8 +32,8 @@ public:
 
 	std::string getMainPath() const;
 
-	static void UploadFile(std::string path);
-	void HandleFile(std::filesystem::directory_entry entry);
+	static void UploadFile(const std::string& path);
+	void HandleFile(const std::filesystem::directory_entry& entry);
 private:
 	void Window();
 
@@ -58,7 +58,7 @@ private:
 	std::shared_ptr<Walnut::Image> m_soundIcon;
 
 
-	std::string m_newScene = "";
+	std::string m_newScene;
 
 	static std::string m_copyPaths[30];
 	static int m_copySize;
