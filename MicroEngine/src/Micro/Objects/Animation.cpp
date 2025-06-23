@@ -2,15 +2,15 @@
 
 namespace Micro{
     //set all animation values in constructor
-    Animation::Animation(std::vector<sf::Sprite>& AnimationVector, float Speed) : AnimationVector(AnimationVector), m_speed(Speed){
+    Animation::Animation(std::vector<sf::Sprite>& animationVector, float speed) : animationVector(animationVector), m_speed(speed){
     }
 
     //run the animation based on a timer
-    void Animation::RunAnimation(float Dletatime, GameObject Object) {
-        m_counter -= Dletatime;
+    void Animation::RunAnimation(float deltaTime, GameObject& object) {
+        m_counter -= deltaTime;
 
         //reset the animation if reach the end
-        if (m_index >= AnimationVector.size() - 1) {
+        if (m_index >= animationVector.size() - 1) {
             m_index = 0;
         }
         if (m_counter <= 0) {//reset the timer and switch the frame
@@ -18,16 +18,7 @@ namespace Micro{
             m_counter = m_speed;
         }
 
-        //set currentSprtie vales match the player's values
-        m_currentSprite = AnimationVector[m_index];
-        m_currentSprite.setScale(Object.GetScale());
-        m_currentSprite.setPosition(Object.GetPosition());
-        m_currentSprite.setRotation(Object.GetRotation());
-    }
-
-    //return the current frame of the animation
-    sf::Sprite Animation::GetCurrentSprite() {
-        return m_currentSprite;
+        object.SetSprite(animationVector[m_index]);
     }
 
     //reset the animation
@@ -42,7 +33,7 @@ namespace Micro{
     }
 
     //set the speed of the animation
-    void Animation::SetSpeed(float Speed) {
-        this->m_speed = Speed;
+    void Animation::SetSpeed(float speed) {
+        this->m_speed = speed;
     }
 }

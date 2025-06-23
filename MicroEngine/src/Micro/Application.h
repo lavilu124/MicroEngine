@@ -9,9 +9,7 @@ namespace Micro{
 	{
 	public:
 		Application(float windowWidth, float windowHeight, float maxFPS, const char* name);
-		Application(sf::Vector2f windowSize, float maxFps, const char* name);
-
-		virtual ~Application();
+		Application(const sf::Vector2f& windowSize, float maxFps, const char* name);
 
 
 		static Application& Get();
@@ -24,10 +22,10 @@ namespace Micro{
 		SystemManager* GetSystemManager();
 
 
-		void SetWindowSize(sf::Vector2u newSize);
+		void SetWindowSize(const sf::Vector2u& newSize);
 		sf::Vector2u GetWindowSize() const;
 		void SetWindowTitle(const char* name);
-		void SetResolution(sf::Vector2f newRes);
+		void SetResolution(const sf::Vector2f& newRes);
 
 	protected:
 		sf::RenderWindow m_window;

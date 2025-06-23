@@ -24,11 +24,11 @@ namespace Micro{
 
 		GameObject* GetObjectByName(const char* name);
 
-		bool CheckForCollision(sf::Sprite sprite, const char* name, GameObject*& collideInfo , Collision::collisionLayer layerToCollideWith = Collision::ALL);
+		bool CheckForCollision(const sf::Sprite&, const char* name, GameObject*& collideInfo , Collision::collisionLayer layerToCollideWith = Collision::ALL, const sf::Uint8& alpahLimit = 0) const;
 
 		void RunInput(sf::Event event, sf::RenderWindow& window);
 
-		void AddInput(Micro::Input::InputAction& action);
+		void AddInput(Input::InputAction& action);
 
 		void LoadScene(const char* scene);
 
@@ -54,11 +54,11 @@ namespace Micro{
 
 		void ChangedLevel();
 
-		void AddText(const std::string& name, std::string font = "");
+		void AddText(const std::string& name, const std::string& font = "");
 		void RemoveText(const std::string& name);
 		Text* GetText(const std::string& name);
 
-		void AddButton(std::string name, std::string img, std::string onClickImg = "", void (*onClick)() = nullptr);
+		void AddButton(const std::string& name, const std::string& img, const std::string& onClickImg = "", void (*onClick)() = nullptr);
 		void RemoveButton(const std::string& name);
 		Button* GetButton(const std::string& name);
 

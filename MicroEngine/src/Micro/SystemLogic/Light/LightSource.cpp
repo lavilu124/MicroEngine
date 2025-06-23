@@ -57,14 +57,14 @@ namespace Micro{
         return m_range;
     }
 
-    bool LightSource::IsShowen() const
+    bool LightSource::IsShown() const
     {
-        return m_showen;
+        return m_shown;
     }
 
-    void LightSource::SetShowen(bool showen)
+    void LightSource::SetShown(bool shown)
     {
-        m_showen = showen;
+        m_shown = shown;
     }
 
     bool LightSource::IsSceneObject() const

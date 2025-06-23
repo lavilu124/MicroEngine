@@ -17,34 +17,36 @@ namespace Micro{
 	{
 	public:
 		void LoadInput();
-		void AddInputFunc(std::string name, void(*function)(Micro::Input::InputAction&));
-		void AddButtonFunc(std::string name, void(*function)());
-		void CreateInput(std::string Name, Input::inputType Type, Input::KeyType Key, Input::inputPart Part, std::string OnInput = "", std::string OffInput = "");
+		void AddInputFunc(const std::string& name, void(*function)(Input::InputAction&));
+		void AddButtonFunc(const std::string& name, void(*function)());
+		void CreateInput(const std::string& name, Input::inputType type, Input::KeyType key, Input::inputPart part, const std::string& onInput = "", const std::string& offInput = "");
 
-		void addInput(Micro::Input::InputAction& action);
+		void addInput(Input::InputAction& action);
 
 		void SetPaths();
 
-		std::vector<std::shared_ptr<Micro::GameObject>> GetObjects(std::string name, SystemManager* systemManger);
+		std::vector<std::shared_ptr<GameObject>> GetObjects(const std::string& name, SystemManager* systemManger);
 
-		sf::Sprite* GetSprite(std::string name);
-		sf::Sound* GetSound(std::string name);
+		sf::Sprite* GetSprite(const std::string& name);
+		sf::Sound* GetSound(const std::string& name);
 		std::map <std::string, Input::InputAction> inputs;
 
-		static void Log(std::string msg);
+		static void Log(const std::string& msg);
 
-		std::string GetFontPath(std::string name);
+		std::string GetFontPath(const std::string& name);
 
 	private:
-		void GetFilesInDir(std::string Dir);
+		void GetFilesInDir(const std::string& dir);
 		
-		void LoadAsset(std::string FileName);
-
-	private:
+		void LoadAsset(const std::string& fileName);
 
 		static void CreateLog();
 
-		std::map <std::string, void(*)(Micro::Input::InputAction&)> m_functionMap;
+	private:
+
+		
+
+		std::map <std::string, void(*)(Input::InputAction&)> m_functionMap;
 		std::map <std::string, void(*)()> m_buttonFuncMap;
 		std::map < std::string, sf::Sprite> m_sprites;
 		std::map < std::string, sf::Sound> m_sounds;
@@ -52,7 +54,7 @@ namespace Micro{
 		std::map <std::string, sf::Texture> m_textures;
 		std::map <std::string, sf::SoundBuffer> m_buffers;
 
-		static std::string m_mainPath;
-		static int m_currentLog;
+		static std::string s_mainPath;
+		static int s_currentLog;
 	};
 }
