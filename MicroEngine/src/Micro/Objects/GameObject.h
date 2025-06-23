@@ -55,9 +55,9 @@
 	private:
 		void SetCenter();
 
-		void HandlePositionChange(sf::Vector2f newPosition);
+		void HandlePositionChange(const sf::Vector2f& newPosition);
 		void HandleRotationChange(float newRotation);
-		void HandleScaleChange(sf::Vector2f newScale);
+		void HandleScaleChange(const sf::Vector2f& newScale);
 
 		std::string m_name;
 		sf::Vector2f m_position;
