@@ -34,7 +34,7 @@ void ObjectViewer::Window()
         ImGui::SameLine();
         // Delete icon button
         if (m_deleteIcon && m_deleteIcon->GetDescriptorSet()) {
-            if (ImGui::ImageButton(m_deleteIcon->GetDescriptorSet(), ImVec2(15.5, 25))) {
+            if (ImGui::ImageButton(m_deleteIcon->GetDescriptorSet(), ImVec2(14.8, 17.5))) {
                 m_toDelete = true;
             }
             if (ImGui::IsItemHovered())
