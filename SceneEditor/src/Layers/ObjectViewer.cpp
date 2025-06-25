@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <sstream>
 
 template <class T>
 T min(T x, T y)
