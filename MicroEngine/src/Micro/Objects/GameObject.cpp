@@ -51,7 +51,7 @@ namespace Micro{
                 HitInfo->OnCollision(this);
                 m_objectSprite.setPosition(m_position);
             }
-            else if (m_layer == 6 && HitInfo->m_layer == 6) {
+            else if ((m_layer == 6 || m_layer > 7) && (HitInfo->m_layer == 6 || HitInfo->m_layer > 7)) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
                 m_position = newPosition;
@@ -94,13 +94,13 @@ namespace Micro{
                 m_rotation = newRotation;
                 return;
             }
-        	if (m_layer < 6 && HitInfo->m_layer < 6) {
+            if ((m_layer < 6 && HitInfo->m_layer < 6) || m_layer == 13 || HitInfo->m_layer == 13) {
                 OnCollision(HitInfo);
                 HitInfo->OnCollision(this);
                 m_objectSprite.setRotation(m_rotation);
                 return;
             }
-        	if (m_layer > 6) {
+        	if ((m_layer == 6 || m_layer > 7) && (HitInfo->m_layer == 6 || HitInfo->m_layer > 7)) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
                 m_rotation = newRotation;
@@ -123,13 +123,13 @@ namespace Micro{
                 m_scale = newScale;
                 return;
             }
-        	if (m_layer < 6 && HitInfo->m_layer < 6) {
+            if ((m_layer < 6 && HitInfo->m_layer < 6) || m_layer == 13 || HitInfo->m_layer == 13) {
                 OnCollision(HitInfo);
                 HitInfo->OnCollision(this);
                 m_objectSprite.setScale(m_scale);
                 return;
             }
-        	if (m_layer > 6) {
+            if ((m_layer == 6 || m_layer > 7) && (HitInfo->m_layer == 6 || HitInfo->m_layer > 7)) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
                 m_scale = newScale;

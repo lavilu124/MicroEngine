@@ -3,6 +3,8 @@
 #include "InputManager.h"
 #include "Menu.h"
 
+#include <filesystem>
+
 static std::string GetRecentProjectsPath()
 {
     return "recent.txt";
@@ -160,14 +162,34 @@ void ProjectSelector::OnUIRender()
         ImGui::Text("Choose a project directory:");
         ImGui::Separator();
 
+
         if (ImGui::Button("Open Project..."))
         {
             const char* selectedFolder = tinyfd_selectFolderDialog("Select Project Folder", "");
-            if (selectedFolder) {
-                m_projectPath = selectedFolder;
-                m_needsResize = true;
+            if (selectedFolder)
+            {
+                if (std::filesystem::exists(std::string(selectedFolder) + "\\Resources"))
+                {
+                    m_projectPath = selectedFolder;
+                    m_needsResize = true;
+                }
+                else
+                {
+                    ImGui::OpenPopup("Wrong File");
+                }
             }
         }
+
+        if (ImGui::BeginPopupModal("Wrong File", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Invalid folder chosen.");
+            if (ImGui::Button("OK"))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
 
         ImGui::SameLine();
         if (ImGui::Button("Create New Project"))
