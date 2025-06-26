@@ -52,7 +52,6 @@ namespace Micro {
 
         deltaTime = 0;
     }
-
     void SystemManager::Start() {
         if (m_sceneManager.objects.empty()) return;
 
