@@ -31,6 +31,7 @@ ProjectDirectory::~ProjectDirectory()
 void ProjectDirectory::OnUIRender()
 {
 	Window();
+    
 }
 
 void ProjectDirectory::SetCurrentPath(const std::string& path)
@@ -99,6 +100,8 @@ int ProjectDirectory::ShowFoldersInDir()
     const float thumbnailSize = 100.0f;
     const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
 
+
+    bool deleted = false;
     for (int i = 0; i < m_folders.size(); i++) {
         const auto& folderPath = m_folders[i];
         if (columnIndex >= imagesPerRow) {
@@ -122,6 +125,14 @@ int ProjectDirectory::ShowFoldersInDir()
             {
                 SetCurrentPath(m_currentPath + "\\" + folderPath.filename().string().c_str());
             }
+            if (ImGui::BeginPopupContextItem("test")) {
+                if (ImGui::MenuItem("Delete")) {
+                    if (TryDeleteEntry(folderPath)) {
+                        deleted = true;
+                    }
+                }
+                ImGui::EndPopup();
+            }
 
             // Render folder name below the icon
             ImGui::SetCursorPosX(boxPadding);
@@ -134,6 +145,8 @@ int ProjectDirectory::ShowFoldersInDir()
         ImGui::SameLine();
         columnIndex++;
     }
+    if (deleted)
+        SetCurrentPath(m_currentPath);
 
     return columnIndex;
 }
@@ -146,12 +159,15 @@ int ProjectDirectory::ShowImagesInDir(int columnIndex)
     const float thumbnailSize = 100.0f;
     const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
 
+    bool deleted = false;
+
     for (auto& [image, imagePath] : m_images) {
         if (columnIndex >= imagesPerRow) {
             columnIndex = 0;
             ImGui::NewLine();
         }
 
+        ImGui::PushID(columnIndex);
         if (image) {
             ImGui::BeginChild(imagePath.filename().string().c_str(), ImVec2(thumbnailSize + 2 * boxPadding, thumbnailSize + 2 * boxPadding + ImGui::GetTextLineHeightWithSpacing()));
             {
@@ -167,26 +183,26 @@ int ProjectDirectory::ShowImagesInDir(int columnIndex)
                 if (ImGui::IsItemClicked()) {
                     m_selectedPath = imagePath.string();
                 }
-                /*if (ImGui::BeginPopupContextItem("test")) {
+                if (ImGui::BeginPopupContextItem("test")) {
                     if (ImGui::MenuItem("Delete")) {
                         if (TryDeleteEntry(imagePath)) {
-                            m_images.erase(std::remove_if(m_images.begin(), m_images.end(),
-                                [&](auto& pair) { return pair.second == imagePath; }), m_images.end());
-                            ImGui::CloseCurrentPopup();
-                            ImGui::EndPopup();
-                            return columnIndex;
+                            deleted = true;
                         }
                     }
                     ImGui::EndPopup();
-                }*/
+                }
                 ImGui::PopStyleVar();
                 ImGui::PopStyleColor();
             }
             ImGui::EndChild();
+            ImGui::PopID();
             ImGui::SameLine();
             columnIndex++;
         }
     }
+
+    if (deleted)
+        SetCurrentPath(m_currentPath);
 
     return columnIndex;
 }
@@ -199,6 +215,7 @@ int ProjectDirectory::ShowMapsInDir(int columnIndex)
     const float thumbnailSize = 100.0f;
     const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
 
+	bool deleted = false;
     for (int i = 0; i < m_maps.size(); i++) {
         const auto& mapPath = m_maps[i];
         if (columnIndex >= imagesPerRow) {
@@ -206,6 +223,7 @@ int ProjectDirectory::ShowMapsInDir(int columnIndex)
             ImGui::NewLine();
         }
 
+       
         ImGui::BeginChild(mapPath.filename().string().c_str(), ImVec2(thumbnailSize + 2 * boxPadding, thumbnailSize + 2 * boxPadding + ImGui::GetTextLineHeightWithSpacing()));
         {
             ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetStyle().Colors[ImGuiCol_HeaderActive]);
@@ -225,6 +243,14 @@ int ProjectDirectory::ShowMapsInDir(int columnIndex)
             {
                 m_newScene = mapPath.string();
             }
+            if (ImGui::BeginPopupContextItem("test")) {
+                if (ImGui::MenuItem("Delete")) {
+                    if (TryDeleteEntry(mapPath)) {
+                        deleted = true;
+                    }
+                }
+                ImGui::EndPopup();
+            }
 
             std::string fileName = mapPath.filename().string();
             fileName.erase(fileName.size() - 8);
@@ -239,6 +265,9 @@ int ProjectDirectory::ShowMapsInDir(int columnIndex)
         ImGui::SameLine();
         columnIndex++;
     }
+
+    if (deleted)
+        SetCurrentPath(m_currentPath);
     
     return columnIndex;
 }
@@ -251,6 +280,7 @@ int ProjectDirectory::ShowSoundsInDir(int columnIndex)
     const float thumbnailSize = 100.0f;
     const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
 
+    bool deleted = false;
     for (int i = 0; i < m_sounds.size(); i++) {
         const auto& soundPath = m_sounds[i];
         if (columnIndex >= imagesPerRow) {
@@ -267,13 +297,16 @@ int ProjectDirectory::ShowSoundsInDir(int columnIndex)
             // Render folder icon as a button
             ImGui::Image(m_soundIcon->GetDescriptorSet(), ImVec2(thumbnailSize, thumbnailSize / 1.25));
 
-            if (ImGui::IsItemHovered()) {
-                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+            if (ImGui::BeginPopupContextItem("test")) {
+                if (ImGui::MenuItem("Delete")) {
+                    if (TryDeleteEntry(soundPath)) {
+                        deleted = true;
+                    }
+                }
+                ImGui::EndPopup();
             }
-            if (ImGui::IsItemClicked())
-            {
-                SetCurrentPath(m_currentPath + "\\" + soundPath.filename().string().c_str());
-            }
+
+
 
             // Render folder name below the icon
             ImGui::SetCursorPosX(boxPadding);
@@ -286,6 +319,8 @@ int ProjectDirectory::ShowSoundsInDir(int columnIndex)
         ImGui::SameLine();
         columnIndex++;
     }
+    if (deleted)
+        SetCurrentPath(m_currentPath);
     return columnIndex;
 }
 
@@ -360,11 +395,7 @@ void ProjectDirectory::Window()
     columnIndex = ShowMapsInDir(columnIndex);
     ShowSoundsInDir(columnIndex);
 
-    //if (ImGui::BeginPopupModal("Delete Error", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-    //    ImGui::Text("Failed to delete file.");
-    //    if (ImGui::Button("OK")) ImGui::CloseCurrentPopup();
-    //    ImGui::EndPopup();
-    //}
+
 
 
     ImGui::End();

@@ -18,7 +18,7 @@ public:
 	
 
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene)
-	: Micro::Application(windowWidth, windowHeight, maxFPS, "new game") {
+	: Application(windowWidth, windowHeight, maxFPS, "new game") {
 		m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
 		m_systemManager.LoadScene("DefualtScene");
 
@@ -32,14 +32,13 @@ public:
 
 
 		////add a wall to block light
-		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
-			sf::Vector2f(0.f, 300.f));
+		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 300.f));
 
 		m_systemManager.GetFileManager().AddInputFunc("test", test);
 
 	}
 
-	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game") {
+	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Application(windowSize, maxFPS, "new game") {
 		m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
 		m_systemManager.LoadScene("DefualtScene");
 
