@@ -29,8 +29,8 @@ namespace Micro{
 
 	protected:
 		sf::RenderWindow m_window;
-		Micro::SystemManager m_systemManager;
-		Micro::Camera* m_camera;
+		SystemManager m_systemManager;
+		Camera* m_camera;
 	};
 
 	Application* CreateApplication(const char* scene);
