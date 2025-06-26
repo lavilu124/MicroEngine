@@ -91,6 +91,7 @@ namespace Micro {
         for (auto it = m_sceneManager.objects.begin(); it != m_sceneManager.objects.end(); ++it)
             if ((*it)->IsShown()) window.draw((*it)->GetSprite());
 
+        m_lighting.setPosition(m_sceneManager.camera.GetPosition());
         window.draw(m_lighting);
 
 
