@@ -21,6 +21,10 @@ void ProjectDirectory::OnAttach()
 
 ProjectDirectory::~ProjectDirectory()
 {
+    for (int i = 0; i < m_images.size(); i++)
+    {
+        m_images[i].first->~Image();
+    }
 	m_images.clear();
 }
 
@@ -36,6 +40,10 @@ void ProjectDirectory::SetCurrentPath(const std::string& path)
 
     m_currentPath = path;
 
+    for (int i = 0; i < m_images.size(); i++)
+    {
+        m_images[i].first->~Image();
+    }
 	m_images.clear();
     m_folders.clear();
     m_maps.clear();
@@ -159,6 +167,18 @@ int ProjectDirectory::ShowImagesInDir(int columnIndex)
                 if (ImGui::IsItemClicked()) {
                     m_selectedPath = imagePath.string();
                 }
+                /*if (ImGui::BeginPopupContextItem("test")) {
+                    if (ImGui::MenuItem("Delete")) {
+                        if (TryDeleteEntry(imagePath)) {
+                            m_images.erase(std::remove_if(m_images.begin(), m_images.end(),
+                                [&](auto& pair) { return pair.second == imagePath; }), m_images.end());
+                            ImGui::CloseCurrentPopup();
+                            ImGui::EndPopup();
+                            return columnIndex;
+                        }
+                    }
+                    ImGui::EndPopup();
+                }*/
                 ImGui::PopStyleVar();
                 ImGui::PopStyleColor();
             }
@@ -339,6 +359,13 @@ void ProjectDirectory::Window()
     columnIndex = ShowImagesInDir(columnIndex);
     columnIndex = ShowMapsInDir(columnIndex);
     ShowSoundsInDir(columnIndex);
+
+    //if (ImGui::BeginPopupModal("Delete Error", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+    //    ImGui::Text("Failed to delete file.");
+    //    if (ImGui::Button("OK")) ImGui::CloseCurrentPopup();
+    //    ImGui::EndPopup();
+    //}
+
 
     ImGui::End();
 }

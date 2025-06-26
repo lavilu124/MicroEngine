@@ -6,6 +6,7 @@
 #include "ApplicationGUI.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+
 #include "stb_image.h"
 
 namespace Walnut {
@@ -160,6 +161,7 @@ namespace Walnut {
 
 	void Image::Release()
 	{
+
 		Application::SubmitResourceFree([sampler = m_Sampler, imageView = m_ImageView, image = m_Image,
 			memory = m_Memory, stagingBuffer = m_StagingBuffer, stagingBufferMemory = m_StagingBufferMemory]()
 		{

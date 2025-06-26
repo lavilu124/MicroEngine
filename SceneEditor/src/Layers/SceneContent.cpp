@@ -18,6 +18,9 @@ void SceneContent::OnDetach()
 	}
 	m_lightObjects.clear();
 	m_gameObjects.clear();
+	m_buttonObjects.clear();
+	m_textObjects.clear();
+
 }
 
 void SceneContent::OnUIRender()
@@ -39,6 +42,19 @@ void SceneContent::OnUIRender()
 	}
 }
 
+bool ProjectDirectory::TryDeleteEntry(const std::filesystem::path& path)
+{
+	try {
+		if (std::filesystem::exists(path)) {
+			std::filesystem::remove(path);
+			return true;
+		}
+	}
+	catch (const std::exception& e) {
+		ImGui::OpenPopup("Delete Error");
+	}
+	return false;
+}
 std::vector<GameObject>& SceneContent::GetGameObjects()
 {
 	return m_gameObjects;
@@ -398,21 +414,44 @@ void SceneContent::RenderUiList() {
 }
 
 
+static bool isScene(Object* obj, currentObjectType type)
+{
+	if (obj->IsSceneObject) {
+		switch (type)
+		{
+		case game:
+			((GameObject*)obj)->sprite->~Image();
+			break;
+		case light:
+			((LightObject*)obj)->image->~Image();
+			break;
+		case text:
+			((TextObject*)obj)->image->~Image();
+			break;
+		case button:
+			((ButtonObject*)obj)->image->~Image();
+			break;
+		}
+		return true;
+	}
+	return false;
+}
+
 void SceneContent::SetNewScene(const std::string& newScene)
 {
-	m_viewer->SetObject(nullptr, currentObjectType::game);
+	m_viewer->SetObject(nullptr, game);
 	m_currentObName = "";
 	m_gameObjects.erase(std::remove_if(m_gameObjects.begin(), m_gameObjects.end(),
-		[](const auto& obj) { return obj.IsSceneObject; }), m_gameObjects.end());
+		[](auto& obj) { return isScene(&obj, game); }), m_gameObjects.end());
 
 	m_lightObjects.erase(std::remove_if(m_lightObjects.begin(), m_lightObjects.end(),
-		[](const auto& light) { return light.IsSceneObject; }), m_lightObjects.end());
+		[](auto& light) { return isScene(&light, currentObjectType::light); }), m_lightObjects.end());
 
 	m_textObjects.erase(std::remove_if(m_textObjects.begin(), m_textObjects.end(),
-		[](const auto& text) { return text.IsSceneObject; }), m_textObjects.end());
+		[](auto& text) { return isScene(&text, currentObjectType::text); }), m_textObjects.end());
 
 	m_buttonObjects.erase(std::remove_if(m_buttonObjects.begin(), m_buttonObjects.end(),
-		[](const auto& button) { return button.IsSceneObject; }), m_buttonObjects.end());
+		[](auto& button) { return  isScene(&button, currentObjectType::button); }), m_buttonObjects.end());
 
 	std::ifstream inputFile(newScene);
 	Json::Value actualJson;
