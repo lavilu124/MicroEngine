@@ -17,7 +17,8 @@ class App : public Micro::Application
 public:
 	
 
-	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game") {
+	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene)
+	: Micro::Application(windowWidth, windowHeight, maxFPS, "new game") {
 		m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
 		m_systemManager.LoadScene("DefualtScene");
 

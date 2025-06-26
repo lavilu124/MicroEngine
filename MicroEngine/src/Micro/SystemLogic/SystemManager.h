@@ -80,7 +80,7 @@ namespace Micro{
 		FileManager m_fileManager;
 
 		LightingArea m_lighting;
-		sf::Texture m_drakness;
+		sf::Texture m_darkness;
 
 
 		int m_currentLightId = 0;

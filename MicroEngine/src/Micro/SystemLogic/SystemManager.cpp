@@ -41,10 +41,9 @@ namespace Micro {
 
         m_windowSize = sf::Vector2f(window.getSize().x, window.getSize().y);
 
-        SetDarkness(0);
 
-        m_lighting.SetAreaTexture(&m_drakness);
-        m_lighting.scale(960 / m_drakness.getSize().x, 540 / m_drakness.getSize().y);
+        m_lighting.SetAreaTexture(&m_darkness);
+        m_lighting.scale(m_windowSize.x , m_windowSize.y);
         m_lighting.Clear();
 
 
@@ -94,8 +93,16 @@ namespace Micro {
 
         window.draw(m_lighting);
 
+
+        auto darkness = sf::Sprite(m_darkness);
+        darkness.setOrigin(darkness.getGlobalBounds().width / 2, darkness.getGlobalBounds().height / 2);
+        darkness.setPosition(m_sceneManager.camera.GetPosition());
+        window.draw(darkness);
+
         for (auto light : m_sceneManager.lights)
             if (light->IsShown()) window.draw(*light);
+
+        
 
         for (auto& button : m_sceneManager.buttons)
             if (button.IsShown()) window.draw(button.GetCurrentSprite());
@@ -249,8 +256,8 @@ namespace Micro {
             pixels[i + 3] = static_cast<sf::Uint8>(255 * (precent / 100.0f));
         }
 
-        m_drakness.create(m_windowSize.x, m_windowSize.y);
-        m_drakness.update(pixels.data());
+        m_darkness.create(m_windowSize.x, m_windowSize.y);
+        m_darkness.update(pixels.data());
     }
 
     void SystemManager::ChangedLevel()
