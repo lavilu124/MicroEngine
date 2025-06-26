@@ -39,6 +39,8 @@ private:
 
 	void SetCurrentPath(const std::string& path);
 
+	static bool TryDeleteEntry(const std::filesystem::path& path);
+
 private:
 	std::string m_mainPath;
 	std::string m_currentPath;

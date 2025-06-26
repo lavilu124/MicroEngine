@@ -427,6 +427,11 @@ void SceneViewer::GenerateLightImage(LightObject& light)
     light.imageData = std::shared_ptr<uint8_t[]>(new uint8_t[dataSize], std::default_delete<uint8_t[]>());
     std::memcpy(light.imageData.get(), pixels, dataSize);
 
+
+    if (light.image) {
+    	light.image->~Image();
+    }
+
     light.image = std::make_shared<Walnut::Image>(
         image.getSize().x,
         image.getSize().y,
@@ -438,6 +443,7 @@ void SceneViewer::GenerateLightImage(LightObject& light)
 
 void SceneViewer::GenerateTextImage(TextObject& text)
 {
+    text.Updating();
     sf::Vector2u size = renderTexture.getSize();
     //create font
     sf::Font font;
@@ -471,6 +477,10 @@ void SceneViewer::GenerateTextImage(TextObject& text)
 
     text.imageData = std::shared_ptr<uint8_t[]>(new uint8_t[dataSize], std::default_delete<uint8_t[]>());
     std::memcpy(text.imageData.get(), pixels, dataSize);
+
+    if (text.image) {
+        text.image->~Image();
+    }
 
     text.image = std::make_shared<Walnut::Image>(
         image.getSize().x,
