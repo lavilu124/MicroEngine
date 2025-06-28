@@ -2,7 +2,7 @@
 #include "../../Objects/GameObject.h"
 #include <stdexcept>
 
-#include "../../../../PhysicsHelper.h"
+#include "PhysicsHelper.h"
 #include "Micro/FileOperations/FileManager.h"
 
 namespace Micro
