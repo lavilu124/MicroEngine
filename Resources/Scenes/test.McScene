@@ -1,104 +1,30 @@
 {
-	"lightSource0" : 
-	{
-		"LightType" : 0,
-		"angle" : 360.0,
-		"color" : 
-		[
-			255.0,
-			0.0,
-			0.0,
-			0.5
-		],
-		"fade" : true,
-		"name" : "light1",
-		"position" : 
-		[
-			200.0,
-			200.0
-		],
-		"radius" : 100.0,
-		"rotation" : 0.0,
-		"isSceneObject" : false
-	},
 	"object0" : 
 	{
-		"layer" : 7,
+		"isSceneObject" : true,
+		"layer" : 0,
 		"level" : 0,
-		"name" : "hi",
-		"position" : 
-		[
-			-200.0,
-			-200.0
-		],
-		"rotation" : 0.0,
-		"scale" : 
-		[
-			-1.0,
-			1.0
-		],
-		"spriteName" : "run0.png",
-		"type" : "none",
-		"isSceneObject" : true
-	},
-	"object1" : 
-	{
-		"layer" : 7,
-		"level" : 1,
 		"name" : "1",
 		"position" : 
 		[
-			-200.0,
-			200.0
-		],
-		"rotation" : 0.0,
-		"scale" : 
-		[
-			-1.0,
-			1.0
-		],
-		"spriteName" : "axe.png",
-		"type" : "none",
-		"isSceneObject" : true
-	},
-	"object2" : 
-	{
-		"layer" : 7,
-		"level" : 0,
-		"name" : "2",
-		"position" : 
-		[
-			200.0,
-			200.0
-		],
-		"rotation" : 0.0,
-		"scale" : 
-		[
-			-1.0,
-			1.0
-		],
-		"spriteName" : "run2.png",
-		"type" : "none",
-		"isSceneObject" : true
-	},
-	"text0" : 
-	{
-		"color" : 
-		[
-			210.39604187011719,
-			145.81904602050781,
-			145.81904602050781,
-			1.0
-		],
-		"font" : "Barriecito-Regular",
-		"name" : "testing",
-		"outlineColor" : 
-		[
 			0.0,
-			1078203908096.0,
-			0.0
+			-400.0
 		],
-		"outlineThickness" : 1.0,
+		"rotation" : 0.0,
+		"scale" : 
+		[
+			-1.0,
+			1.0
+		],
+		"spriteName" : "cube.png",
+		"type" : "none"
+	},
+	"object1" : 
+	{
+		"isSceneObject" : true,
+		"layer" : 0,
+		"level" : 0,
+		"name" : "s",
 		"position" : 
 		[
 			0.0,
@@ -110,8 +36,7 @@
 			1.0,
 			1.0
 		],
-		"size" : 24,
-		"value" : "testing",
-		"isSceneObject" : true
+		"spriteName" : "slope.png",
+		"type" : "none"
 	}
 }

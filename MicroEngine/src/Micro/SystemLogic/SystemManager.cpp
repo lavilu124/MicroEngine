@@ -115,7 +115,7 @@ namespace Micro {
     }
 
 
-    bool SystemManager::CheckForCollision(const sf::Sprite& sprite, const char* name, GameObject*& collideInfo, Collision::collisionLayer layerToCollideWith, const sf::Uint8& alpahLimit) const
+    bool SystemManager::CheckForCollision(const sf::Sprite& sprite, const char* name, GameObject*& collideInfo, float& angleOfCollision, Collision::collisionLayer layerToCollideWith, const sf::Uint8& alpahLimit) const
     {
         if (layerToCollideWith == 7)
             return false;
@@ -125,7 +125,7 @@ namespace Micro {
                 (m_sceneManager.objects[i]->GetLayer() == layerToCollideWith ||
                     (layerToCollideWith == Collision::ALL && m_sceneManager.objects[i]->GetLayer() != 7))) {
 
-                if (Collision::PixelPerfectCollision(sprite, m_sceneManager.objects[i]->GetSprite())) {
+                if (Collision::PixelPerfectCollision(sprite,m_sceneManager.objects[i]->GetSprite(), angleOfCollision)) {
                     collideInfo = m_sceneManager.objects[i].get();
                     return true;
                 }

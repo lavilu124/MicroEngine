@@ -1,7 +1,4 @@
-<<<<<<< Updated upstream
-D:\test
-=======
-C:\Users\USER\Documents\yair\Tests\test1
 C:\Users\USER\Documents\yair\Projects\MicroEngine
+C:\Users\USER\Documents\yair\Tests\test1
+D:\test
 C:\Users\USER\Documents\yair\Tests\test2
->>>>>>> Stashed changes

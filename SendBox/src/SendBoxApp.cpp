@@ -18,25 +18,20 @@ public:
 	
 
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene) : Micro::Application(windowWidth, windowHeight, maxFPS, "new game") {
-		m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
-		m_systemManager.LoadScene("DefualtScene");
+		//m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
+		m_systemManager.LoadScene("test");
+
+		
 
 		m_systemManager.SetDarkness(75);
-
-		////add a light to the scene
-		m_lightId = m_systemManager.AddLight(ls::lightType::radial, "testrgjgi");
-		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetRange(150);
-		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->SetColor(sf::Color::Blue);
-		m_systemManager.GetLight<ls::lightType::radial>(m_lightId)->setPosition(10, 10);
-
-
-		////add a wall to block light
-		m_systemManager.AddEdge(sf::Vector2f(0.f, 0.f),
-			sf::Vector2f(0.f, 300.f));
-
+     
 		m_systemManager.GetFileManager().AddInputFunc("test", test);
 
-		m_systemManager.GetObjectByName("hi")->SetPhysicsBody(5, true);
+		m_systemManager.GetObjectByName("1")->SetPhysicsBody(10, true, Micro::Physics::Material{0.6f, 0.3f, 0.5f , Micro::Physics::MINIMUM, Micro::Physics::AVERAGE});
+		m_systemManager.GetObjectByName("s")->SetPhysicsBody(100000000000, false, Micro::Physics::Material{ 0.6f, 0.3f, 0.5f , Micro::Physics::MINIMUM, Micro::Physics::AVERAGE });
+		
+		
+		
 	}
 
 	App(const sf::Vector2f windowSize, float maxFPS, const char* scene) : Micro::Application(windowSize, maxFPS, "new game") {
@@ -74,5 +69,5 @@ private:
 };
 
 Micro::Application* Micro::CreateApplication(const char* scene) {
-	return new App(1920, 1080, 144, scene);
+	return new App(1920, 1080, 165, scene);
 }

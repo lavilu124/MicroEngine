@@ -49,9 +49,9 @@
 		bool IsSceneObject() const;
 		void SetIsSceneObject(bool val);
 
-		void SetPhysicsBody(float mass, bool hasGravity);
+		void SetPhysicsBody(float mass, bool hasGravity, const Physics::Material& material);
 
-		std::optional<Physics::PhysicsBody> GetPhysicsBody();
+		std::optional<Physics::PhysicsBody>& GetPhysicsBody();
 	private:
 		void SetCenter();
 
@@ -64,9 +64,9 @@
 		sf::Vector2f m_scale;
 		float m_rotation;
 		sf::Sprite m_objectSprite;
-
+		bool m_collisionBeenCalled;
 	protected:
-		virtual void OnCollision(GameObject* hitInfo);
+		virtual void OnCollision(GameObject* hitInfo, float collisionAngle);
 		virtual void OnTrigger(GameObject* hitInfo);
 
 		std::optional<Physics::PhysicsBody> m_physicsBody;
