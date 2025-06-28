@@ -19,9 +19,11 @@ namespace Micro{
 
 		sf::Vector2f GetPosition() const;
 		void SetPosition(const sf::Vector2f& newPosition);
+		void SetPosition(float x, float y);
 
 		sf::Vector2f GetScale() const;
 		void SetScale(const sf::Vector2f& newScale);
+		void setScale(float x, float y);
 
 		float GetRotation() const;
 		void SetRotation(float rotation);
