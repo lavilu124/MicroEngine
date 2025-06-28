@@ -1,0 +1,42 @@
+{
+	"object0" : 
+	{
+		"isSceneObject" : true,
+		"layer" : 0,
+		"level" : 0,
+		"name" : "Object 1",
+		"position" : 
+		[
+			0.0,
+			-100.0
+		],
+		"rotation" : 0.0,
+		"scale" : 
+		[
+			1.0,
+			1.0
+		],
+		"spriteName" : "cube.png",
+		"type" : "none"
+	},
+	"object1" : 
+	{
+		"isSceneObject" : true,
+		"layer" : 0,
+		"level" : 0,
+		"name" : "Object 2",
+		"position" : 
+		[
+			0.0,
+			0.0
+		],
+		"rotation" : 0.0,
+		"scale" : 
+		[
+			1.0,
+			1.0
+		],
+		"spriteName" : "slope.png",
+		"type" : "none"
+	}
+}

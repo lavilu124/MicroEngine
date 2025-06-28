@@ -146,9 +146,15 @@ namespace Micro{
     }
 
     void GameObject::SetPosition(const sf::Vector2f& newPosition) {
-        if (newPosition != m_position) {
+        if (newPosition != m_position) 
             HandlePositionChange(newPosition);
-        }
+        
+    }
+
+    void GameObject::SetPosition(float x, float y)
+    {
+        if (m_position != sf::Vector2f{x,y})
+            HandlePositionChange({ x,y });
     }
 
     sf::Vector2f GameObject::GetScale() const {
@@ -159,6 +165,12 @@ namespace Micro{
         if (newScale != m_scale) {
             HandleScaleChange(newScale);
         }
+    }
+
+    void GameObject::setScale(float x, float y)
+    {
+        if (sf::Vector2f{ x,y } != m_scale)
+            HandleScaleChange({ x,y });
     }
 
     float GameObject::GetRotation() const {

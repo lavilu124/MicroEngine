@@ -3,6 +3,8 @@
 #include <array>
 #include "Collision.hpp"
 
+#include <iostream>
+
 namespace Micro{
     namespace Collision
     {
@@ -83,6 +85,10 @@ namespace Micro{
                                 Bitmasks.GetPixel(mask2, object2.getTexture(), (int)(o2v.x) + O2SubRect.left, (int)(o2v.y) + O2SubRect.top) > alphaLimit) {
                                 pixelPositionObject1 = sf::Vector2i((int)(o1v.x) + O1SubRect.left, (int)(o1v.y) + O1SubRect.top);
                                 pixelPositionObject2 = sf::Vector2i((int)(o2v.x) + O2SubRect.left, (int)(o2v.y) + O2SubRect.top);
+
+
+
+
                                 return true;
                             }
                         }
