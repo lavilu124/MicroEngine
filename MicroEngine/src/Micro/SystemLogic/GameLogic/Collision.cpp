@@ -58,7 +58,7 @@ namespace Micro{
 
         BitmaskManager Bitmasks;
 
-        bool PixelPerfectCollision(const sf::Sprite& object1, const sf::Sprite& object2, sf::Uint8 alphaLimit) {
+        bool PixelPerfectCollision(const sf::Sprite& object1, const sf::Sprite& object2, float& angleOfCollision , sf::Uint8 alphaLimit) {
             sf::FloatRect Intersection;
             if (object1.getGlobalBounds().intersects(object2.getGlobalBounds(), Intersection)) {
                 sf::IntRect O1SubRect = object1.getTextureRect();
@@ -81,8 +81,37 @@ namespace Micro{
 
                             if (Bitmasks.GetPixel(mask1, object1.getTexture(), (int)(o1v.x) + O1SubRect.left, (int)(o1v.y) + O1SubRect.top) > alphaLimit &&
                                 Bitmasks.GetPixel(mask2, object2.getTexture(), (int)(o2v.x) + O2SubRect.left, (int)(o2v.y) + O2SubRect.top) > alphaLimit) {
+
+
+
                                 pixelPositionObject1 = sf::Vector2i((int)(o1v.x) + O1SubRect.left, (int)(o1v.y) + O1SubRect.top);
                                 pixelPositionObject2 = sf::Vector2i((int)(o2v.x) + O2SubRect.left, (int)(o2v.y) + O2SubRect.top);
+
+
+                                sf::Vector2i p = pixelPositionObject2;
+
+                                sf::Uint8* mask = Bitmasks.GetMask(object2.getTexture());
+                                sf::IntRect subrect = object2.getTextureRect();
+
+                                auto alphaAt = [&](int x, int y) -> sf::Uint8 {
+                                    if (x < 0 || y < 0 || x >= (int)object2.getTexture()->getSize().x || y >= (int)object2.getTexture()->getSize().y)
+                                        return 0;
+                                    return Bitmasks.GetPixel(mask, object2.getTexture(), x, y);
+                                    };
+
+                                // 3-point sampling for edge direction
+                                sf::Vector2i left = { p.x - 1, p.y };
+                                sf::Vector2i right = { p.x + 1, p.y };
+                                sf::Vector2i up = { p.x, p.y - 1 };
+                                sf::Vector2i down = { p.x, p.y + 1 };
+
+                                float dx = alphaAt(right.x, right.y) - alphaAt(left.x, left.y);
+                                float dy = alphaAt(down.x, down.y) - alphaAt(up.x, up.y);
+
+                                float angleRad = std::atan2(dy, dx);
+                                float angleDeg = angleRad * 180.f / 3.14159f;
+								//angleOfCollision = 180.f - angleDeg; 
+								angleOfCollision = 3.14159f - angleRad;
                                 return true;
                             }
                         }

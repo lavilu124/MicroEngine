@@ -28,17 +28,26 @@ namespace Micro{
         m_systemManager->DestroyObject(m_name.c_str());
     }
 
-    void GameObject::OnCollision(GameObject* hitInfo) {}
+    void GameObject::OnCollision(GameObject* hitInfo, float collisionAngle)
+    {
+	    if (hitInfo->m_physicsBody.has_value() && m_physicsBody.has_value())
+			m_physicsBody.value().onCollision(hitInfo->m_physicsBody.value(), collisionAngle);
+        m_collisionBeenCalled = true;
+    }
 
-    void GameObject::OnTrigger(GameObject* hitInfo) {}
+    void GameObject::OnTrigger(GameObject* hitInfo)
+    {
+		m_collisionBeenCalled = true;
+    }
 
     void GameObject::HandlePositionChange(const sf::Vector2f& newPosition) {
         m_objectSprite.setPosition(newPosition);
 
         GameObject* HitInfo = this;
-
+        float collisionAngle = 0.f;
         //checking if the new position collides with anything
-        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
+        
+        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, collisionAngle, Collision::ALL)) {
             if (!HitInfo->IsShown())
             {
                 m_position = newPosition;
@@ -46,24 +55,30 @@ namespace Micro{
             }
 
             if ((m_layer < 6 && HitInfo->m_layer < 6) || m_layer == 13 || HitInfo->m_layer == 13) { //13 is collison with all 6 is trigger 7 is none and 7-13 is custom
-                OnCollision(HitInfo);
-                HitInfo->OnCollision(this);
+				if (!m_collisionBeenCalled)
+					OnCollision(HitInfo, collisionAngle);
+                HitInfo->m_collisionBeenCalled = true;
+
+				if (!HitInfo->m_collisionBeenCalled)
+					HitInfo->OnCollision(this, collisionAngle);
                 m_objectSprite.setPosition(m_position);
             }
-            else if (m_layer == 6 && HitInfo->m_layer == 6) {
-                OnTrigger(HitInfo);
-                HitInfo->OnTrigger(this);
+            else if ((m_layer == 6 ||  m_layer > 7) && (HitInfo->m_layer == 6 || HitInfo->m_layer > 7)) {
+				if (!m_collisionBeenCalled)
+					OnTrigger(HitInfo);
+				if (!HitInfo->m_collisionBeenCalled)
+					HitInfo->OnTrigger(this);
                 m_position = newPosition;
                 return;
             }
 
-
+			//if (m_physicsBody.has_value() && HitInfo->m_physicsBody.has_value()) return;
             //testing if the object can move only along the x axies
             sf::Vector2f TestX = sf::Vector2f(newPosition.x, m_position.y);
             m_objectSprite.setPosition(TestX);
 
             //checking collison for the movement along the x axies
-            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
+            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, collisionAngle,  Collision::ALL)) {
                 m_position = m_objectSprite.getPosition();
                 return;
             }
@@ -73,7 +88,7 @@ namespace Micro{
             m_objectSprite.setPosition(TestY);
 
             //checking collison for the movement along the y axies
-            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
+            if (!m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, collisionAngle,Collision::ALL)) {
                 m_position = m_objectSprite.getPosition();
                 return;
             }
@@ -85,50 +100,61 @@ namespace Micro{
         m_objectSprite.setRotation(newRotation);
 
         GameObject* HitInfo = this;
+        float collisionAngle = 0.f;
 
         //checking if the new position collides with anything
-        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
+        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, collisionAngle, Collision::ALL)) {
             if (!HitInfo->IsShown())
             {
                 m_rotation = newRotation;
                 return;
             }
-        	if (m_layer < 6 && HitInfo->m_layer < 6) {
-                OnCollision(HitInfo);
-                HitInfo->OnCollision(this);
+            if ((m_layer < 6 && HitInfo->m_layer < 6) || m_layer == 13 || HitInfo->m_layer == 13) {
+				if (!m_collisionBeenCalled)
+					OnCollision(HitInfo, collisionAngle);
+				if (!HitInfo->m_collisionBeenCalled)
+					HitInfo->OnCollision(this, collisionAngle);
+                HitInfo->m_collisionBeenCalled = true;
+
                 m_objectSprite.setRotation(m_rotation);
                 return;
             }
-        	if (m_layer > 6) {
-                OnTrigger(HitInfo);
-                HitInfo->OnTrigger(this);
+            if ((m_layer == 6 || m_layer > 7) && (HitInfo->m_layer == 6 || HitInfo->m_layer > 7)) {
+				if (!m_collisionBeenCalled)
+					OnTrigger(HitInfo);
+				if (!HitInfo->m_collisionBeenCalled)
+					HitInfo->OnTrigger(this);
                 m_rotation = newRotation;
                 return;
             }
         }
 
-    	m_rotation = newRotation;
+        m_rotation = newRotation;
     }
 
     void GameObject::HandleScaleChange(const sf::Vector2f& newScale) {
         m_objectSprite.setScale(newScale);
 
         GameObject* HitInfo = this;
+        float collisionAngle = 0.f;
 
         //checking if the new position collides with anything
-        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, Collision::ALL)) {
+        if (m_systemManager->CheckForCollision(m_objectSprite, m_name.c_str(), HitInfo, collisionAngle,Collision::ALL)) {
             if (!HitInfo->IsShown())
             {
                 m_scale = newScale;
                 return;
             }
-        	if (m_layer < 6 && HitInfo->m_layer < 6) {
-                OnCollision(HitInfo);
-                HitInfo->OnCollision(this);
+            if ((m_layer < 6 && HitInfo->m_layer < 6) || m_layer == 13 || HitInfo->m_layer == 13) {
+				if (!m_collisionBeenCalled)
+					OnCollision(HitInfo, collisionAngle);
+				HitInfo->m_collisionBeenCalled = true;
+				if (!HitInfo->m_collisionBeenCalled)
+                    HitInfo->OnCollision(this, collisionAngle);
                 m_objectSprite.setScale(m_scale);
                 return;
             }
-        	if (m_layer > 6) {
+            if ((m_layer == 6 || m_layer > 7) && (HitInfo->m_layer == 6 || HitInfo->m_layer > 7)) {
                 OnTrigger(HitInfo);
                 HitInfo->OnTrigger(this);
                 m_scale = newScale;
@@ -137,7 +163,7 @@ namespace Micro{
 
 
         }
-    	m_scale = newScale;
+        m_scale = newScale;
     }
 
     sf::Vector2f GameObject::GetPosition() const {
@@ -145,7 +171,8 @@ namespace Micro{
     }
 
     void GameObject::SetPosition(const sf::Vector2f& newPosition) {
-        if (newPosition != m_position && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
+        if (newPosition != m_position) {
+            if (m_physicsBody.has_value() && !m_physicsBody.value().isMoveable) return;
             HandlePositionChange(newPosition);
         }
     }
@@ -155,7 +182,8 @@ namespace Micro{
     }
 
     void GameObject::SetScale(const sf::Vector2f& newScale) {
-        if (newScale != m_scale && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
+        if (newScale != m_scale) {
+            if (m_physicsBody.has_value() && !m_physicsBody.value().isMoveable) return;
             HandleScaleChange(newScale);
         }
     }
@@ -165,7 +193,8 @@ namespace Micro{
     }
 
     void GameObject::SetRotation(float newRotation ) {
-        if (newRotation != m_rotation && m_physicsBody.has_value() && m_physicsBody.value().isMoveable) {
+        if (newRotation != m_rotation) {
+            if (m_physicsBody.has_value() && !m_physicsBody.value().isMoveable) return;
             HandleRotationChange(newRotation);
         }
     }
@@ -191,6 +220,7 @@ namespace Micro{
         {
 	        m_physicsBody.value().update(deltaTime);
         }
+        m_collisionBeenCalled = false;
     }
 
     std::string GameObject::GetName() const{
@@ -230,16 +260,16 @@ namespace Micro{
         m_isSceneObject = val;
     }
 
-    void GameObject::SetPhysicsBody(float mass, bool hasGravity)
+    void GameObject::SetPhysicsBody(float mass, bool hasGravity, const Physics::Material& material)
     {
         m_physicsBody.emplace(mass, m_position, [this](sf::Vector2f newPos)
         {
         	this->SetPosition(newPos);
-        });
+        }, material);
         m_physicsBody.value().hasGravitation = hasGravity;
     }
 
-    std::optional<Physics::PhysicsBody> GameObject::GetPhysicsBody()
+    std::optional<Physics::PhysicsBody>& GameObject::GetPhysicsBody()
     {
         return m_physicsBody;
     }

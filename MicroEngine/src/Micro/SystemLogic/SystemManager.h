@@ -24,7 +24,7 @@ namespace Micro{
 
 		GameObject* GetObjectByName(const char* name);
 
-		bool CheckForCollision(const sf::Sprite&, const char* name, GameObject*& collideInfo , Collision::collisionLayer layerToCollideWith = Collision::ALL, const sf::Uint8& alpahLimit = 0) const;
+		bool CheckForCollision(const sf::Sprite&, const char* name, GameObject*& collideInfo ,float& angleOfCollision, Collision::collisionLayer layerToCollideWith = Collision::ALL, const sf::Uint8& alpahLimit = 0) const;
 
 		void RunInput(sf::Event event, sf::RenderWindow& window);
 

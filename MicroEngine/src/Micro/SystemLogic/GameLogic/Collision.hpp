@@ -26,7 +26,7 @@ namespace Micro {
         };
 
 
-        bool MICRO_API PixelPerfectCollision(const sf::Sprite& object1, const sf::Sprite& object2, sf::Uint8 alphaLimit = 0);
+        bool MICRO_API PixelPerfectCollision(const sf::Sprite& object1, const sf::Sprite& object2, float& angleOfCollision, sf::Uint8 alphaLimit = 0);
 
 
         bool MICRO_API CreateTextureAndBitmask(sf::Texture& loadInto, const std::string& filename);
