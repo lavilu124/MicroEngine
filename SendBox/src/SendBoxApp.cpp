@@ -8,25 +8,25 @@
 //	std::cout << "testing123";
 //}
 
-void test(Micro::Input::InputAction& in) {
-
-	auto obj = Micro::Application::Get().GetSystemManager()->GetObjectByName("Object 1");
-	auto pos = obj->GetPosition();
-	obj->SetPosition({pos.x, pos.y + 100});
-}
+//void test(Micro::Input::InputAction& in) {
+//
+//	auto obj = Micro::Application::Get().GetSystemManager()->GetObjectByName("Object 1");
+//	auto pos = obj->GetPosition();
+//	obj->SetPosition({pos.x, pos.y + 100});
+//}
 
 class App : public Micro::Application
 {
 public:
 	
-
+	
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene)
 	: Application(windowWidth, windowHeight, maxFPS, "new game") {
-		//m_systemManager.GetFileManager().AddButtonFunc("testing1", testing1);
 		m_systemManager.LoadScene("testingAngle");
 
 
-		m_systemManager.GetFileManager().AddInputFunc("test", test);
+
+		//m_systemManager.GetFileManager().AddInputFunc("test", test);
 
 	}
 

@@ -233,7 +233,9 @@ void SceneContent::RenderObjectList()
 
 	ImGui::Indent();
 	for (int i = 0; i < m_gameObjects.size(); i++) {
-		if (ImGui::Button(m_gameObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
+		const char* name;
+		(m_gameObjects[i].name.empty() ? name = "Unnamed Object" : name = m_gameObjects[i].name.c_str());
+		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
 			m_indexOfCurrentOb = i;
 			m_currentObName = m_gameObjects[i].name;
