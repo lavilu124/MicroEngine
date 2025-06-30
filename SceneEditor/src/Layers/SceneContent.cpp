@@ -294,7 +294,9 @@ void SceneContent::RenderLightList()
 
 	ImGui::Indent();
 	for (int i = 0; i < m_lightObjects.size(); i++) {
-		if (ImGui::Button(m_lightObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
+		const char* name;
+		(m_lightObjects[i].name.empty() ? name = "Unnamed Light" : name = m_lightObjects[i].name.c_str());
+		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_lightObjects[i], currentObjectType::light);
 			m_indexOfCurrentOb = i;
 		}
@@ -340,7 +342,9 @@ void SceneContent::RenderUiList() {
 
 	ImGui::Indent();
 	for (int i = 0; i < m_textObjects.size(); i++) {
-		if (ImGui::Button(m_textObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
+		const char* name;
+		(m_textObjects[i].name.empty() ? name = "Unnamed Text" : name = m_textObjects[i].name.c_str());
+		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_textObjects[i], currentObjectType::text);
 			m_indexOfCurrentOb = i;
 			m_currentObName = m_textObjects[i].name;
@@ -381,7 +385,9 @@ void SceneContent::RenderUiList() {
 
 	ImGui::Indent();
 	for (int i = 0; i < m_buttonObjects.size(); i++) {
-		if (ImGui::Button(m_buttonObjects[i].name.c_str(), ImVec2(windowSize.x - 20.0f, 30))) {
+		const char* name;
+		(m_buttonObjects[i].name.empty() ? name = "Unnamed Button" : name = m_buttonObjects[i].name.c_str());
+		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
 			m_viewer->SetObject(&m_buttonObjects[i], currentObjectType::button);
 			m_indexOfCurrentOb = i;
 			m_currentObName = m_buttonObjects[i].name;
