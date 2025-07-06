@@ -15,6 +15,10 @@ public:
 	void OnAttach() override;
 	bool* Open() { return &m_isOpen; }
 
+	bool DoneRun();
+
+	std::shared_ptr<SceneContent> sceneContent;
+
 private:
 	void Window();
 	void SaveWindow();
@@ -30,14 +34,14 @@ private:
 	void GenerateTextImage(TextObject& text);
 
 
-	void ExecutePlayCommand() const;
+	void ExecutePlayCommand();
 	
 	void RenderHeader(const ImVec2& contentRegion);
 
 	
-
+	
 private:
-	std::shared_ptr<SceneContent> m_sceneContent;
+	
 	sf::RenderTexture renderTexture;
 
 	std::shared_ptr<Walnut::Image> m_playButtonImage;
@@ -57,4 +61,7 @@ private:
 	ImVec2 m_lastMousePos = { 0.0f, 0.0f };
 
 	bool m_isOpen = true;
+
+
+	bool m_doneWithRun = false;
 };

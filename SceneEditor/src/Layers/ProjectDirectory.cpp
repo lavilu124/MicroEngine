@@ -189,7 +189,6 @@ void ProjectDirectory::Window()
 }
 
 
-
 int ProjectDirectory::ShowFoldersInDir(int columnIndex)
 {
     const float spacing = 12.0f;
