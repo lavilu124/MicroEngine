@@ -1,5 +1,5 @@
 #include "ProjectSelector.h"
-#include "SceneViewer.h"
+#include "Console.h"
 #include "InputManager.h"
 #include "Menu.h"
 
@@ -134,19 +134,25 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
     std::shared_ptr<InputManager> inputM = std::make_shared<InputManager>(path + "\\Resources\\settings\\input.cfg");
     app->PushLayer(inputM);
 
+	std::shared_ptr<Console> console = std::make_shared<Console>(sceneViewer);
+	app->PushLayer(console);
+
+
     std::weak_ptr<Menu> weakMenu = menu;
 	std::weak_ptr<SceneContent> weakSceneContent = sceneContent;
 	std::weak_ptr<InputManager> weakInputM = inputM;
 	std::weak_ptr<ProjectDirectory> weakDir = dir;
 	std::weak_ptr<ObjectViewer> weakViewer = viewer;
 	std::weak_ptr<SceneViewer> weakSceneViewer = sceneViewer;
-    app->SetMenubarCallback([app, weakMenu, weakSceneContent, weakInputM, weakDir, weakViewer, weakSceneViewer]()
+	std::weak_ptr<Console> weakConsole = console;
+    app->SetMenubarCallback([app, weakMenu, weakSceneContent, weakInputM, weakDir, weakViewer, weakSceneViewer, weakConsole]()
         {
             auto dir = weakDir.lock();
             auto viewer = weakViewer.lock();
             auto sceneViewer = weakSceneViewer.lock();
             auto inputM = weakInputM.lock();
             auto sceneContent = weakSceneContent.lock();
+			auto console = weakConsole.lock();
 
             static bool openCreatePorject = false;
 
@@ -259,6 +265,7 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
                 ImGui::MenuItem("Project Directory", nullptr, dir->Open());
                 ImGui::MenuItem("Object Viewer", nullptr, viewer->Open());
                 ImGui::MenuItem("Scene Viewer", nullptr, sceneViewer->Open());
+				ImGui::MenuItem("Console", nullptr, console->Open());
                 ImGui::EndMenu();
             }
 

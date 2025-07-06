@@ -3,7 +3,7 @@
 
 #include "../fileManage/FileManage.h"
 
-SceneViewer::SceneViewer(const std::shared_ptr<SceneContent>& sceneContent, const char* mainPath) : m_sceneContent(sceneContent), m_mainPath(mainPath)
+SceneViewer::SceneViewer(const std::shared_ptr<SceneContent>& sceneContent, const char* mainPath) : sceneContent(sceneContent), m_mainPath(mainPath)
 {
 }
 
@@ -47,12 +47,12 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     ImGui::SetCursorPos({ 0.0f, 0.0f });
     if (ImGui::ImageButton(m_saveButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight )))
     {
-        if (m_sceneContent->GetCurrentScene().empty()) {
+        if (sceneContent->GetCurrentScene().empty()) {
             //open save window
             m_saving = true;
         }
         else {
-            FileManage::SaveScene(m_sceneContent->GetCurrentScene(), m_sceneContent.get());
+            FileManage::SaveScene(sceneContent->GetCurrentScene(), sceneContent.get());
         }
     }
     if (ImGui::IsItemHovered()) {
@@ -81,7 +81,8 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     style.WindowBorderSize = originalBorderSize;
 }
 
-void SceneViewer::ExecutePlayCommand() const {
+void SceneViewer::ExecutePlayCommand()
+{
     std::string command = m_mainPath;
     
 
@@ -115,6 +116,8 @@ void SceneViewer::ExecutePlayCommand() const {
 
 
         system("Game.exe");
+
+        m_doneWithRun = true;
     }
     else if (std::filesystem::exists(command2)) {
         std::string workingDir = command2.substr(0, command2.find_last_of('\\'));
@@ -135,6 +138,19 @@ void SceneViewer::ExecutePlayCommand() const {
     }
 
     std::filesystem::current_path(originalPath);
+
+
+}
+
+bool SceneViewer::DoneRun()
+{
+    if (m_doneWithRun)
+    {
+        m_doneWithRun = false;
+		return  true;
+    }
+
+	return false;
 }
 
 void SceneViewer::Window()
@@ -143,11 +159,11 @@ void SceneViewer::Window()
     ImGuiIO& io = ImGui::GetIO();
     if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_S))
     {
-        if (m_sceneContent->GetCurrentScene().empty()) {
+        if (sceneContent->GetCurrentScene().empty()) {
             m_saving = true; // open save dialog
         }
         else {
-            FileManage::SaveScene(m_sceneContent->GetCurrentScene(), m_sceneContent.get());
+            FileManage::SaveScene(sceneContent->GetCurrentScene(), sceneContent.get());
         }
     }
 
@@ -228,7 +244,7 @@ void SceneViewer::SaveWindow()
     {
 
         std::string fullPath = m_mainPath + "\\Scenes\\" + m_saveName + ".McScene";
-        FileManage::SaveScene(fullPath, m_sceneContent.get());
+        FileManage::SaveScene(fullPath, sceneContent.get());
 
         m_doneSaving = true;
     }
@@ -255,7 +271,7 @@ void SceneViewer::RenderGameObjects(ImVec2 contentRegion) const
 
     ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
 
-    for (auto& gameObject : m_sceneContent->GetGameObjects()) {
+    for (auto& gameObject : sceneContent->GetGameObjects()) {
         if (gameObject.sprite && gameObject.isVisable) {
             sf::Vector2f scaledPos = sf::Vector2f(gameObject.position.x * m_zoom, gameObject.position.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
             ImVec2 position = ImVec2(drawOrigin.x + scaledPos.x + contentRegion.x / 2, drawOrigin.y + scaledPos.y + contentRegion.y / 2);
@@ -281,7 +297,7 @@ void SceneViewer::RenderLights(ImVec2 contentRegion)
 
     ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
 
-    for (auto& light : m_sceneContent->GetLights()) {
+    for (auto& light : sceneContent->GetLights()) {
         if (!light.isVisable)
             continue;
 
@@ -317,7 +333,7 @@ void SceneViewer::renderTexts(ImVec2 contentRegion) {
 
     ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
 
-    for (auto& text : m_sceneContent->GetTexts()) {
+    for (auto& text : sceneContent->GetTexts()) {
         if (!text.isVisable)
             continue;
 
@@ -352,7 +368,7 @@ void SceneViewer::renderButtons(ImVec2 contentRegion) const
 
     ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
 
-    for (auto& button : m_sceneContent->GetButtons()) {
+    for (auto& button : sceneContent->GetButtons()) {
         if (button.image && button.isVisable) {
             sf::Vector2f scaledPos = sf::Vector2f(button.position.x * m_zoom, button.position.y * m_zoom) + m_offset;
             ImVec2 position = ImVec2(drawOrigin.x + scaledPos.x + contentRegion.x / 2, drawOrigin.y + scaledPos.y + contentRegion.y / 2);
