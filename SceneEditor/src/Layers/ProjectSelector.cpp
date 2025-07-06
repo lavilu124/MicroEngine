@@ -109,6 +109,9 @@ static void SaveRecentProject(const std::string& path)
         out << p << '\n';
 }
 
+
+static void OpenPoroject(const std::string& path, const std::vector<std::shared_ptr<Walnut::Layer>>& layers);
+
 static void InitMainLayers(Walnut::Application* app, const std::string& path)
 {
     std::shared_ptr<ProjectDirectory> dir = std::make_shared<ProjectDirectory>(path + "\\Resources");
@@ -139,6 +142,126 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
 	std::weak_ptr<SceneViewer> weakSceneViewer = sceneViewer;
     app->SetMenubarCallback([app, weakMenu, weakSceneContent, weakInputM, weakDir, weakViewer, weakSceneViewer]()
         {
+            auto dir = weakDir.lock();
+            auto viewer = weakViewer.lock();
+            auto sceneViewer = weakSceneViewer.lock();
+            auto inputM = weakInputM.lock();
+            auto sceneContent = weakSceneContent.lock();
+
+            static bool openCreatePorject = false;
+
+
+            bool newPorject = false;
+            if (ImGui::BeginMenu("file"))
+            {
+	            if (ImGui::MenuItem("New Project"))
+	            {
+                  openCreatePorject = true;
+	            }
+                if (ImGui::MenuItem("Open Project"))
+                {
+                    const char* selectedFolder = tinyfd_selectFolderDialog("Select Project Folder", "");
+                    if (selectedFolder)
+                    {
+                        std::string path = selectedFolder;
+                        if (std::filesystem::exists(path + "\\Resources"))
+                        {
+                            OpenPoroject(path, {dir, viewer, sceneViewer, inputM, sceneContent});
+                            newPorject = true;
+                        }
+                        else
+                        {
+                            ImGui::OpenPopup("Wrong File");
+                        }
+                    }
+                }
+                if (ImGui::MenuItem("Exit"))
+                {
+                    app->Close();
+                }
+
+                ImGui::EndMenu();
+            }
+            if (newPorject) return;
+			if (openCreatePorject)
+                ImGui::OpenPopup("Create New Project");
+
+            if (ImGui::BeginPopupModal("Create New Project", NULL, ImGuiWindowFlags_NoResize))
+            {
+
+                static char basePathBuffer[512] = {};
+				static char projectNameBuffer[256] = {};
+                std::string errorMsg;
+
+                std::string createProjectPath;
+				std::string createProjectName;
+
+                ImGui::Text("Select base folder:");
+                ImGui::SameLine();
+                if (ImGui::Button("Browse..."))
+                {
+                    const char* folder = tinyfd_selectFolderDialog("Select Base Folder", "");
+                    if (folder)
+                    {
+                        strncpy(basePathBuffer, folder, sizeof(basePathBuffer) - 1);
+                        createProjectPath = folder;
+                    }
+                }
+                ImGui::InputText("Base Path", basePathBuffer, sizeof(basePathBuffer));
+                ImGui::InputText("Project Name", projectNameBuffer, sizeof(projectNameBuffer));
+
+                if (ImGui::Button("Create"))
+                {
+                    createProjectPath = basePathBuffer;
+                    createProjectName = projectNameBuffer;
+
+                    if (!createProjectPath.empty() && !createProjectName.empty())
+                    {
+                        bool success = CreateNewProjectStructure(createProjectPath, createProjectName);
+                        if (success)
+                        {
+							OpenPoroject(createProjectPath + "\\" + createProjectName, { dir, viewer, sceneViewer, inputM, sceneContent });
+							SaveRecentProject(createProjectPath + "\\" + createProjectName);
+                            ImGui::CloseCurrentPopup();
+                            openCreatePorject = false;
+                            newPorject = true;
+                        }
+                    	else errorMsg = "Failed to create project (folder may already exist).";
+                    }
+                    else errorMsg = "Please specify both base path and project name.";
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button("Cancel"))
+                {
+                    ImGui::CloseCurrentPopup();
+                    errorMsg.clear();
+                    openCreatePorject = false;
+                }
+
+                if (!errorMsg.empty())
+                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "%s", errorMsg.c_str());
+
+                ImGui::EndPopup();
+
+                if (!ImGui::IsPopupOpen("Create New Project"))
+                    openCreatePorject = false;
+            }
+            if (newPorject) return;
+
+    		
+            if (ImGui::BeginMenu("View"))
+            {
+                /*ImGui::MenuItem("Content Browser", nullptr, &m_showContentBrowser);
+                ImGui::MenuItem("Scene Hierarchy", nullptr, &m_showSceneHierarchy);*/
+                ImGui::MenuItem("Scene Content", nullptr, sceneContent->Open());
+                ImGui::MenuItem("Input Manager", nullptr, inputM->Open());
+                ImGui::MenuItem("Project Directory", nullptr, dir->Open());
+                ImGui::MenuItem("Object Viewer", nullptr, viewer->Open());
+                ImGui::MenuItem("Scene Viewer", nullptr, sceneViewer->Open());
+                ImGui::EndMenu();
+            }
+
             auto menu = weakMenu.lock();
             if (ImGui::BeginMenu("Custom Object") && menu)
             {
@@ -149,25 +272,38 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
 
                 ImGui::EndMenu();
             }
-
-            auto dir = weakDir.lock();
-            auto viewer = weakViewer.lock();
-            auto sceneViewer = weakSceneViewer.lock();
-            auto inputM = weakInputM.lock();
-			auto sceneContent = weakSceneContent.lock();
-        	if (ImGui::BeginMenu("View"))
-        	{
-                /*ImGui::MenuItem("Content Browser", nullptr, &m_showContentBrowser);
-                ImGui::MenuItem("Scene Hierarchy", nullptr, &m_showSceneHierarchy);*/
-                ImGui::MenuItem("Scene Content", nullptr, sceneContent->Open());
-				ImGui::MenuItem("Input Manager", nullptr, inputM->Open());
-				ImGui::MenuItem("Project Directory", nullptr, dir->Open());
-				ImGui::MenuItem("Object Viewer", nullptr, viewer->Open());
-				ImGui::MenuItem("Scene Viewer", nullptr, sceneViewer->Open());
-                ImGui::EndMenu();
-        	}
+			
         });
 
+}
+
+static void OpenPoroject(const std::string& path, const std::vector<std::shared_ptr<Walnut::Layer>>& layers)
+{
+    if (!std::filesystem::exists(path + "\\Resources"))
+        return;
+
+
+    for (auto& layer : layers)
+    {
+        layer->OnDetach();
+        Walnut::Application::Get().PopLayer(layer);
+    }
+
+    InitMainLayers(&Walnut::Application::Get(), path);
+
+    // Resize and center window
+    GLFWwindow* window = static_cast<GLFWwindow*>(Walnut::Application::Get().GetWindowHandle());
+    int newWidth = 1280, newHeight = 720;
+    glfwSetWindowSize(window, newWidth, newHeight);
+
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    if (mode)
+    {
+        int xpos = (mode->width - newWidth) / 2;
+        int ypos = (mode->height - newHeight) / 2;
+        glfwSetWindowPos(window, xpos, ypos);
+    }
 }
 
 void ProjectSelector::OnUIRender()
@@ -216,11 +352,7 @@ void ProjectSelector::OnUIRender()
         ImGui::SameLine();
         if (ImGui::Button("Create New Project"))
         {
-            m_createProjectPath.clear();
-            m_createProjectName.clear();
-            memset(m_basePathBuffer, 0, sizeof(m_basePathBuffer));
-            memset(m_projectNameBuffer, 0, sizeof(m_projectNameBuffer));
-            ImGui::OpenPopup("Create New Project");
+            CreatePorject();
         }
 
         ImGui::Separator();
@@ -344,4 +476,13 @@ void ProjectSelector::OnUIRender()
             glfwSetWindowPos(window, xpos, ypos);
         }
     }
+}
+
+void ProjectSelector::CreatePorject()
+{
+    m_createProjectPath.clear();
+    m_createProjectName.clear();
+    memset(m_basePathBuffer, 0, sizeof(m_basePathBuffer));
+    memset(m_projectNameBuffer, 0, sizeof(m_projectNameBuffer));
+    ImGui::OpenPopup("Create New Project");
 }
