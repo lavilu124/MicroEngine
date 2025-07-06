@@ -28,7 +28,7 @@ public:
 
 	int ShowMapsInDir(int columnIndex = 0);
 
-	int ShowSoundsInDir(int columnIndex = 0);
+	int ShowFiles(int columnIndex = 0);
 
 	std::string GetNewScene();
 
@@ -60,7 +60,6 @@ private:
 	std::vector<std::pair<std::shared_ptr<Walnut::Image>, std::filesystem::path>> m_images;
 	std::vector < std::filesystem::path > m_folders;
 	std::vector < std::filesystem::path > m_maps;
-	std::vector < std::filesystem::path > m_sounds;
 
 	int itemsPerRow = 10;
 
@@ -71,6 +70,8 @@ private:
 	std::shared_ptr<Walnut::Image> m_reloadIcon;
 	std::shared_ptr<Walnut::Image> m_returnIcon;
 	std::shared_ptr<Walnut::Image> m_soundIcon;
+	std::shared_ptr<Walnut::Image> m_fontIcon;
+	std::shared_ptr<Walnut::Image> m_fileIcon;
 
 
 	std::string m_newScene;

@@ -28,7 +28,8 @@ void ProjectDirectory::OnAttach()
     m_reloadIcon = std::make_shared<Walnut::Image>("appGui\\reloadIcon.png");
     m_returnIcon = std::make_shared<Walnut::Image>("appGui\\returnIcon.png");
     m_soundIcon = std::make_shared<Walnut::Image>("appGui\\soundIcon.png");
-
+	m_fontIcon = std::make_shared<Walnut::Image>("appGui\\fontIcon.png");
+    m_fileIcon = std::make_shared<Walnut::Image>("appGui\\fileIcon.png");
 }
 
 void ProjectDirectory::SetCurrentPath(const std::string& path)
@@ -45,7 +46,6 @@ void ProjectDirectory::SetCurrentPath(const std::string& path)
     m_images.clear();
     m_folders.clear();
     m_maps.clear();
-    m_sounds.clear();
 
 
     for (const auto& entry : std::filesystem::directory_iterator(m_currentPath)) {
@@ -62,11 +62,6 @@ void ProjectDirectory::HandleFile(const std::filesystem::directory_entry& entry)
         for (auto folder : m_folders)
             if (folder == entry) return;
         m_folders.push_back(entry);
-    }
-    else if (entry.path().extension() == ".ogg" || entry.path().extension() == ".wav" || entry.path().extension() == ".mp3") {
-        for (auto sound : m_sounds)
-            if (sound == entry) return;
-        m_sounds.push_back(entry);
     }
     else if (entry.path().extension() == ".png" || entry.path().extension() == ".jpg" || entry.path().extension() == ".jpeg") {
         for (auto img : m_images)
@@ -183,7 +178,7 @@ void ProjectDirectory::Window()
         columnIndex = ShowFoldersInDir(columnIndex);
         columnIndex = ShowImagesInDir(columnIndex);
         columnIndex = ShowMapsInDir(columnIndex);
-        ShowSoundsInDir(columnIndex);
+        ShowFiles(columnIndex);
 
 
     }
@@ -543,7 +538,7 @@ int ProjectDirectory::ShowMapsInDir(int columnIndex)
 }
 
 
-int ProjectDirectory::ShowSoundsInDir(int columnIndex)
+int ProjectDirectory::ShowFiles(int columnIndex)
 {
     const float spacing = 10.0f;
     const float boxPadding = 5.0f;
@@ -552,22 +547,27 @@ int ProjectDirectory::ShowSoundsInDir(int columnIndex)
     const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
 
     bool deleted = false;
-    for (const auto& soundPath : m_sounds)
+    for (const auto& entry : std::filesystem::directory_iterator(m_currentPath))
     {
+        if (entry.path().extension() == ".png" || entry.path().extension() == ".jpg" || entry.path().extension() == ".jpeg" || entry.path().extension() == ".McScene" || entry.is_directory())
+        {
+            continue;
+        }
+
         if (columnIndex >= imagesPerRow)
         {
             columnIndex = 0;
             ImGui::NewLine();
         }
 
-        bool isSelected = (m_selectedItemPath == soundPath);
+        bool isSelected = (m_selectedItemPath == entry.path());
         if (isSelected) {
             ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.26f, 0.59f, 0.98f, 0.25f)); // Unity-blue glow
             ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
             ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
         }
 
-        ImGui::BeginChild(soundPath.filename().string().c_str(), ImVec2(thumbnailSize + 2 * boxPadding, thumbnailSize + 30.0f), false, ImGuiWindowFlags_NoScrollbar);
+        ImGui::BeginChild(entry.path().filename().string().c_str(), ImVec2(thumbnailSize + 2 * boxPadding, thumbnailSize + 30.0f), false, ImGuiWindowFlags_NoScrollbar);
         {
             ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetStyle().Colors[ImGuiCol_HeaderActive]);
             ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
@@ -575,40 +575,51 @@ int ProjectDirectory::ShowSoundsInDir(int columnIndex)
             ImVec2 iconSize(thumbnailSize, thumbnailSize / 1.25f);
             ImVec2 cursorPos = ImGui::GetCursorPos();
             ImGui::SetCursorPosX((thumbnailSize + 2 * boxPadding - iconSize.x) * 0.5f + cursorPos.x);
-            ImGui::Image(m_soundIcon->GetDescriptorSet(), iconSize);
+            if (entry.path().extension() == ".ogg" || entry.path().extension() == ".wav" || entry.path().extension() == ".mp3")
+            {
+                ImGui::Image(m_soundIcon->GetDescriptorSet(), iconSize);
+            }else if (entry.path().extension() == ".ttf")
+            {
+            	ImGui::Image(m_fontIcon->GetDescriptorSet(), iconSize);
+            }else
+            {
+
+				ImGui::Image(m_fileIcon->GetDescriptorSet(), iconSize);
+            }
+            
 
             if (ImGui::IsItemClicked())
             {
-                m_selectedItemPath = soundPath;
+                m_selectedItemPath = entry.path();
             }
 
             if (ImGui::BeginPopupContextItem("SoundContext"))
             {
                 if (ImGui::MenuItem("Delete"))
                 {
-                    if (TryDeleteEntry(soundPath))
+                    if (TryDeleteEntry(entry.path()))
                         deleted = true;
                 }
 
                 if (ImGui::MenuItem("Rename")) {
-                    m_renameTargetPath = soundPath;
-                    m_renameBuffer = soundPath.filename().string();
+                    m_renameTargetPath = entry.path();
+                    m_renameBuffer = entry.path().filename().string();
                     ImGui::CloseCurrentPopup();
                 }
 
                 ImGui::EndPopup();
             }
 
-            if (soundPath == m_renameTargetPath) {
+            if (entry.path() == m_renameTargetPath) {
                 ImGui::PushItemWidth(thumbnailSize + boxPadding * 2);
                 char buffer[256];
                 strcpy(buffer, m_renameBuffer.c_str());
 
                 if (ImGui::InputText("##Rename", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
-                    std::filesystem::path newPath = soundPath.parent_path() / buffer;
+                    std::filesystem::path newPath = entry.path().parent_path() / buffer;
 
                     if (!std::filesystem::exists(newPath)) {
-                        std::filesystem::rename(soundPath, newPath);
+                        std::filesystem::rename(entry.path(), newPath);
                         SetCurrentPath(m_currentPath);
                     }
 
@@ -625,7 +636,7 @@ int ProjectDirectory::ShowSoundsInDir(int columnIndex)
                 ImGui::PopItemWidth();
             }
             else {
-                std::string name = soundPath.filename().string();
+                std::string name = entry.path().filename().string();
                 ImVec2 textSize = ImGui::CalcTextSize(name.c_str());
                 ImGui::SetCursorPosX((thumbnailSize + 2 * boxPadding - textSize.x) * 0.5f + cursorPos.x);
                 ImGui::TextWrapped(name.c_str());
@@ -643,6 +654,7 @@ int ProjectDirectory::ShowSoundsInDir(int columnIndex)
 
         ImGui::SameLine();
         columnIndex++;
+        
     }
 
     if (deleted)
