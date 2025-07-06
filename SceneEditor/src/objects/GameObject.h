@@ -17,6 +17,8 @@ public:
 	bool IsLevelChanged();
 
 	void SetPath(std::string newPath);
+
+	std::string GetPath() const { return m_path; }
 private:
 	std::string m_path;
 
