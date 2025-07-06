@@ -29,8 +29,8 @@ void SceneViewer::OnUIRender()
 }
 
 void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
-    constexpr float buttonWidth = 25.0f;
-    constexpr float buttonHeight = 25.0f;
+    constexpr float buttonWidth = 16.7f;
+    constexpr float buttonHeight = 16.7f;
 
     ImVec2 buttonPos((contentRegion.x - buttonWidth) / 2.0f, 0.0f);
 
@@ -42,12 +42,12 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     style.Colors[ImGuiCol_Border] = ImVec4(0, 0, 0, 0);
     style.WindowBorderSize = 0.0f;
 
-    ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight * 1.4));
+    ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight * 1.75));
 
     ImGui::SetCursorPos({ 0.0f, 0.0f });
-    if (ImGui::ImageButton(m_saveButtonImage->GetDescriptorSet(), ImVec2(buttonWidth * 0.8, buttonHeight * 0.8)))
+    if (ImGui::ImageButton(m_saveButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight )))
     {
-        if (m_sceneContent->GetCurrentScene() == "") {
+        if (m_sceneContent->GetCurrentScene().empty()) {
             //open save window
             m_saving = true;
         }
@@ -61,9 +61,10 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
         ImGui::Text("%s", "Save");
         ImGui::EndTooltip();
     }
+    
 
     ImGui::SetCursorPos(buttonPos);
-    if (ImGui::ImageButton(m_playButtonImage->GetDescriptorSet(), ImVec2(buttonWidth * 0.8, buttonHeight * 0.8)))
+    if (ImGui::ImageButton(m_playButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight)))
         ExecutePlayCommand();
 
     if (ImGui::IsItemHovered()) {
@@ -88,8 +89,9 @@ void SceneViewer::ExecutePlayCommand() const {
         command = command.substr(0, command.find_last_of('\\'));
     std::string command2 = command;
 
-    command += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
-    command2 += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
+    command += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
+    command2 += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
+    
     
     
 
@@ -137,16 +139,27 @@ void SceneViewer::ExecutePlayCommand() const {
 
 void SceneViewer::Window()
 {
-    ImGui::Begin("Scene Viewer", nullptr, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
+	if (!m_isOpen) return;
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_S))
+    {
+        if (m_sceneContent->GetCurrentScene().empty()) {
+            m_saving = true; // open save dialog
+        }
+        else {
+            FileManage::SaveScene(m_sceneContent->GetCurrentScene(), m_sceneContent.get());
+        }
+    }
+
+    ImGui::Begin("Scene Viewer", &m_isOpen, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
     if (m_saving)
         SaveWindow();
 
-    ImGuiIO& io = ImGui::GetIO();
     ImVec2 mousePos = io.MousePos;
-    ImVec2 windowPos = ImGui::GetWindowPos();
     ImVec2 cursorPos = ImGui::GetCursorScreenPos();
     ImVec2 relativeMousePos = { mousePos.x - cursorPos.x, mousePos.y - cursorPos.y };
 
+    ImVec2 contentRegion = ImGui::GetContentRegionAvail();
     // Zoom (scroll wheel)
     if (ImGui::IsWindowHovered() && io.MouseWheel != 0.0f)
     {
@@ -154,9 +167,12 @@ void SceneViewer::Window()
         float oldZoom = m_zoom;
         m_zoom *= (io.MouseWheel > 0) ? zoomFactor : (1.0f / zoomFactor);
 
-        // Zoom towards mouse position
-        m_offset.x -= (relativeMousePos.x - m_offset.x) * (1.0f - m_zoom / oldZoom);
-        m_offset.y -= (relativeMousePos.y - m_offset.y) * (1.0f - m_zoom / oldZoom);
+        // Mouse position relative to the scene center
+        ImVec2 sceneCenter = ImVec2(contentRegion.x / 2.0f, contentRegion.y / 2.0f);
+        ImVec2 focusPoint = ImVec2(relativeMousePos.x - sceneCenter.x, relativeMousePos.y - sceneCenter.y);
+
+        m_offset.x -= focusPoint.x * (1.0f - m_zoom / oldZoom);
+        m_offset.y -= focusPoint.y * (1.0f - m_zoom / oldZoom);
     }
 
     // Panning (mouse drag)
@@ -167,8 +183,9 @@ void SceneViewer::Window()
         m_offset.y += delta.y;
     }
 
-    ImVec2 contentRegion = ImGui::GetContentRegionAvail();
+    
     RenderHeader(contentRegion);
+    
     ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetCursorScreenPos(), ImVec2(ImGui::GetCursorScreenPos().x + contentRegion.x, ImGui::GetCursorScreenPos().y + contentRegion.y), IM_COL32(0, 0, 0, 255));
 
     auto pos = ImGui::GetCursorScreenPos();
@@ -192,27 +209,10 @@ void SceneViewer::SaveWindow()
     ImGui::Begin("Save");
     ImGui::Text("Save Scene");
 
-    static bool initialized = false;
-    static char pathBuffer[1024];
+
     static char fileNameBuffer[128];
 
-    if (!initialized)
-    {
-        strcpy_s(pathBuffer, sizeof(pathBuffer), m_mainPath.c_str());
-        std::string fileName = m_savePath.substr(m_savePath.find_last_of('\\') + 1);
-        strcpy_s(fileNameBuffer, sizeof(fileNameBuffer), fileName.c_str());
-        initialized = true;
-    }
-
-    ImGui::Text("Path:");
     ImGui::Indent();
-
-    if (ImGui::InputText("##Path", pathBuffer, sizeof(pathBuffer)))
-    {
-        m_savePath = pathBuffer;
-    }
-
-    ImGui::Unindent();
 
     ImGui::Text("File Name:");
     ImGui::Indent();
@@ -226,10 +226,8 @@ void SceneViewer::SaveWindow()
 
     if (ImGui::Button("Save"))
     {
-        if (m_savePath.empty())
-            m_savePath = m_mainPath;
 
-        std::string fullPath = m_savePath + "\\" + m_saveName + ".McScene";
+        std::string fullPath = m_mainPath + "\\Scenes\\" + m_saveName + ".McScene";
         FileManage::SaveScene(fullPath, m_sceneContent.get());
 
         m_doneSaving = true;
@@ -241,7 +239,6 @@ void SceneViewer::SaveWindow()
     {
         m_saving = false;
         m_doneSaving = false;
-        initialized = false; // Reset buffer on close
         ImGui::End();
         return;
     }

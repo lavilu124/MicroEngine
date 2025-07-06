@@ -132,7 +132,12 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
     app->PushLayer(inputM);
 
     std::weak_ptr<Menu> weakMenu = menu;
-    app->SetMenubarCallback([app, weakMenu]()
+	std::weak_ptr<SceneContent> weakSceneContent = sceneContent;
+	std::weak_ptr<InputManager> weakInputM = inputM;
+	std::weak_ptr<ProjectDirectory> weakDir = dir;
+	std::weak_ptr<ObjectViewer> weakViewer = viewer;
+	std::weak_ptr<SceneViewer> weakSceneViewer = sceneViewer;
+    app->SetMenubarCallback([app, weakMenu, weakSceneContent, weakInputM, weakDir, weakViewer, weakSceneViewer]()
         {
             auto menu = weakMenu.lock();
             if (ImGui::BeginMenu("Custom Object") && menu)
@@ -144,6 +149,23 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
 
                 ImGui::EndMenu();
             }
+
+            auto dir = weakDir.lock();
+            auto viewer = weakViewer.lock();
+            auto sceneViewer = weakSceneViewer.lock();
+            auto inputM = weakInputM.lock();
+			auto sceneContent = weakSceneContent.lock();
+        	if (ImGui::BeginMenu("View"))
+        	{
+                /*ImGui::MenuItem("Content Browser", nullptr, &m_showContentBrowser);
+                ImGui::MenuItem("Scene Hierarchy", nullptr, &m_showSceneHierarchy);*/
+                ImGui::MenuItem("Scene Content", nullptr, sceneContent->Open());
+				ImGui::MenuItem("Input Manager", nullptr, inputM->Open());
+				ImGui::MenuItem("Project Directory", nullptr, dir->Open());
+				ImGui::MenuItem("Object Viewer", nullptr, viewer->Open());
+				ImGui::MenuItem("Scene Viewer", nullptr, sceneViewer->Open());
+                ImGui::EndMenu();
+        	}
         });
 
 }
@@ -154,14 +176,14 @@ void ProjectSelector::OnUIRender()
 
     if (m_state == AppState::ProjectSelection)
     {
-        ImGui::SetNextWindowSize(ImVec2(SELECTOR_WIDTH, SELECTOR_HEIGHT), ImGuiCond_Always);
+
+        ImGui::SetNextWindowSize(ImVec2(SELECTOR_WIDTH, SELECTOR_HEIGHT), ImGuiCond_FirstUseEver);
         ImGui::Begin("Select Project", nullptr,
-            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
+            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar  | ImGuiWindowFlags_NoResize);
+
 
         ImGui::Text("Choose a project directory:");
         ImGui::Separator();
-
 
         if (ImGui::Button("Open Project..."))
         {

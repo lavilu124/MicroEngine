@@ -1,4 +1,4 @@
-#include "ApplicationGUI.h"
+﻿#include "ApplicationGUI.h"
 
 #include "Walnut/UI/UI.h"
 #include "Walnut/Core/Log.h"

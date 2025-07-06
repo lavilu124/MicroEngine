@@ -11,6 +11,7 @@ public:
 	~ProjectDirectory();
 
 	void OnUIRender() override;
+	
 
 	void OnAttach() override;
 
@@ -19,7 +20,9 @@ public:
 
 	void ClearSelectedPath();
 
-	int ShowFoldersInDir();
+	void MoveDir(std::filesystem::path path);
+
+	int ShowFoldersInDir(int columnIndex = 0);
 
 	int ShowImagesInDir(int columnIndex = 0);
 
@@ -27,25 +30,33 @@ public:
 
 	int ShowSoundsInDir(int columnIndex = 0);
 
-	std::string getNewScene();
+	std::string GetNewScene();
 
 
-	std::string getMainPath() const;
+	std::string GetMainPath() const;
 
 	static void UploadFile(const std::string& path);
+	
 	void HandleFile(const std::filesystem::directory_entry& entry);
+
+	bool* Open() { return &m_isOpen; }
 private:
 	void Window();
 
 	void SetCurrentPath(const std::string& path);
 
 	static bool TryDeleteEntry(const std::filesystem::path& path);
+	void DrawFolderHierarchy(const std::filesystem::path& path, bool released);
+
+	void CreateNewFolder();
 
 private:
+	//relevant paths
 	std::string m_mainPath;
 	std::string m_currentPath;
 	std::string m_selectedPath;
 
+	//items in dir
 	std::vector<std::pair<std::shared_ptr<Walnut::Image>, std::filesystem::path>> m_images;
 	std::vector < std::filesystem::path > m_folders;
 	std::vector < std::filesystem::path > m_maps;
@@ -53,6 +64,8 @@ private:
 
 	int itemsPerRow = 10;
 
+
+	//icons
 	std::shared_ptr<Walnut::Image> m_folderIcon;
 	std::shared_ptr<Walnut::Image> m_mapIcon;
 	std::shared_ptr<Walnut::Image> m_reloadIcon;
@@ -64,4 +77,13 @@ private:
 
 	static std::string m_copyPaths[30];
 	static int m_copySize;
+
+	std::filesystem::path m_selectedItemPath;
+
+	bool m_isOpen = true;
+
+	//rename vars
+	std::filesystem::path m_renameTargetPath;
+	std::string m_renameBuffer;
+	bool m_renamePopupOpen = false;
 };

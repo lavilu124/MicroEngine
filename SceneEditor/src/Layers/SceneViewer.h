@@ -13,6 +13,7 @@ public:
 	void OnUIRender() override;
 
 	void OnAttach() override;
+	bool* Open() { return &m_isOpen; }
 
 private:
 	void Window();
@@ -32,6 +33,8 @@ private:
 	void ExecutePlayCommand() const;
 	
 	void RenderHeader(const ImVec2& contentRegion);
+
+	
 
 private:
 	std::shared_ptr<SceneContent> m_sceneContent;
@@ -53,5 +56,5 @@ private:
 	bool m_dragging = false;
 	ImVec2 m_lastMousePos = { 0.0f, 0.0f };
 
-
+	bool m_isOpen = true;
 };

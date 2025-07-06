@@ -64,7 +64,9 @@ void InputManager::SaveInputs() const
 }
 
 void InputManager::OnUIRender() {
-    ImGui::Begin("Input Manager");
+	if (!m_isOpen) return;
+    
+    ImGui::Begin("Input Manager", &m_isOpen);
 
     // Left panel: Input list and Add button
     ImGui::BeginChild("List", ImVec2(200, 0), true);
@@ -99,7 +101,7 @@ void InputManager::OnUIRender() {
             def.type = typeOptions[currentTypeIndex];
         }
 
-        
+
         if (def.type != "ControllerKey" && def.type != "JoystickMove") {
             ImGui::Text("Key: %s", def.key.c_str());
             ImGui::SameLine();
@@ -123,7 +125,7 @@ void InputManager::OnUIRender() {
                         if (ImGuiToSFMLKeyMap.find((ImGuiKey)key) != ImGuiToSFMLKeyMap.end())
                         {
                             // Key exists in the map
-                            int sfKey = (int) ImGuiToSFMLKeyMap.at((ImGuiKey)key);
+                            int sfKey = (int)ImGuiToSFMLKeyMap.at((ImGuiKey)key);
                             def.type = "KeyboardKey";
                             def.key = std::to_string(sfKey);
                             m_listeningForKey = false;
@@ -156,7 +158,7 @@ void InputManager::OnUIRender() {
 
             }
         }
-        else if (def.type == "ControllerKey"){
+        else if (def.type == "ControllerKey") {
             ImGui::Text("Key: %s", def.key.c_str());
             ImGui::SameLine();
             // List of controller keys (example keys, modify as needed)
@@ -211,7 +213,7 @@ void InputManager::OnUIRender() {
 
         // Part dropdown
         static const char* partOptions[] = { "started", "Pressed", "released" };
-        int currentPartIndex = 1; 
+        int currentPartIndex = 1;
         for (int i = 0; i < IM_ARRAYSIZE(partOptions); ++i) {
             if (def.part == partOptions[i]) {
                 currentPartIndex = i;
