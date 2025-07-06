@@ -19,6 +19,8 @@ public:
     void OnUIRender() override;
     void OnAttach() override;
 
+	bool* Open() { return &m_isOpen; }
+
 private:
     std::string m_path;
     std::vector<InputDefinition> m_inputs;
@@ -30,5 +32,7 @@ private:
 
     void SaveInputs() const;
     void LoadInputs();
+
+    bool m_isOpen = true;
 };
 

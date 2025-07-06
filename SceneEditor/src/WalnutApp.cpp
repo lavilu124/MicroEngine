@@ -5,13 +5,19 @@
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 {
-    Walnut::ApplicationSpecification spec;
+    ApplicationSpecification spec;
     spec.Name = "Micro Engine";
     spec.CustomTitlebar = true;
-    
+	spec.Height = 600;
+	spec.Width = 800;
 
-    Walnut::Application* app = new Walnut::Application(spec);
+
+	//set to icon path
+    spec.IconPath = "appGUI\\playIcon.png";
+
+    Application* app = new Application(spec);
     app->PushLayer(std::make_shared<ProjectSelector>(app));
+
 
     return app;
 }

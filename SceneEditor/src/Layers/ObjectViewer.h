@@ -28,6 +28,8 @@ public:
 
 	void NewObject();
 
+	bool* Open() { return &m_isOpen; }
+
 private:
 	void Window();
 	void DisplayGameObject();
@@ -53,4 +55,6 @@ private:
 
 
 	float m_lightInt = 0;
+
+	bool m_isOpen = true;
 };

@@ -20,6 +20,46 @@ void Menu::OnUIRender()
 
 }
 
+void Menu::OnAttach()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.FramePadding = ImVec2(4.0f, 2.0f);   
+    style.ItemSpacing = ImVec2(8.0f, 4.0f);    
+    style.WindowPadding = ImVec2(8.0f, 4.0f);
+    style.WindowPadding = ImVec2(8, 8);
+    style.ChildBorderSize = 0.0f;
+    style.FrameBorderSize = 0.0f;
+    style.ItemSpacing = ImVec2(8, 6);
+    style.IndentSpacing = 16.0f;
+    style.FrameRounding = 4.0f;
+    style.ChildRounding = 4.0f;
+    style.GrabRounding = 4.0f;
+
+    //// Colors for a clean modern look
+    ImVec4* colors = style.Colors;
+    //colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);
+    //colors[ImGuiCol_ChildBg] = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
+    //colors[ImGuiCol_FrameBg] = ImVec4(0.18f, 0.18f, 0.18f, 1.00f);
+    //colors[ImGuiCol_Header] = ImVec4(0.20f, 0.22f, 0.25f, 1.00f);
+    //colors[ImGuiCol_HeaderHovered] = ImVec4(0.25f, 0.30f, 0.35f, 1.00f);
+    //colors[ImGuiCol_HeaderActive] = ImVec4(0.35f, 0.40f, 0.45f, 1.00f);
+
+    style.Colors[ImGuiCol_Header] = ImVec4(0.20f, 0.22f, 0.25f, 1.0f);
+    style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.35f, 0.40f, 0.45f, 1.0f);
+    style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.0f);
+
+    colors[ImGuiCol_TabActive] = ImVec4(0.26f, 0.59f, 0.98f, .20f); // Unity blue
+
+    // ?? Inactive tab (not focused but visible)
+    colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.15f, .10f);
+
+    // ?? Hovered tab
+    colors[ImGuiCol_TabHovered] = ImVec4(0.30f, 0.60f, 1.00f, 1.00f);
+
+    // ?? Unfocused but selected tab
+    colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.30f);
+}
+
 bool Menu::ObjectExist(const std::string& name) const{
     std::filesystem::path projDir = m_rootPath;
     std::ifstream classes(projDir / "projectData.txt");

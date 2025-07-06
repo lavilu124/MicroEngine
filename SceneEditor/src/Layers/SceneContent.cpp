@@ -104,13 +104,14 @@ static void quickSort(std::vector<GameObject>& vec, int low, int high) {
 
 void SceneContent::Window()
 {
-	ImGui::Begin("Scene Content");
+	if (!m_isOpen) return;
+	ImGui::Begin("Scene Content", &m_isOpen);
 
 	if (m_gameObjects.size() == 0 && m_lightObjects.size() == 0) {
 		ImGui::Text("No Objects");
 	}
 
-	std::string newScene = m_directory->getNewScene();
+	std::string newScene = m_directory->GetNewScene();
 	if (newScene != "") {
 		SetNewScene(newScene);
 	}
@@ -501,7 +502,7 @@ void SceneContent::SetNewScene(const std::string& newScene)
 		bool isSceneObject = currentObject["isSceneObject"].asBool();
 		std::string type = currentObject["type"].asString();
 
-		std::string pathToSprite = GetDirForSprite(spriteName, m_directory->getMainPath());
+		std::string pathToSprite = GetDirForSprite(spriteName, m_directory->GetMainPath());
 
 		m_gameObjects.emplace_back(name, pathToSprite, position, scale, rotation, layer, level);
 		m_gameObjects.back().IsSceneObject = isSceneObject;
@@ -584,8 +585,8 @@ void SceneContent::SetNewScene(const std::string& newScene)
 		ImVec2 scale = ImVec2(currentObject["scale"][0].asFloat(), currentObject["scale"][1].asFloat());
 		bool isSceneObject = currentObject["isSceneObject"].asBool();
 
-		std::string pathToImg1 = GetDirForSprite(img, m_directory->getMainPath());
-		std::string pathToImg2 = GetDirForSprite(onClickImg, m_directory->getMainPath());
+		std::string pathToImg1 = GetDirForSprite(img, m_directory->GetMainPath());
+		std::string pathToImg2 = GetDirForSprite(onClickImg, m_directory->GetMainPath());
 
 
 		m_buttonObjects.emplace_back(name, pathToImg1, onclickfunc, pathToImg2, rotation, position, scale);

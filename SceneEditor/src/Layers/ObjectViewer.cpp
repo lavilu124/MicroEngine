@@ -21,19 +21,16 @@ void ObjectViewer::OnUIRender()
 
 void ObjectViewer::Window()
 {
-    ImGui::Begin("Object Viewer");
+	if (!m_isOpen) return;
+    ImGui::Begin("Object Viewer", &m_isOpen);
 
     if (m_currentObject == nullptr) {
         ImGui::Text("No Object Was Selected");
     }
     else {
-        ImGui::Text("Selected Object");
-        ImGui::Separator();
-
-        ImGui::SameLine();
-        // Delete icon button
+        // Delete icon buttons
         if (m_deleteIcon && m_deleteIcon->GetDescriptorSet()) {
-            if (ImGui::ImageButton(m_deleteIcon->GetDescriptorSet(), ImVec2(14.8, 17.5))) {
+            if (ImGui::ImageButton(m_deleteIcon->GetDescriptorSet(), ImVec2(20, 20))) {
                 m_toDelete = true;
             }
             if (ImGui::IsItemHovered())
@@ -45,12 +42,17 @@ void ObjectViewer::Window()
             }
         }
 
+
+        ImGui::SameLine();
+
+        ImGui::Text("Selected Object");
+
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
 
         switch (m_currentObjectType) {
-        case currentObjectType::game:
+        case game:
             if (ImGui::CollapsingHeader("Game Object", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
                 ImGui::Indent();
@@ -59,7 +61,7 @@ void ObjectViewer::Window()
                 ImGui::PopStyleVar();
             }
             break;
-        case currentObjectType::light:
+        case light:
             if (ImGui::CollapsingHeader("Light Object", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
                 ImGui::Indent();
@@ -68,7 +70,7 @@ void ObjectViewer::Window()
                 ImGui::PopStyleVar();
             }
             break;
-        case currentObjectType::text:
+        case text:
             if (ImGui::CollapsingHeader("Text Object", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
                 ImGui::Indent();
@@ -77,7 +79,7 @@ void ObjectViewer::Window()
                 ImGui::PopStyleVar();
             }
             break;
-        case currentObjectType::button:
+        case button:
             if (ImGui::CollapsingHeader("Button Object", ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
                 ImGui::Indent();
@@ -181,7 +183,7 @@ void ObjectViewer::DisplayGameObject()
         typeCStrs.clear();
         m_typeList.push_back("none");
 
-        std::filesystem::path rootPath = m_projectDirectory->getMainPath();
+        std::filesystem::path rootPath = m_projectDirectory->GetMainPath();
         rootPath.remove_filename();
         std::ifstream file(rootPath / "projectData.txt");
         std::string line;

@@ -20,6 +20,9 @@ public:
 
 	std::shared_ptr<ProjectDirectory> GetDir();
 
+
+	bool* Open() { return &m_isOpen; }
+
 private:
 	void Window();
 
@@ -54,4 +57,6 @@ private:
 	std::string m_currentScene = "";
 
 	std::string m_currentObName = "";
+
+	bool m_isOpen = true;
 };

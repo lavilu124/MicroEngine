@@ -11,6 +11,8 @@ public:
 
 	void OnUIRender() override;
 
+	void OnAttach() override;
+
 	void NewObjectWindow();
 
 	bool ObjectExist(const std::string& name) const;
