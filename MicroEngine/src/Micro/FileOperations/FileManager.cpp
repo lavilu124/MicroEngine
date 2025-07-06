@@ -220,7 +220,7 @@ namespace Micro{
             return;
         }
 
-        for (const auto& entry : std::filesystem::recursive_directory_iterator(s_mainPath + "\\Resources\\graphics\\")) {
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(s_mainPath + "\\Resources\\")) {
             if (entry.is_regular_file() && entry.path().extension() == ".png" && entry.path().filename().string() == fileName) {
 
                 sf::Texture NewTexture;
@@ -233,10 +233,7 @@ namespace Micro{
                 }
 
             }
-        }
-
-        for (const auto& entry : std::filesystem::recursive_directory_iterator(s_mainPath + "\\Resources\\sounds\\")) {
-            if ((entry.is_regular_file() && entry.path().extension() == ".wav" || entry.is_regular_file() && entry.path().extension() == ".ogg" || entry.is_regular_file() && entry.path().extension() == ".mp3")
+            else if ((entry.is_regular_file() && entry.path().extension() == ".wav" || entry.is_regular_file() && entry.path().extension() == ".ogg" || entry.is_regular_file() && entry.path().extension() == ".mp3")
                 && entry.path().filename().string() == fileName) {
 
                 sf::SoundBuffer NewBuffer;
@@ -252,8 +249,16 @@ namespace Micro{
     }
 
     std::vector<std::shared_ptr<GameObject>> FileManager::GetObjects(const std::string& name, SystemManager* systemManager) {
+        std::string path;
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(s_mainPath + "\\Resources\\"))
+        {
+            if (entry.is_regular_file() &&  entry.path().filename().string() == name + ".McScene")
+            {
+				path = entry.path().string();
+            }
+        }
 
-        std::ifstream inputFile(s_mainPath + "\\Resources\\Scenes\\" + name + ".McScene");
+        std::ifstream inputFile(path);
         Json::Value actualJson;
         Json::Reader Reader;
 
@@ -455,7 +460,12 @@ namespace Micro{
     }
 
     sf::Sound* FileManager::GetSound(const std::string& name) {
-        return &m_sounds[name];
+        if (m_sounds.find(name) == m_sounds.end()) {
+            LoadAsset(name);
+        }
+        if (m_sounds.find(name) == m_sounds.end()) return nullptr;
+
+    	return &m_sounds[name];
     }
 
     void FileManager::CreateLog() {
