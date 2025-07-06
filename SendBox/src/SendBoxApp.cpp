@@ -22,7 +22,7 @@ public:
 	
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene)
 	: Application(windowWidth, windowHeight, maxFPS, "new game") {
-		m_systemManager.LoadScene("testingAngle");
+		m_systemManager.LoadScene("testingAng");
 
 
 
