@@ -28,6 +28,8 @@ public:
 
     virtual void OnUIRender() override;
 
+    void CreatePorject();
+
 private:
     AppState m_state = AppState::ProjectSelection;
     std::string m_projectPath;
