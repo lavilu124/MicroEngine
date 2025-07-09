@@ -2,6 +2,7 @@
 	"button0" : 
 	{
 		"img" : "b1.png",
+		"isSceneObject" : true,
 		"name" : "testing123",
 		"onClickFunc" : "testing1",
 		"onClickImg" : "b2.png",
@@ -15,8 +16,19 @@
 		[
 			1.0,
 			1.0
+		]
+	},
+	"camera" : 
+	{
+		"darknessPrecent" : 0,
+		"objectName" : "",
+		"position" : 
+		[
+			0.0,
+			0.0
 		],
-		"isSceneObject" : true
+		"rotation" : 0.0,
+		"zoom" : 1.0
 	},
 	"lightSource0" : 
 	{
@@ -30,6 +42,7 @@
 			0.5
 		],
 		"fade" : true,
+		"isSceneObject" : true,
 		"name" : "light1",
 		"position" : 
 		[
@@ -37,11 +50,11 @@
 			200.0
 		],
 		"radius" : 100.0,
-		"rotation" : 0.0,
-		"isSceneObject" : true
+		"rotation" : 0.0
 	},
 	"object0" : 
 	{
+		"isSceneObject" : true,
 		"layer" : 7,
 		"level" : 0,
 		"name" : "hi",
@@ -57,31 +70,11 @@
 			1.0
 		],
 		"spriteName" : "run0.png",
-		"type" : "none",
-		"isSceneObject" : true
+		"type" : "none"
 	},
 	"object1" : 
 	{
-		"layer" : 7,
-		"level" : 1,
-		"name" : "1",
-		"position" : 
-		[
-			-200.0,
-			200.0
-		],
-		"rotation" : 0.0,
-		"scale" : 
-		[
-			-1.0,
-			1.0
-		],
-		"spriteName" : "axe.png",
-		"type" : "none",
-		"isSceneObject" : true
-	},
-	"object2" : 
-	{
+		"isSceneObject" : true,
 		"layer" : 7,
 		"level" : 0,
 		"name" : "2",
@@ -97,8 +90,27 @@
 			1.0
 		],
 		"spriteName" : "run2.png",
-		"type" : "none",
-		"isSceneObject" : true
+		"type" : "none"
+	},
+	"object2" : 
+	{
+		"isSceneObject" : true,
+		"layer" : 7,
+		"level" : 1,
+		"name" : "1",
+		"position" : 
+		[
+			-200.0,
+			200.0
+		],
+		"rotation" : 0.0,
+		"scale" : 
+		[
+			-1.0,
+			1.0
+		],
+		"spriteName" : "axe.png",
+		"type" : "none"
 	},
 	"text0" : 
 	{
@@ -110,11 +122,12 @@
 			1.0
 		],
 		"font" : "Barriecito-Regular",
+		"isSceneObject" : true,
 		"name" : "testing",
 		"outlineColor" : 
 		[
 			0.0,
-			1078203908096.0,
+			70110208621281280.0,
 			0.0
 		],
 		"outlineThickness" : 1.0,
@@ -130,7 +143,6 @@
 			1.0
 		],
 		"size" : 24,
-		"value" : "testing",
-		"isSceneObject" : true
+		"value" : "testing"
 	}
 }

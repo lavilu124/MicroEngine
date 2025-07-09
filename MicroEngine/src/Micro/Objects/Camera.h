@@ -18,7 +18,7 @@ namespace Micro{
 
 		void ClearCam();
 
-		void Update() const;
+		void Update(SystemManager& systemManager);
 
 		void SetWindowSize(sf::Vector2f newSize);
 
@@ -26,7 +26,7 @@ namespace Micro{
 		void SetView(sf::View newView);
 
 
-		void SetPosition(sf::Vector2f newPos, SystemManager& systemManager);
+		void SetPosition(sf::Vector2f newPos);
 		sf::Vector2f GetPosition() const;
 
 

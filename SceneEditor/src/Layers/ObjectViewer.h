@@ -8,7 +8,8 @@ enum currentObjectType {
 	light,
 	game,
 	text,
-	button
+	button,
+	camera
 };
 
 class ObjectViewer : public Walnut::Layer
@@ -30,9 +31,14 @@ public:
 
 	bool* Open() { return &m_isOpen; }
 
+	void SetObjectNames(const std::vector<std::string>& names);
+
 private:
+	
 	void Window();
 	void DisplayGameObject();
+
+	void DisplayCamera();
 
 	void DisplayLightObject() const;
 
@@ -57,4 +63,7 @@ private:
 	float m_lightInt = 0;
 
 	bool m_isOpen = true;
+
+	std::vector<const char*> m_objectNameCStrs; // for the combo box
+	std::vector<std::string> m_objectNames; 
 };

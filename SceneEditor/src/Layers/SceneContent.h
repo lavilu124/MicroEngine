@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "ObjectViewer.h"
+#include "../objects/Camera.h"
 
 class SceneContent : public Walnut::Layer
 {
@@ -19,6 +20,8 @@ public:
 	std::string GetCurrentScene();
 
 	std::shared_ptr<ProjectDirectory> GetDir();
+
+	Camera GetCam() { return m_camera; }
 
 
 	bool* Open() { return &m_isOpen; }
@@ -43,6 +46,7 @@ private:
 	std::vector <LightObject> m_lightObjects;
 	std::vector <TextObject> m_textObjects;
 	std::vector <ButtonObject> m_buttonObjects;
+	Camera m_camera;
 
 	int m_newLightIndex = -1;
 	int m_NewGameIndex = -1;

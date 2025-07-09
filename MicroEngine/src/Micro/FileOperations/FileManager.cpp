@@ -277,6 +277,29 @@ namespace Micro{
 		int count = 0;
 
         //going over the json and reading all the data
+		//camera
+        if (actualJson["camera"].isNull())
+        {
+        	MC_LOG("No camera found in scene " + name);
+        }else
+        {
+        	Json::Value cameraJson = actualJson["camera"];
+
+			sf::Vector2f position = sf::Vector2f(cameraJson["position"][0].asFloat(), cameraJson["position"][1].asFloat());
+			float rotation = cameraJson["rotation"].asFloat();
+			float zoom = cameraJson["zoom"].asFloat();
+			int darkness = cameraJson["darknessPrecent"].asInt();
+            systemManager->GetCamera().SetPosition(position);
+			systemManager->GetCamera().SetRotation(rotation);
+			systemManager->GetCamera().SetZoom(zoom);
+            systemManager->SetDarkness(darkness);
+
+			std::string objectName = cameraJson["objectName"].asString();
+			if (!objectName.empty() && objectName != "none")
+			{
+				systemManager->GetCamera().Follow(objectName);
+			}
+        }
 
         //objects
         for (int i = 0; i < actualJson.size(); i++) {

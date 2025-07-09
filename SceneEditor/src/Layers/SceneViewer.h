@@ -23,6 +23,10 @@ private:
 	void Window();
 	void SaveWindow();
 
+	void RenderCameraBorder(ImVec2 contentRegion) const;
+
+	void RenderDarknessOverlay(ImVec2 contentRegion) const;
+
 	void RenderGameObjects(ImVec2 contentRegion) const;
 	void RenderLights(ImVec2 contentRegion);
 
@@ -64,4 +68,8 @@ private:
 
 
 	bool m_doneWithRun = false;
+
+	sf::RenderTexture m_lightMaskTexture;
+	std::shared_ptr<Walnut::Image> m_lightMaskImage;
+	std::shared_ptr<uint8_t[]> m_lightMaskData;
 };

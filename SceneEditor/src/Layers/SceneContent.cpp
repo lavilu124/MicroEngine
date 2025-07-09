@@ -6,7 +6,7 @@
 #include "../include/json/value.h"
 #include <fstream>
 
-SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const std::shared_ptr<ProjectDirectory>& directory) : m_viewer(viewer), m_directory(directory)
+SceneContent::SceneContent(const std::shared_ptr<ObjectViewer>& viewer, const std::shared_ptr<ProjectDirectory>& directory) : m_viewer(viewer), m_directory(directory), m_camera({0,0},0)
 {
 }
 
@@ -107,14 +107,41 @@ void SceneContent::Window()
 	if (!m_isOpen) return;
 	ImGui::Begin("Scene Content", &m_isOpen);
 
-	if (m_gameObjects.size() == 0 && m_lightObjects.size() == 0) {
-		ImGui::Text("No Objects");
-	}
+	ImGui::Indent();
+
+
 
 	std::string newScene = m_directory->GetNewScene();
 	if (newScene != "") {
 		SetNewScene(newScene);
 	}
+
+	if (m_viewer->GetCurrentObjectType() == camera)
+	{
+		//TODO: only happends when a name changes
+		std::vector<std::string> names;
+		for (const auto& ob : m_gameObjects)
+		{
+			names.push_back(ob.name);
+		}
+		m_viewer->SetObjectNames(names);
+	}
+
+	ImGui::Spacing();
+
+	ImVec2 windowSize = ImGui::GetWindowSize();
+	if (windowSize.x > 300) windowSize.x = 300;
+	if (ImGui::Button("Camera", ImVec2(windowSize.x - 20.0f, 30))) {
+		m_viewer->SetObject(&m_camera, camera);
+
+		std::vector<std::string> names;
+		for (const auto& ob : m_gameObjects)
+		{
+			names.push_back(ob.name);
+		}
+		m_viewer->SetObjectNames(names);
+	}
+	ImGui::Unindent();
 
 	if (m_NewGameIndex == -1) {
 		for (auto& ob : m_gameObjects) {
@@ -479,6 +506,26 @@ void SceneContent::SetNewScene(const std::string& newScene)
 	int count = 0;
 
 	//going over the json and reading all the data
+
+	//camera
+	Json::Value cameraJson = actualJson["camera"];
+	if (cameraJson.isNull())
+	{
+		m_camera = Camera({ 0,0 }, 0);
+	}
+	else
+	{
+		ImVec2 position = ImVec2(cameraJson["position"][0].asFloat(), cameraJson["position"][1].asFloat());
+		float rotation = cameraJson["rotation"].asFloat();
+		float zoom = cameraJson["zoom"].asFloat();
+		int darknessPrecent = cameraJson["darknessPrecent"].asInt();
+		m_camera = Camera(position, rotation);
+		m_camera.zoom = zoom;
+		m_camera.objectName = cameraJson["objectName"].asString();
+		m_camera.darknessPrecent = darknessPrecent;
+	}
+
+
 	//game
 	for (int i = 0; i < actualJson.size(); i++) {
 		std::stringstream ss;
