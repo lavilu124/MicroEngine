@@ -148,6 +148,20 @@ void ProjectDirectory::Window()
         if (ImGui::ImageButton(m_returnIcon->GetDescriptorSet(), ImVec2(iconSize, iconSize)))
             SetCurrentPath(m_currentPath.substr(0, m_currentPath.find_last_of('\\')));
 
+		ImGui::SameLine();
+		static char searchBuffer[256] = "";
+        if (ImGui::InputText("##search", searchBuffer, sizeof(searchBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            for (const auto& entry : std::filesystem::recursive_directory_iterator(m_mainPath)) {
+                if (entry.path().filename().string().find(searchBuffer) != std::string::npos)
+                {
+                    SetCurrentPath(entry.path().parent_path().string());
+
+                    break;
+                }
+            }
+        }
+
         // Handle file uploads
         if (m_copySize > 0)
         {
