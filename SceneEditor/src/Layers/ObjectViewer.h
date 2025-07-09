@@ -33,12 +33,15 @@ public:
 
 	void SetObjectNames(const std::vector<std::string>& names);
 
+	std::vector<const char*> GetTypeNamesCStrs();
+	void DeletedObjectType();
+
 private:
 	
 	void Window();
 	void DisplayGameObject();
 
-	void DisplayCamera();
+	void DisplayCamera() const;
 
 	void DisplayLightObject() const;
 
@@ -63,6 +66,8 @@ private:
 	float m_lightInt = 0;
 
 	bool m_isOpen = true;
+
+	std::vector<const char*> m_typeCStrs; // for the combo box
 
 	std::vector<const char*> m_objectNameCStrs; // for the combo box
 	std::vector<std::string> m_objectNames; 
