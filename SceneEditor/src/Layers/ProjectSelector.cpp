@@ -114,7 +114,10 @@ static void OpenPoroject(const std::string& path, const std::vector<std::shared_
 
 static void InitMainLayers(Walnut::Application* app, const std::string& path)
 {
-    std::shared_ptr<ProjectDirectory> dir = std::make_shared<ProjectDirectory>(path + "\\Resources");
+    std::shared_ptr<InputManager> inputM = std::make_shared<InputManager>(path + "\\Resources\\settings\\input.cfg");
+    app->PushLayer(inputM);
+
+    std::shared_ptr<ProjectDirectory> dir = std::make_shared<ProjectDirectory>(path + "\\Resources", inputM->Open());
     app->PushLayer(dir);
 
     glfwSetDropCallback(static_cast<GLFWwindow*>(app->GetWindowHandle()), OnFileDrop);
@@ -130,9 +133,6 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
 
     std::shared_ptr<Menu> menu = std::make_shared<Menu>(path, viewer);
     app->PushLayer(menu);
-
-    std::shared_ptr<InputManager> inputM = std::make_shared<InputManager>(path + "\\Resources\\settings\\input.cfg");
-    app->PushLayer(inputM);
 
 	std::shared_ptr<Console> console = std::make_shared<Console>(sceneViewer);
 	app->PushLayer(console);
