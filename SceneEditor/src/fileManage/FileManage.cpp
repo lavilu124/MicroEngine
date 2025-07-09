@@ -15,6 +15,17 @@ void FileManage::SaveScene(const std::string& path, SceneContent* content)
 
 	Json::Value sceneJson;
 
+	//Camera
+	const auto& camera = content->GetCam();
+	Json::Value cameraJson;
+	cameraJson["position"][0] = camera.position.x;
+	cameraJson["position"][1] = camera.position.y;
+	cameraJson["rotation"] = camera.rotation;
+	cameraJson["zoom"] = camera.zoom;
+	cameraJson["darknessPrecent"] = camera.darknessPrecent;
+	cameraJson["objectName"] = camera.objectName;
+	sceneJson["camera"] = cameraJson;
+
 	// Game 
 	for (int i = 0; i < content->GetGameObjects().size(); i++) {
 		std::string objectKey = "object" + std::to_string(i);

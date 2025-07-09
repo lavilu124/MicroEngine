@@ -1,5 +1,6 @@
 ﻿#include "SceneViewer.h"
 #include <filesystem>
+#include <iostream>
 
 #include "../fileManage/FileManage.h"
 
@@ -209,6 +210,9 @@ void SceneViewer::Window()
     RenderGameObjects(contentRegion);
     ImGui::SetCursorScreenPos(pos);
 
+    RenderDarknessOverlay(contentRegion);
+    ImGui::SetCursorScreenPos(pos);
+
     RenderLights(contentRegion);
     ImGui::SetCursorScreenPos(pos);
 
@@ -216,6 +220,11 @@ void SceneViewer::Window()
     ImGui::SetCursorScreenPos(pos);
 
 	renderTexts(contentRegion);
+    ImGui::SetCursorScreenPos(pos);
+
+
+    RenderCameraBorder(contentRegion);
+
 
     ImGui::End();
 }
@@ -263,6 +272,98 @@ void SceneViewer::SaveWindow()
         ImGui::Text("Scene saved successfully");
 
     ImGui::End();
+}
+
+void SceneViewer::RenderCameraBorder(ImVec2 contentRegion) const
+{
+    sf::Vector2f size = { 1920.0f / sceneContent->GetCam().zoom, 1080.0f / sceneContent->GetCam().zoom };
+    ImVec2 drawOrigin = ImGui::GetCursorScreenPos();
+
+    ImGui::PushClipRect(drawOrigin, ImVec2(drawOrigin.x + contentRegion.x, drawOrigin.y + contentRegion.y), true);
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+    // Convert world space to screen space
+    auto ToScreen = [&](sf::Vector2f worldPos) -> ImVec2 {
+        sf::Vector2f scaledPos = sf::Vector2f(worldPos.x * m_zoom, worldPos.y * m_zoom) + sf::Vector2f(m_offset.x, m_offset.y);
+        return ImVec2(drawOrigin.x + scaledPos.x + contentRegion.x / 2.0f,
+            drawOrigin.y + scaledPos.y + contentRegion.y / 2.0f);
+        };
+
+    ImVec2 center = sceneContent->GetCam().position;
+    float rotationDeg = sceneContent->GetCam().rotation;
+    float rotationRad = rotationDeg * 3.14159265f / 180.0f;
+    float cosA = std::cos(rotationRad);
+    float sinA = std::sin(rotationRad);
+
+
+    sf::Vector2f halfSize = { size.x / 2.0f - 1, size.y / 2.0f - 1 };
+
+    
+    sf::Vector2f corners[4] = {
+        sf::Vector2f(-halfSize.x, -halfSize.y), 
+        sf::Vector2f(halfSize.x, -halfSize.y), 
+        sf::Vector2f(halfSize.x,  halfSize.y), 
+        sf::Vector2f(-halfSize.x,  halfSize.y)  
+    };
+
+    // Apply rotation
+    ImVec2 rotatedCorners[4];
+    for (int i = 0; i < 4; ++i)
+    {
+        float x = corners[i].x;
+        float y = corners[i].y;
+
+        float rotatedX = cosA * x - sinA * y;
+        float rotatedY = sinA * x + cosA * y;
+
+        rotatedCorners[i] = ToScreen(sf::Vector2f(rotatedX + center.x, rotatedY + center.y));
+    }
+
+    const float dashLength = 5.0f;
+    const float gapLength = 5.0f;
+    const ImU32 color = IM_COL32(255, 255, 255, 255);
+
+    auto DrawDashedLine = [&](ImVec2 p1, ImVec2 p2) {
+        ImVec2 dir = ImVec2(p2.x - p1.x, p2.y - p1.y);
+        float length = sqrtf(dir.x * dir.x + dir.y * dir.y);
+        dir.x /= length;
+        dir.y /= length;
+
+        float current = 0.0f;
+        while (current < length) {
+            ImVec2 start = ImVec2(p1.x + dir.x * current, p1.y + dir.y * current);
+            float endOffset = std::min(dashLength, length - current);
+            ImVec2 end = ImVec2(start.x + dir.x * endOffset, start.y + dir.y * endOffset);
+            drawList->AddLine(start, end, color, 1.0f);
+            current += dashLength + gapLength;
+        }
+        };
+
+    DrawDashedLine(rotatedCorners[0], rotatedCorners[1]);
+    DrawDashedLine(rotatedCorners[1], rotatedCorners[2]);
+    DrawDashedLine(rotatedCorners[2], rotatedCorners[3]);
+    DrawDashedLine(rotatedCorners[3], rotatedCorners[0]);
+
+    ImGui::PopClipRect();
+}
+
+
+
+
+void SceneViewer::RenderDarknessOverlay(ImVec2 contentRegion) const
+{
+    float darknessLevel = sceneContent->GetCam().darknessPrecent;
+
+    // Convert to alpha [0, 255]
+    int alpha = static_cast<int>((darknessLevel / 100.0f) * 255.0f);
+    ImU32 overlayColor = IM_COL32(0, 0, 0, alpha);
+
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+    drawList->AddRectFilled(pos,
+        ImVec2(pos.x + contentRegion.x, pos.y + contentRegion.y),
+        overlayColor);
 }
 
 void SceneViewer::RenderGameObjects(ImVec2 contentRegion) const

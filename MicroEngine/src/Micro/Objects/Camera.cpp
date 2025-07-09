@@ -50,10 +50,17 @@ namespace Micro{
 
 
 
-	void Camera::Update() const{
+	void Camera::Update(SystemManager& systemManager){
 
 		if (m_window != nullptr) {
 			m_window->setView(m_view);
+		}
+
+		if (m_objectName != "")
+		{
+			if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName.c_str())->GetPosition())
+				m_view.setCenter(systemManager.GetObjectByName(m_objectName.c_str())->GetPosition());
+
 		}
 	}
 	void Camera::SetWindowSize(sf::Vector2f NewSize)
@@ -71,13 +78,13 @@ namespace Micro{
 		m_view = newView;
 	}
 
-	void Camera::SetPosition(sf::Vector2f newPos, SystemManager& systemManager)
+	void Camera::SetPosition(sf::Vector2f newPos)
 	{
 		if (m_objectName != "") {
-			if (m_view.getCenter() != systemManager.GetObjectByName(m_objectName.c_str())->GetPosition())
-				m_view.setCenter(systemManager.GetObjectByName(m_objectName.c_str())->GetPosition());
+			return;
 		}
-		else if (m_view.getCenter() != m_position) {
+
+		if (m_view.getCenter() != m_position) {
 			m_view.setCenter(m_position);
 		}
 

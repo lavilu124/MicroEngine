@@ -74,7 +74,7 @@ namespace Micro {
         deltaTimeT = clock.restart();
         deltaTime = deltaTimeT.asSeconds();
 
-        m_sceneManager.camera.Update();
+        m_sceneManager.camera.Update(*this);
 
         m_lighting.Clear();
 

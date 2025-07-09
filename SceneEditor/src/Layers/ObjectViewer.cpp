@@ -3,6 +3,10 @@
 #include <string>
 #include <fstream>
 
+#include "../objects/Camera.h"
+
+class Camera;
+
 template <class T>
 T min(T x, T y)
 {
@@ -12,11 +16,22 @@ T min(T x, T y)
 ObjectViewer::ObjectViewer(const std::shared_ptr<ProjectDirectory>& projectDirectory)
     : m_projectDirectory(projectDirectory)
 {
+    m_objectNameCStrs.push_back("none");
 }
 
 void ObjectViewer::OnUIRender()
 {
     Window();
+}
+
+void ObjectViewer::SetObjectNames(const std::vector<std::string>& names)
+{
+    m_objectNames = names;
+
+    m_objectNameCStrs.clear();
+    m_objectNameCStrs.push_back("none");
+    for (const auto& name : m_objectNames)
+        m_objectNameCStrs.push_back(name.c_str());
 }
 
 void ObjectViewer::Window()
@@ -84,6 +99,16 @@ void ObjectViewer::Window()
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
                 ImGui::Indent();
                 DisplayButtonObject();
+                ImGui::Unindent();
+                ImGui::PopStyleVar();
+            }
+            break;
+        case camera:
+            if (ImGui::CollapsingHeader("Camera ", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 4));
+                ImGui::Indent();
+                DisplayCamera();
                 ImGui::Unindent();
                 ImGui::PopStyleVar();
             }
@@ -262,6 +287,70 @@ void ObjectViewer::DisplayGameObject()
 
 
     ImGui::Unindent();
+}
+
+void ObjectViewer::DisplayCamera()
+{
+	Camera* cam = (Camera*)m_currentObject;
+
+
+    ImGui::Text("Position:");
+    ImGui::Indent();
+    float positionValues[2] = { m_currentObject->position.x, m_currentObject->position.y };
+    if (ImGui::InputFloat2("##GamePosition", positionValues)) {
+        m_currentObject->position.x = positionValues[0];
+        m_currentObject->position.y = positionValues[1];
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Rotation (Degrees):");
+    ImGui::Indent();
+    if (ImGui::InputFloat("##GameRotation", &m_currentObject->rotation)) {
+        m_currentObject->rotation = std::min<float>(m_currentObject->rotation, 360.0f);
+    }
+    ImGui::Unindent();
+
+    ImGui::Spacing();
+
+    ImGui::Text("Follow Object:");
+    ImGui::Indent();
+
+
+    int currentIndex = 0;
+    for (size_t i = 0; i < m_objectNames.size(); ++i) {
+        if (m_objectNames[i] == cam->objectName) {
+            currentIndex = static_cast<int>(i);
+            break;
+        }
+    }
+
+    if (ImGui::Combo("##GameType", &currentIndex, m_objectNameCStrs.data(), (int)m_objectNameCStrs.size())) {
+        cam->objectName = m_typeList[currentIndex];
+    }
+    ImGui::Unindent();
+
+	ImGui::Spacing();
+
+    ImGui::Text("Zoom");
+	ImGui::Indent();
+
+    if (ImGui::SliderFloat("##Zoom", &cam->zoom, 0.0f, 1.0f))
+    {
+	    
+    }
+	ImGui::Unindent();
+
+	ImGui::Spacing();
+
+	ImGui::Text("Darkness Precent");
+    ImGui::Indent();
+	if (ImGui::SliderInt("##DarknessPrecent", &cam->darknessPrecent, 0, 100))
+	{
+		
+	}
+	ImGui::Unindent();
 }
 
 void ObjectViewer::DisplayLightObject() const
