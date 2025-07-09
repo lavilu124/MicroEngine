@@ -276,6 +276,22 @@ static void InitMainLayers(Walnut::Application* app, const std::string& path)
                 {
                     menu->NewObjectPressed();
                 }
+                if (ImGui::BeginMenu("Delete Object"))
+                {
+					if (!viewer->GetTypeNamesCStrs().empty())
+					{
+						auto names = viewer->GetTypeNamesCStrs();
+                        for (int i = 1; i < names.size(); i++)
+                        {
+							if (std::string(names[i]).empty()) continue;
+                            if (ImGui::MenuItem(names[i]))
+                            {
+                                menu->DeleteObjectPressed(names[i]);
+                            }
+                        }
+					}
+                    ImGui::EndMenu();
+                }
 
                 ImGui::EndMenu();
             }

@@ -12,12 +12,21 @@ void Menu::NewObjectPressed()
 	m_newObjectOpen = true;
 }
 
+void Menu::DeleteObjectPressed(const char* name)
+{
+	m_deleteObjectName = name;
+	m_deleteObjectOpen = true;
+}
+
 void Menu::OnUIRender()
 {
 	if (m_newObjectOpen) {
 		NewObjectWindow();
 	}
-
+    if (m_deleteObjectOpen)
+    {
+        DeleteObjectWindow();
+    }
 }
 
 void Menu::OnAttach()
@@ -136,6 +145,56 @@ void Menu::NewObjectWindow()
         if (ImGui::Button("Cancel"))
         {
             m_newObjectOpen = false;
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void Menu::DeleteObjectWindow()
+{
+    ImGui::OpenPopup("Delete Class");
+
+    if (ImGui::BeginPopupModal("Delete Class", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+		ImGui::Text("Are you sure you want to delete the class '%s'?", m_deleteObjectName);
+        if (ImGui::Button("Yes"))
+        {
+            std::filesystem::path projDir = m_rootPath;
+            std::filesystem::path headerDest = projDir / "Game" / "src" / "Objects" / (std::string(m_deleteObjectName) + ".h");
+            std::filesystem::path cppDest = projDir / "Game" / "src" / "Objects" / (std::string(m_deleteObjectName) + ".cpp");
+
+            try
+            {
+                if (std::filesystem::exists(headerDest))
+					std::filesystem::remove(headerDest);
+				if (std::filesystem::exists(cppDest))
+                    std::filesystem::remove(cppDest);
+
+				std::ifstream classes(projDir / "projectData.txt");
+                std::string content((std::istreambuf_iterator<char>(classes)), std::istreambuf_iterator<char>());
+				classes.close();
+				size_t pos = content.find(m_deleteObjectName);
+				if (pos != std::string::npos)
+				{
+					content.erase(pos, std::string(m_deleteObjectName).length() + 1);
+					std::ofstream out(projDir / "projectData.txt");
+				}
+
+				m_objectViewer->DeletedObjectType();
+                m_deleteObjectOpen = false;
+            }
+            catch (const std::exception& e)
+            {
+
+            }
+
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("no"))
+        {
+            m_deleteObjectOpen = false;
             ImGui::CloseCurrentPopup();
         }
 

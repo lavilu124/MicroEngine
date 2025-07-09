@@ -34,6 +34,35 @@ void ObjectViewer::SetObjectNames(const std::vector<std::string>& names)
         m_objectNameCStrs.push_back(name.c_str());
 }
 
+std::vector<const char*> ObjectViewer::GetTypeNamesCStrs()
+{
+    if (!m_ObjectsLoaded) {
+        m_typeList.clear();
+        m_typeCStrs.clear();
+        m_typeList.push_back("none");
+
+        std::filesystem::path rootPath = m_projectDirectory->GetMainPath();
+        rootPath.remove_filename();
+        std::ifstream file(rootPath / "projectData.txt");
+        std::string line;
+        while (std::getline(file, line)) {
+            if (!line.empty()) {
+                m_typeList.push_back(line);
+            }
+        }
+        for (const auto& str : m_typeList) {
+            m_typeCStrs.push_back(str.c_str());
+        }
+        m_ObjectsLoaded = true;
+    }
+	return m_typeCStrs;
+}
+
+void ObjectViewer::DeletedObjectType()
+{
+    m_ObjectsLoaded = false;
+}
+
 void ObjectViewer::Window()
 {
 	if (!m_isOpen) return;
@@ -200,12 +229,10 @@ void ObjectViewer::DisplayGameObject()
     ImGui::Text("Type:");
     ImGui::Indent();
     
-    static std::vector<const char*> typeCStrs;
-    
 
     if (!m_ObjectsLoaded) {
         m_typeList.clear();
-        typeCStrs.clear();
+        m_typeCStrs.clear();
         m_typeList.push_back("none");
 
         std::filesystem::path rootPath = m_projectDirectory->GetMainPath();
@@ -218,7 +245,7 @@ void ObjectViewer::DisplayGameObject()
             }
         }
         for (const auto& str : m_typeList) {
-            typeCStrs.push_back(str.c_str());
+            m_typeCStrs.push_back(str.c_str());
         }
         m_ObjectsLoaded = true;
     }
@@ -232,7 +259,7 @@ void ObjectViewer::DisplayGameObject()
         }
     }
 
-    if (ImGui::Combo("##GameType", &currentIndex, typeCStrs.data(), (int)typeCStrs.size())) {
+    if (ImGui::Combo("##GameType", &currentIndex, m_typeCStrs.data(), (int)m_typeCStrs.size())) {
         GameOj->type = m_typeList[currentIndex];
     }
     ImGui::Unindent();
@@ -289,7 +316,7 @@ void ObjectViewer::DisplayGameObject()
     ImGui::Unindent();
 }
 
-void ObjectViewer::DisplayCamera()
+void ObjectViewer::DisplayCamera() const
 {
 	Camera* cam = (Camera*)m_currentObject;
 
