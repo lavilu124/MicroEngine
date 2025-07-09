@@ -456,7 +456,7 @@ namespace Micro{
             auto it2 = m_functionMap.find(onclickfunc);
             if (it == m_buttonFuncMap.end()) {
                 MC_LOG("No function registered with name: " + onclickfunc);
-                //continue; // or handle error
+                continue; // or handle error
             }
 
             auto x = it->second;
