@@ -5,8 +5,7 @@
 std::string ProjectDirectory::m_copyPaths[30];
 int ProjectDirectory::m_copySize = 0;
 
-ProjectDirectory::ProjectDirectory(const std::string& path)
-{
+ProjectDirectory::ProjectDirectory(const std::string& path, bool* inputManagerOpen) : m_inputManagerOpen(inputManagerOpen){
     m_currentPath = path;
     m_mainPath = path;
 }
@@ -594,7 +593,16 @@ int ProjectDirectory::ShowFiles(int columnIndex)
             }else if (entry.path().extension() == ".ttf")
             {
             	ImGui::Image(m_fontIcon->GetDescriptorSet(), iconSize);
-            }else
+            }else if (entry.path().extension() == ".cfg")
+            {
+                ImGui::Image(m_fileIcon->GetDescriptorSet(), iconSize);
+                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                {
+                    *m_inputManagerOpen = true;
+                    ImGui::SetWindowFocus("Input Manager");
+                }
+            }
+        	else
             {
 
 				ImGui::Image(m_fileIcon->GetDescriptorSet(), iconSize);

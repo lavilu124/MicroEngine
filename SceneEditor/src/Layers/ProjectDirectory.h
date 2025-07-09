@@ -2,11 +2,13 @@
 #include <GLFW/glfw3.h>
 #include <filesystem>
 
+#include "InputManager.h"
+
 class ProjectDirectory : public Walnut::Layer
 {
 public:
 
-	ProjectDirectory(const std::string& path);
+	ProjectDirectory(const std::string& path, bool* inputManagerOpen);
 
 	~ProjectDirectory();
 
@@ -51,6 +53,8 @@ private:
 	void CreateNewFolder();
 
 private:
+	bool* m_inputManagerOpen;
+
 	//relevant paths
 	std::string m_mainPath;
 	std::string m_currentPath;
