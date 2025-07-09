@@ -10,6 +10,7 @@ namespace Micro{
 		
 		m_window.setFramerateLimit(maxFPS);
 
+
 		s_Instance = this;
 		 
 		m_camera = &m_systemManager.GetCamera();
@@ -68,12 +69,6 @@ namespace Micro{
 		m_window.setTitle(name);
 	}
 
-	void Application::SetResolution(const sf::Vector2f& newRes)
-	{
-		if (newRes.x > m_window.getSize().x || newRes.y > m_window.getSize().y)
-			m_window.setSize({ static_cast<unsigned int>(newRes.x), static_cast<unsigned int>(newRes.y) });
-		m_systemManager.GetCamera().SetWindowSize(newRes);
-	}
 
 
 	sf::Vector2u Application::GetWindowSize() const

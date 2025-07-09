@@ -25,12 +25,13 @@ namespace Micro{
 		void SetWindowSize(const sf::Vector2u& newSize);
 		sf::Vector2u GetWindowSize() const;
 		void SetWindowTitle(const char* name);
-		void SetResolution(const sf::Vector2f& newRes);
 
 	protected:
 		sf::RenderWindow m_window;
 		SystemManager m_systemManager;
 		Camera* m_camera;
+
+
 	};
 
 	Application* CreateApplication(const char* scene);
