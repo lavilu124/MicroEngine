@@ -82,63 +82,108 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     style.WindowBorderSize = originalBorderSize;
 }
 
-void SceneViewer::ExecutePlayCommand()
+static std::string GetMsbuildPathFromVswhere()
 {
-    std::string command = m_mainPath;
-    
+    std::string msbuildPath;
 
-    if (command.find("\\Resources") != std::string::npos)
-        command = command.substr(0, command.find_last_of('\\'));
-    std::string command2 = command;
+    FILE* pipe = _popen(R"(vswhere.exe -latest -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\MSBuild.exe)", "r");
+    if (!pipe)
+        return "";
 
-    command += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
-    command2 += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
-    
-    
-    
-
-    auto originalPath = std::filesystem::current_path();
-    
-    
-
-    if (std::filesystem::exists(command)) {
-        std::string workingDir = command.substr(0, command.find_last_of('\\'));
-        // Save the current path
-        
-
-        // Change to the game's directory
-        std::filesystem::current_path(workingDir);
-
-        /*std::string scene = m_sceneContent->GetCurrentScene();
-        scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
-        command += " ";
-        command += scene;*/
-
-
-
-        system("Game.exe");
-
-        m_doneWithRun = true;
+    char buffer[256];
+    while (fgets(buffer, sizeof(buffer), pipe)) {
+        msbuildPath = buffer;
     }
-    else if (std::filesystem::exists(command2)) {
-        std::string workingDir = command2.substr(0, command2.find_last_of('\\'));
-        // Save the current path
+    _pclose(pipe);
+
+    // Trim newline + any quotes
+    msbuildPath.erase(std::remove(msbuildPath.begin(), msbuildPath.end(), '\n'), msbuildPath.end());
+    msbuildPath.erase(std::remove(msbuildPath.begin(), msbuildPath.end(), '\r'), msbuildPath.end());
+    msbuildPath.erase(std::remove(msbuildPath.begin(), msbuildPath.end(), '\"'), msbuildPath.end());
+
+    return msbuildPath;
+}
 
 
-        // Change to the game's directory
-        std::filesystem::current_path(workingDir);
+void SceneViewer::ExecutePlayCommand() const
+{
 
-        /*std::string scene = m_sceneContent->GetCurrentScene();
-        scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
-        command2 += " ";
-        command2 += scene;*/
-
-
-
-        system("Game.exe");
+    std::string msbuildPath = GetMsbuildPathFromVswhere();
+    if (!std::filesystem::exists(msbuildPath)) {
+        std::cerr << "MSBuild path invalid or not found!" << std::endl;
+        return;
     }
 
-    std::filesystem::current_path(originalPath);
+    std::string projectPath = m_mainPath;
+    if (projectPath.find("\\Resources") != std::string::npos)
+        projectPath = projectPath.substr(0, projectPath.find_last_of('\\'));
+    projectPath += "\\Game\\Game.vcxproj";
+
+    if (!std::filesystem::exists(projectPath)) {
+        std::cerr << "Game project file not found!" << std::endl;
+        return;
+    }
+
+    std::string command = "\"" + msbuildPath + "\" \"" + projectPath + "\" /p:Configuration=Debug /p:Platform=x64";
+    std::string fullCommand = "cmd /C \"" + command + "\"";
+
+    int result = std::system(fullCommand.c_str());
+    if (result != 0)
+        return;
+
+
+    //if (command.find("\\Resources") != std::string::npos)
+    //    command = command.substr(0, command.find_last_of('\\'));
+    //std::string command2 = command;
+
+    //command += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
+    //command2 += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
+    //
+    //
+    //
+
+    //auto originalPath = std::filesystem::current_path();
+    //
+    //
+
+    //if (std::filesystem::exists(command)) {
+    //    std::string workingDir = command.substr(0, command.find_last_of('\\'));
+    //    // Save the current path
+    //    
+
+    //    // Change to the game's directory
+    //    std::filesystem::current_path(workingDir);
+
+    //    /*std::string scene = m_sceneContent->GetCurrentScene();
+    //    scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
+    //    command += " ";
+    //    command += scene;*/
+
+
+
+    //    system("Game.exe");
+
+    //    m_doneWithRun = true;
+    //}
+    //else if (std::filesystem::exists(command2)) {
+    //    std::string workingDir = command2.substr(0, command2.find_last_of('\\'));
+    //    // Save the current path
+
+
+    //    // Change to the game's directory
+    //    std::filesystem::current_path(workingDir);
+
+    //    /*std::string scene = m_sceneContent->GetCurrentScene();
+    //    scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
+    //    command2 += " ";
+    //    command2 += scene;*/
+
+
+
+    //    system("Game.exe");
+    //}
+
+    //std::filesystem::current_path(originalPath);
 
 
 }

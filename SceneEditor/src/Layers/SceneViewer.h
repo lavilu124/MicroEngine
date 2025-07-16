@@ -38,7 +38,7 @@ private:
 	void GenerateTextImage(TextObject& text);
 
 
-	void ExecutePlayCommand();
+	void ExecutePlayCommand() const;
 	
 	void RenderHeader(const ImVec2& contentRegion);
 

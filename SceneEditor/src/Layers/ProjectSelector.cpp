@@ -18,7 +18,14 @@ static std::vector<std::string> LoadRecentProjects()
     while (std::getline(in, line))
     {
         if (!line.empty() && std::filesystem::exists(line))
-            paths.push_back(line);
+        {
+            line.erase(0, line.find_first_not_of(" \t\n\r"));
+            line.erase(line.find_last_not_of(" \t\n\r") + 1);
+
+            if (std::find(paths.begin(), paths.end(), line) == paths.end())
+				paths.push_back(line);
+        }
+            
     }
     return paths;
 }
@@ -69,13 +76,16 @@ static bool CreateNewProjectStructure(const std::filesystem::path& basePath, con
         if (!CopyDirectory(enginePath, projectRoot / "MicroEngine")) return false;
         if (!CopyDirectory(depPath, projectRoot / "dependencies")) return false;
 
+        auto originalPath = std::filesystem::current_path();
+        std::filesystem::current_path(projectRoot);
 
-        /*std::filesystem::path setupScript = projectRoot / "Scripts" / "Setup-Windows.bat";
-        if (!std::filesystem::exists(setupScript)) return false;
+		std::string command = "Vendor\\Binaries\\Premake\\Windows\\premake5.exe --file=Build.lua vs2022";
+        std::string fullCommand = "cmd /C \"" + command + "\"";
+        int result = system(fullCommand.c_str());
 
-        int result = system(setupScript.string().c_str());
-        return result == 0;*/
-        return true;
+		std::filesystem::current_path(originalPath);
+
+        return result == 0;
     }
     catch (...) { return false; }
 }
@@ -114,6 +124,7 @@ static void OpenPoroject(const std::string& path, const std::vector<std::shared_
 
 static void InitMainLayers(Walnut::Application* app, const std::string& path)
 {
+
     std::shared_ptr<InputManager> inputM = std::make_shared<InputManager>(path + "\\Resources\\settings\\input.cfg");
     app->PushLayer(inputM);
 
@@ -338,7 +349,7 @@ void ProjectSelector::OnUIRender()
 
         ImGui::SetNextWindowSize(ImVec2(SELECTOR_WIDTH, SELECTOR_HEIGHT), ImGuiCond_FirstUseEver);
         ImGui::Begin("Select Project", nullptr,
-            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar  | ImGuiWindowFlags_NoResize);
+            ImGuiWindowFlags_NoTitleBar /*| ImGuiWindowFlags_NoMove*/ | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar  | ImGuiWindowFlags_NoResize);
 
 
         ImGui::Text("Choose a project directory:");

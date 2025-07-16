@@ -31,5 +31,5 @@ private:
 };
 
 Micro::Application* Micro::CreateApplication(const char* scene) {
-	return new App(1920, 1080, 144, scene);
+	return new App(960, 540, 144, scene);
 }

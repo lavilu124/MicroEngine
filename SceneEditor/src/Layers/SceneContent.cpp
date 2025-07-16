@@ -105,63 +105,76 @@ static void quickSort(std::vector<GameObject>& vec, int low, int high) {
 void SceneContent::Window()
 {
 	if (!m_isOpen) return;
+
+	// Begin Hierarchy Window
 	ImGui::Begin("Scene Content", &m_isOpen);
+
+	// Set colors for hover and selection (Unity style)
+	ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.25f, 0.5f, 0.75f, 0.1f));
+	ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.25f, 0.5f, 1.0f, 1.5f));
+	ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0)); // Transparent background
+
+	// Shrink item spacing and padding
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 2));
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.0f);
 
 	ImGui::Indent();
 
-
-
+	// Check for scene change
 	std::string newScene = m_directory->GetNewScene();
-	if (newScene != "") {
+	if (!newScene.empty())
 		SetNewScene(newScene);
-	}
 
+	// Update object names if the camera is selected
 	if (m_viewer->GetCurrentObjectType() == camera)
 	{
-		//TODO: only happends when a name changes
 		std::vector<std::string> names;
 		for (const auto& ob : m_gameObjects)
-		{
 			names.push_back(ob.name);
-		}
 		m_viewer->SetObjectNames(names);
 	}
 
 	ImGui::Spacing();
 
+	// Camera entry
 	ImVec2 windowSize = ImGui::GetWindowSize();
 	if (windowSize.x > 300) windowSize.x = 300;
-	if (ImGui::Button("Camera", ImVec2(windowSize.x - 20.0f, 30))) {
+
+	bool selected = (m_viewer->GetCurrentObjectType() == camera);
+	if (ImGui::Selectable("Camera", selected, 0, ImVec2(windowSize.x - 24.0f, 20)))
+	{
 		m_viewer->SetObject(&m_camera, camera);
 
 		std::vector<std::string> names;
 		for (const auto& ob : m_gameObjects)
-		{
 			names.push_back(ob.name);
-		}
 		m_viewer->SetObjectNames(names);
 	}
+
 	ImGui::Unindent();
 
+	// Re-sort if needed
 	if (m_NewGameIndex == -1) {
 		for (auto& ob : m_gameObjects) {
 			if (ob.IsLevelChanged()) {
-				quickSort(m_gameObjects, 0, m_gameObjects.size() - 1);
+				quickSort(m_gameObjects, 0, static_cast<int>(m_gameObjects.size()) - 1);
 				if (!m_currentObName.empty() && m_viewer->GetCurrentObjectType() == currentObjectType::game) {
 					for (int i = 0; i < m_gameObjects.size(); i++) {
-						if (m_gameObjects[i].name == m_currentObName) 
+						if (m_gameObjects[i].name == m_currentObName)
 							m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
 					}
 				}
 			}
 		}
-		
 	}
 
+	// Render hierarchy lists
 	RenderObjectList();
 	RenderLightList();
 	RenderUiList();
 
+	// Context menu for creating new objects
 	float footerHeight = 40.0f;
 	ImGui::SetCursorPosY(ImGui::GetWindowSize().y - footerHeight * 2);
 
@@ -171,284 +184,271 @@ void SceneContent::Window()
 		{
 			if (ImGui::MenuItem("Light Object"))
 			{
-				m_lightObjects.push_back(LightObject(
-					"Light " + std::to_string(m_lightObjects.size() + 1),
-					ImVec2(0, 0),
-					0,
-					360,
-					0,
-					ImVec4(255, 255, 255, 255),
-					200,
-					200
-				));
-
-				m_newLightIndex = m_lightObjects.size() - 1;
-				if (m_viewer->GetCurrentObjectType() == currentObjectType::light && m_viewer->GetObject() != nullptr) {
-					m_viewer->SetObject(&m_lightObjects[m_indexOfCurrentOb], currentObjectType::light);
-					m_currentObName = m_lightObjects[m_indexOfCurrentOb].name;
-				}
+				m_lightObjects.emplace_back("Light " + std::to_string(m_lightObjects.size() + 1),
+					ImVec2(0, 0), 0, 360, 0, ImVec4(255, 255, 255, 255), 200, 200);
+				m_newLightIndex = static_cast<int>(m_lightObjects.size()) - 1;
 			}
 
 			if (ImGui::MenuItem("Game Object"))
 			{
-				GameObject newGameObject("Object " + std::to_string(m_gameObjects.size() + 1), "");
-				m_gameObjects.push_back(newGameObject);
-				m_NewGameIndex = m_gameObjects.size() - 1;
-				if (m_viewer->GetCurrentObjectType() == currentObjectType::game && m_viewer->GetObject() != nullptr) {
-					m_viewer->SetObject(&m_gameObjects[m_indexOfCurrentOb], currentObjectType::game);
-					m_currentObName = m_gameObjects[m_indexOfCurrentOb].name;
-				}
-					
+				m_gameObjects.emplace_back("Object " + std::to_string(m_gameObjects.size() + 1), "");
+				m_NewGameIndex = static_cast<int>(m_gameObjects.size()) - 1;
 			}
 
 			if (ImGui::BeginMenu("UI"))
 			{
 				if (ImGui::MenuItem("Text"))
 				{
-					m_textObjects.push_back(TextObject(
-						"New Text",
-						"Text " + std::to_string(m_textObjects.size() + 1),
-						ImVec4(255, 255, 255, 255),
-						"default",
-						ImVec4(0, 0, 0, 255),
-						1.0f,
-						24,
-						ImVec2(1.0f, 1.0f),
-						ImVec2(0, 0),
-						0.0f
-					));
-					m_newTextIndex = m_textObjects.size() - 1;
-					if (m_viewer->GetCurrentObjectType() == currentObjectType::text && m_viewer->GetObject() != nullptr) {
-						m_viewer->SetObject(&m_textObjects[m_indexOfCurrentOb], currentObjectType::text);
-						m_currentObName = m_textObjects[m_indexOfCurrentOb].name;
-					}
-						
+					m_textObjects.emplace_back("New Text", "Text " + std::to_string(m_textObjects.size() + 1),
+						ImVec4(255, 255, 255, 255), "default", ImVec4(0, 0, 0, 255),
+						1.0f, 24, ImVec2(1.0f, 1.0f), ImVec2(0, 0), 0.0f);
+					m_newTextIndex = static_cast<int>(m_textObjects.size()) - 1;
 				}
-				if (ImGui::MenuItem("Button")) {
-					m_buttonObjects.push_back(ButtonObject(
-						"New Button",
-						"",
-						""
-					));
-					m_newButtonIndex = m_buttonObjects.size() - 1;
-					if (m_viewer->GetCurrentObjectType() == currentObjectType::button && m_viewer->GetObject() != nullptr) {
-						m_viewer->SetObject(&m_buttonObjects[m_indexOfCurrentOb], currentObjectType::button);
-						m_currentObName = m_buttonObjects[m_indexOfCurrentOb].name;
-					}
-						
+				if (ImGui::MenuItem("Button"))
+				{
+					m_buttonObjects.emplace_back("New Button", "", "");
+					m_newButtonIndex = static_cast<int>(m_buttonObjects.size()) - 1;
 				}
-
 				ImGui::EndMenu();
 			}
-
 			ImGui::EndMenu();
 		}
-
 		ImGui::EndPopup();
 	}
 
+
+	ImGui::PopStyleVar(3);
+	ImGui::PopStyleColor(3);
 	ImGui::End();
 }
+
 
 void SceneContent::RenderObjectList()
 {
 	ImVec2 windowSize = ImGui::GetWindowSize();
 	if (windowSize.x > 300) windowSize.x = 300;
-	if (m_gameObjects.size() != 0) {
-		ImGui::Separator();
+
+	if (!m_gameObjects.empty()) {
 		ImGui::Text("Game Objects:");
 	}
 
 	ImGui::Indent();
-	for (int i = 0; i < m_gameObjects.size(); i++) {
-		const char* name;
-		(m_gameObjects[i].name.empty() ? name = "Unnamed Object" : name = m_gameObjects[i].name.c_str());
-		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
-			m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
-			m_indexOfCurrentOb = i;
-			m_currentObName = m_gameObjects[i].name;
-		}
-	}
-	ImGui::Unindent();
 
-	
 	static char GameObNameInput[256] = "";
 	static int lastNewGameIndex = -1;
 
-	if (m_NewGameIndex > -1) {
-		if (m_NewGameIndex != lastNewGameIndex) {
-			
-			snprintf(GameObNameInput, sizeof(GameObNameInput), "Object %d", m_NewGameIndex + 1);
-			lastNewGameIndex = m_NewGameIndex;
-		}
+	for (int i = 0; i < m_gameObjects.size(); ++i)
+	{
+		bool isNew = (i == m_NewGameIndex);
 
-		ImGui::Text("Enter new GameObject name:");
-		if (ImGui::InputText("##EnterGameObjectName", GameObNameInput, IM_ARRAYSIZE(GameObNameInput))) {
-			
-		}
+		if (isNew)
+		{
+			// Focus input text on creation
+			if (m_NewGameIndex != lastNewGameIndex) {
+				snprintf(GameObNameInput, sizeof(GameObNameInput), "Object %d", m_NewGameIndex + 1);
+				lastNewGameIndex = m_NewGameIndex;
+				ImGui::SetKeyboardFocusHere();
+			}
 
-		if (ImGui::Button("Cancel")) {
-			m_gameObjects.erase(m_gameObjects.begin() + m_NewGameIndex);
-			m_NewGameIndex = -1;
-			lastNewGameIndex = -1;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Confirm")) {
-			m_gameObjects[m_NewGameIndex].name = GameObNameInput;
-			m_NewGameIndex = -1;
-			lastNewGameIndex = -1;
+			if (ImGui::InputText("##NewGameObject", GameObNameInput, IM_ARRAYSIZE(GameObNameInput),
+				ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			{
+				m_gameObjects[m_NewGameIndex].name = GameObNameInput;
+				m_NewGameIndex = -1;
+				lastNewGameIndex = -1;
 
-			quickSort(m_gameObjects, 0, m_gameObjects.size() - 1);
-			if (!m_currentObName.empty() && m_viewer->GetCurrentObjectType() == currentObjectType::game) {
-				for (int i = 0; i < m_gameObjects.size(); i++) {
-					if (m_gameObjects[i].name == m_currentObName) 
-						m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
+				quickSort(m_gameObjects, 0, m_gameObjects.size() - 1);
+				if (!m_currentObName.empty() && m_viewer->GetCurrentObjectType() == currentObjectType::game) {
+					for (int j = 0; j < m_gameObjects.size(); j++) {
+						if (m_gameObjects[j].name == m_currentObName)
+							m_viewer->SetObject(&m_gameObjects[j], currentObjectType::game);
+					}
 				}
+			}
+
+			// Right-click cancel
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+				m_gameObjects.erase(m_gameObjects.begin() + m_NewGameIndex);
+				m_NewGameIndex = -1;
+				lastNewGameIndex = -1;
+			}
+
+		}
+		else
+		{
+			const char* name = m_gameObjects[i].name.empty() ? "Unnamed Object" : m_gameObjects[i].name.c_str();
+			bool selected = (m_indexOfCurrentOb == i && m_viewer->GetCurrentObjectType() == currentObjectType::game);
+			if (ImGui::Selectable(name, selected, 0, ImVec2(windowSize.x - 24.0f, 20)))
+			{
+				m_viewer->SetObject(&m_gameObjects[i], currentObjectType::game);
+				m_indexOfCurrentOb = i;
+				m_currentObName = m_gameObjects[i].name;
 			}
 		}
 	}
 
-
+	ImGui::Unindent();
 }
+
 
 void SceneContent::RenderLightList()
 {
 	ImVec2 windowSize = ImGui::GetWindowSize();
 	if (windowSize.x > 300) windowSize.x = 300;
-	if (m_lightObjects.size() != 0) {
+
+	if (!m_lightObjects.empty()) {
 		ImGui::Separator();
 		ImGui::Text("Light Objects:");
 	}
 
 	ImGui::Indent();
-	for (int i = 0; i < m_lightObjects.size(); i++) {
-		const char* name;
-		(m_lightObjects[i].name.empty() ? name = "Unnamed Light" : name = m_lightObjects[i].name.c_str());
-		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
-			m_viewer->SetObject(&m_lightObjects[i], currentObjectType::light);
-			m_indexOfCurrentOb = i;
-		}
-	}
-	ImGui::Unindent();
-
 
 	static char lightNameInput[256] = "";
 	static int lastNewLightIndex = -1;
 
-	if (m_newLightIndex > -1) {
-		if (m_newLightIndex != lastNewLightIndex) {
-			snprintf(lightNameInput, sizeof(lightNameInput), "Light %d", m_newLightIndex + 1);
-			lastNewLightIndex = m_newLightIndex;
-		}
+	for (int i = 0; i < m_lightObjects.size(); i++)
+	{
+		bool isNew = (i == m_newLightIndex);
 
-		ImGui::InputText("##Enter Light Name", lightNameInput, IM_ARRAYSIZE(lightNameInput));
+		if (isNew) {
+			if (m_newLightIndex != lastNewLightIndex) {
+				snprintf(lightNameInput, sizeof(lightNameInput), "Light %d", m_newLightIndex + 1);
+				lastNewLightIndex = m_newLightIndex;
+				ImGui::SetKeyboardFocusHere();
+			}
 
-		if (ImGui::Button("Cancel")) {
-			m_lightObjects.erase(m_lightObjects.begin() + m_newLightIndex);
-			m_newLightIndex = -1;
-			lastNewLightIndex = -1;
+			if (ImGui::InputText("##NewLight", lightNameInput, IM_ARRAYSIZE(lightNameInput),
+				ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			{
+				m_lightObjects[m_newLightIndex].name = lightNameInput;
+				m_newLightIndex = -1;
+				lastNewLightIndex = -1;
+			}
+
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+				m_lightObjects.erase(m_lightObjects.begin() + m_newLightIndex);
+				m_newLightIndex = -1;
+				lastNewLightIndex = -1;
+			}
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Confirm")) {
-			m_lightObjects[m_newLightIndex].name = lightNameInput;
-			m_newLightIndex = -1;
-			lastNewLightIndex = -1;
+		else {
+			const char* name = m_lightObjects[i].name.empty() ? "Unnamed Light" : m_lightObjects[i].name.c_str();
+			bool selected = (m_indexOfCurrentOb == i && m_viewer->GetCurrentObjectType() == currentObjectType::light);
+			if (ImGui::Selectable(name, selected, 0, ImVec2(windowSize.x - 24.0f, 20))) {
+				m_viewer->SetObject(&m_lightObjects[i], currentObjectType::light);
+				m_indexOfCurrentOb = i;
+				m_currentObName = m_lightObjects[i].name;
+			}
 		}
 	}
 
+	ImGui::Unindent();
 }
 
-void SceneContent::RenderUiList() {
+
+void SceneContent::RenderUiList()
+{
 	ImVec2 windowSize = ImGui::GetWindowSize();
 	if (windowSize.x > 300) windowSize.x = 300;
 
-	// Text objects
+	// --- Text Objects ---
 	if (!m_textObjects.empty()) {
 		ImGui::Separator();
 		ImGui::Text("UI Texts:");
 	}
 
 	ImGui::Indent();
-	for (int i = 0; i < m_textObjects.size(); i++) {
-		const char* name;
-		(m_textObjects[i].name.empty() ? name = "Unnamed Text" : name = m_textObjects[i].name.c_str());
-		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
-			m_viewer->SetObject(&m_textObjects[i], currentObjectType::text);
-			m_indexOfCurrentOb = i;
-			m_currentObName = m_textObjects[i].name;
-		}
-	}
-	ImGui::Unindent();
 
 	static char TextNameInput[256] = "";
 	static int lastNewTextIndex = -1;
 
-	if (m_newTextIndex > -1) {
-		if (m_newTextIndex != lastNewTextIndex) {
-			snprintf(TextNameInput, sizeof(TextNameInput), "Text %d", m_newTextIndex + 1);
-			lastNewTextIndex = m_newTextIndex;
-		}
+	for (int i = 0; i < m_textObjects.size(); i++)
+	{
+		bool isNew = (i == m_newTextIndex);
 
-		ImGui::InputText("##Enter Text Name", TextNameInput, IM_ARRAYSIZE(TextNameInput));
+		if (isNew) {
+			if (m_newTextIndex != lastNewTextIndex) {
+				snprintf(TextNameInput, sizeof(TextNameInput), "Text %d", m_newTextIndex + 1);
+				lastNewTextIndex = m_newTextIndex;
+				ImGui::SetKeyboardFocusHere();
+			}
 
-		if (ImGui::Button("Cancel")) {
-			m_textObjects.erase(m_textObjects.begin() + m_newTextIndex);
-			m_newTextIndex = -1;
-			lastNewTextIndex = -1;
+			if (ImGui::InputText("##NewText", TextNameInput, IM_ARRAYSIZE(TextNameInput),
+				ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			{
+				m_textObjects[m_newTextIndex].name = TextNameInput;
+				m_newTextIndex = -1;
+				lastNewTextIndex = -1;
+			}
+
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+				m_textObjects.erase(m_textObjects.begin() + m_newTextIndex);
+				m_newTextIndex = -1;
+				lastNewTextIndex = -1;
+			}
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Confirm")) {
-			m_textObjects[m_newTextIndex].name = TextNameInput;
-			m_newTextIndex = -1;
-			lastNewTextIndex = -1;
+		else {
+			const char* name = m_textObjects[i].name.empty() ? "Unnamed Text" : m_textObjects[i].name.c_str();
+			bool selected = (m_indexOfCurrentOb == i && m_viewer->GetCurrentObjectType() == currentObjectType::text);
+			if (ImGui::Selectable(name, selected, 0, ImVec2(windowSize.x - 24.0f, 20))) {
+				m_viewer->SetObject(&m_textObjects[i], currentObjectType::text);
+				m_indexOfCurrentOb = i;
+				m_currentObName = m_textObjects[i].name;
+			}
 		}
 	}
 
+	ImGui::Unindent();
 
-	// Button objects
+	// --- Button Objects ---
 	if (!m_buttonObjects.empty()) {
 		ImGui::Separator();
 		ImGui::Text("UI Buttons:");
 	}
 
 	ImGui::Indent();
-	for (int i = 0; i < m_buttonObjects.size(); i++) {
-		const char* name;
-		(m_buttonObjects[i].name.empty() ? name = "Unnamed Button" : name = m_buttonObjects[i].name.c_str());
-		if (ImGui::Button(name, ImVec2(windowSize.x - 20.0f, 30))) {
-			m_viewer->SetObject(&m_buttonObjects[i], currentObjectType::button);
-			m_indexOfCurrentOb = i;
-			m_currentObName = m_buttonObjects[i].name;
-		}
-	}
-	ImGui::Unindent();
 
 	static char ButtonNameInput[256] = "";
 	static int lastNewButtonIndex = -1;
 
-	if (m_newButtonIndex > -1) {
-		if (m_newButtonIndex != lastNewButtonIndex) {
-			snprintf(ButtonNameInput, sizeof(ButtonNameInput), "Button %d", m_newButtonIndex + 1);
-			lastNewButtonIndex = m_newButtonIndex;
-		}
+	for (int i = 0; i < m_buttonObjects.size(); i++)
+	{
+		bool isNew = (i == m_newButtonIndex);
 
-		ImGui::InputText("##Enter Button Name", ButtonNameInput, IM_ARRAYSIZE(ButtonNameInput));
+		if (isNew) {
+			if (m_newButtonIndex != lastNewButtonIndex) {
+				snprintf(ButtonNameInput, sizeof(ButtonNameInput), "Button %d", m_newButtonIndex + 1);
+				lastNewButtonIndex = m_newButtonIndex;
+				ImGui::SetKeyboardFocusHere();
+			}
 
-		if (ImGui::Button("Cancel##ButtonCancel")) {
-			m_buttonObjects.erase(m_buttonObjects.begin() + m_newButtonIndex);
-			m_newButtonIndex = -1;
-			lastNewButtonIndex = -1;
+			if (ImGui::InputText("##NewButton", ButtonNameInput, IM_ARRAYSIZE(ButtonNameInput),
+				ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+			{
+				m_buttonObjects[m_newButtonIndex].name = ButtonNameInput;
+				m_newButtonIndex = -1;
+				lastNewButtonIndex = -1;
+			}
+
+			if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+				m_buttonObjects.erase(m_buttonObjects.begin() + m_newButtonIndex);
+				m_newButtonIndex = -1;
+				lastNewButtonIndex = -1;
+			}
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Confirm##ButtonConfirm")) {
-			m_buttonObjects[m_newButtonIndex].name = ButtonNameInput;
-			m_newButtonIndex = -1;
-			lastNewButtonIndex = -1;
+		else {
+			const char* name = m_buttonObjects[i].name.empty() ? "Unnamed Button" : m_buttonObjects[i].name.c_str();
+			bool selected = (m_indexOfCurrentOb == i && m_viewer->GetCurrentObjectType() == currentObjectType::button);
+			if (ImGui::Selectable(name, selected, 0, ImVec2(windowSize.x - 24.0f, 20))) {
+				m_viewer->SetObject(&m_buttonObjects[i], currentObjectType::button);
+				m_indexOfCurrentOb = i;
+				m_currentObName = m_buttonObjects[i].name;
+			}
 		}
 	}
 
+	ImGui::Unindent();
 }
-
 
 static bool isScene(Object* obj, currentObjectType type)
 {

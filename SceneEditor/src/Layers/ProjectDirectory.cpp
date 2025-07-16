@@ -108,28 +108,19 @@ void ProjectDirectory::Window()
     if (!m_isOpen) return;
 
     bool released = false;
-    if (!m_selectedItemPath.empty())
-        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && !m_selectedItemPath.empty())
     {
-        ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
         released = true;
     }
 
     ImGui::Begin("Content Browser", &m_isOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
 
-    // Create two columns, left for folder tree, right for file content
-    ImGui::Columns(2, "ContentBrowserColumns", true);
-    ImGui::SetColumnWidth(0, 240.0f); // Sidebar width like Unity
+    // Create two columns: folder tree (left), file content (right)
+    ImGui::Columns(2, "ContentBrowserColumns", false);
+    ImGui::SetColumnWidth(0, 240.0f); // Sidebar width
 
-    ImVec2 cursor = ImGui::GetCursorScreenPos();
-    ImVec2 top = ImVec2(cursor.x - 1.0f, cursor.y);
-    ImVec2 bottom = ImVec2(cursor.x - 1.0f, cursor.y + ImGui::GetWindowHeight());
-    ImU32 shadowColor = IM_COL32(0, 0, 0, 90);
-    ImGui::GetWindowDrawList()->AddRectFilled(top, bottom, shadowColor);
-
-    // LEFT: Folder Hierarchy (Sidebar)
+    // LEFT: Folder Hierarchy
     {
         ImGui::BeginChild("Hierarchy", ImVec2(0, 0), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
         DrawFolderHierarchy(m_mainPath, released);
@@ -141,27 +132,31 @@ void ProjectDirectory::Window()
     // RIGHT: Content Explorer
     {
         const float iconSize = 24.0f;
+
         if (ImGui::ImageButton(m_reloadIcon->GetDescriptorSet(), ImVec2(iconSize, iconSize)))
             SetCurrentPath(m_currentPath);
+
         ImGui::SameLine();
+
         if (ImGui::ImageButton(m_returnIcon->GetDescriptorSet(), ImVec2(iconSize, iconSize)))
             SetCurrentPath(m_currentPath.substr(0, m_currentPath.find_last_of('\\')));
 
-		ImGui::SameLine();
-		static char searchBuffer[256] = "";
-        if (ImGui::InputText("##search", searchBuffer, sizeof(searchBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+        ImGui::SameLine();
+        static char searchBuffer[256] = "";
+        ImGui::SetNextItemWidth(300.0f);
+        ImGui::InputTextWithHint("##search", "Search Assets", searchBuffer, sizeof(searchBuffer));
+
+        if (ImGui::IsItemDeactivatedAfterEdit())
         {
             for (const auto& entry : std::filesystem::recursive_directory_iterator(m_mainPath)) {
-                if (entry.path().filename().string().find(searchBuffer) != std::string::npos)
-                {
+                if (entry.path().filename().string().find(searchBuffer) != std::string::npos) {
                     SetCurrentPath(entry.path().parent_path().string());
-
                     break;
                 }
             }
         }
 
-        // Handle file uploads
+        // Handle uploads
         if (m_copySize > 0)
         {
             for (int i = 0; i < m_copySize; ++i)
@@ -177,12 +172,12 @@ void ProjectDirectory::Window()
             m_copySize = 0;
         }
 
-        // Right-click context menu (only on empty space)
+        // Right-click context menu
         if (ImGui::BeginPopupContextWindow("ContentBrowserPopup", ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
         {
             if (ImGui::MenuItem("New Folder"))
             {
-                CreateNewFolder(); 
+                CreateNewFolder();
             }
             ImGui::EndPopup();
         }
@@ -192,14 +187,12 @@ void ProjectDirectory::Window()
         columnIndex = ShowImagesInDir(columnIndex);
         columnIndex = ShowMapsInDir(columnIndex);
         ShowFiles(columnIndex);
-
-
     }
 
-    ImGui::Columns(1); // End 2-column layout
+    ImGui::Columns(1);
     ImGui::End();
-    
 }
+
 
 
 int ProjectDirectory::ShowFoldersInDir(int columnIndex)
@@ -210,6 +203,10 @@ int ProjectDirectory::ShowFoldersInDir(int columnIndex)
     const float thumbnailSize = 100.0f;
     const int imagesPerRow = (int)(windowWidth / (thumbnailSize + 2 * boxPadding + spacing));
 
+    if (!m_selectedPath.empty())
+    {
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+    }
 
     bool deleted = false;
     for (int i = 0; i < m_folders.size(); i++) {
@@ -357,6 +354,7 @@ int ProjectDirectory::ShowImagesInDir(int columnIndex)
 
             if (ImGui::IsItemHovered())
             {
+                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
                 ImGui::BeginTooltip();
                 ImGui::Text("%s", imagePath.filename().string().c_str());
                 ImGui::EndTooltip();
@@ -479,6 +477,10 @@ int ProjectDirectory::ShowMapsInDir(int columnIndex)
                 m_selectedItemPath = mapPath;
                 m_newScene = mapPath.string();
             }
+            if (ImGui::IsItemHovered())
+            {
+				ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+            }
 
             if (ImGui::BeginPopupContextItem("MapContext"))
             {
@@ -590,22 +592,33 @@ int ProjectDirectory::ShowFiles(int columnIndex)
             if (entry.path().extension() == ".ogg" || entry.path().extension() == ".wav" || entry.path().extension() == ".mp3")
             {
                 ImGui::Image(m_soundIcon->GetDescriptorSet(), iconSize);
+                if (ImGui::IsItemHovered())
+                    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
             }else if (entry.path().extension() == ".ttf")
             {
             	ImGui::Image(m_fontIcon->GetDescriptorSet(), iconSize);
+                if (ImGui::IsItemHovered())
+                    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
             }else if (entry.path().extension() == ".cfg")
             {
                 ImGui::Image(m_fileIcon->GetDescriptorSet(), iconSize);
-                if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                if (ImGui::IsItemHovered())
                 {
-                    *m_inputManagerOpen = true;
-                    ImGui::SetWindowFocus("Input Manager");
+                    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                    {
+                        *m_inputManagerOpen = true;
+                        ImGui::SetWindowFocus("Input Manager");
+                    }
+                    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
                 }
             }
         	else
             {
 
 				ImGui::Image(m_fileIcon->GetDescriptorSet(), iconSize);
+                if (ImGui::IsItemHovered())
+                    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
             }
             
 

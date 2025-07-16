@@ -941,7 +941,7 @@ namespace Walnut {
 
 					ImGui::PopStyleColor(); // ImGuiCol_Border
 				}
-				
+
 				if (m_Specification.CustomTitlebar)
 				{
 					float titleBarHeight;
@@ -998,6 +998,7 @@ namespace Walnut {
 		}
 
 	}
+
 
 	void Application::Close()
 	{

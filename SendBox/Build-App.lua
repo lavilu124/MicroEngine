@@ -7,14 +7,16 @@ project "SendBox"
 
    files { "src/**.h", "src/**.cpp" }
 
+   local sfmlRoot = "../dependencies/SFML/SFML-2.6.1"
+
    includedirs
    {
       "src",
 
 	  -- Include Core
 	  "../MicroEngine/Source",
-      "$(SolutionDir)dependencies/SFML/SFML-2.6.1/include",
-      "$(SolutionDir)MicroEngine/src"
+      sfmlRoot .. "/include",
+      "../MicroEngine/src"
    }
 
    links
@@ -23,12 +25,11 @@ project "SendBox"
    }
 
    prebuildcommands {
-    'del /q "$(OutDir)Micro.dll"',
-    'xcopy /y "$(SolutionDir)Binaries\\' .. outputdir .. '\\Micro\\Micro.dll" "$(OutDir)"'
+    'xcopy /y "../Binaries\\' .. outputdir .. '\\Micro\\Micro.dll" "$(OutDir)"'
    }
 
    postbuildcommands {
-    'xcopy /y "$(SolutionDir)dependencies\\SFML\\SFML-2.6.1\\bin\\*.dll" "$(OutDir)"'
+    'xcopy /y "../dependencies\\SFML\\SFML-2.6.1\\bin\\*.dll" "$(OutDir)"'
    }
 
    targetdir ("../Binaries/" .. outputdir .. "/%{prj.name}")
@@ -43,11 +44,11 @@ project "SendBox"
         runtime "Debug"
         symbols "On"
         links {
-            "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-graphics-d.lib",
-            "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-window-d.lib",
-            "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-system-d.lib",
-            "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-audio-d.lib",
-            "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-network-d.lib"
+            sfmlRoot .. "/lib/sfml-graphics-d.lib",
+            sfmlRoot .. "/lib/sfml-window-d.lib",
+            sfmlRoot .. "/lib/sfml-system-d.lib",
+            sfmlRoot .. "/lib/sfml-audio-d.lib",
+            sfmlRoot .. "/lib/sfml-network-d.lib"
         }
 
    filter "configurations:Release"
@@ -56,11 +57,11 @@ project "SendBox"
        optimize "On"
        symbols "On"
        links {
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-graphics.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-window.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-system.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-audio.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-network.lib"
+           sfmlRoot .. "/lib/sfml-graphics.lib",
+           sfmlRoot .. "/lib/sfml-window.lib",
+           sfmlRoot .. "/lib/sfml-system.lib",
+           sfmlRoot .. "/lib/sfml-audio.lib",
+           sfmlRoot .. "/lib/sfml-network.lib"
        }
 
    filter "configurations:Dist"
@@ -69,9 +70,9 @@ project "SendBox"
        optimize "On"
        symbols "Off"
        links {
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-graphics.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-window.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-system.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-audio.lib",
-           "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-network.lib"
+           sfmlRoot .. "/lib/sfml-graphics.lib",
+           sfmlRoot .. "/lib/sfml-window.lib",
+           sfmlRoot .. "/lib/sfml-system.lib",
+           sfmlRoot .. "/lib/sfml-audio.lib",
+           sfmlRoot .. "/lib/sfml-network.lib"
        }
