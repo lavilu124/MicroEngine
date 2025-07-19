@@ -1,5 +1,5 @@
 project "Game"
-   kind "ConsoleApp"
+   kind "SharedLib"
    language "C++"
    cppdialect "C++17"
    targetdir "Binaries/%{cfg.buildcfg}"

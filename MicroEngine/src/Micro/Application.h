@@ -8,8 +8,8 @@ namespace Micro{
 	class MICRO_API Application
 	{
 	public:
-		Application(float windowWidth, float windowHeight, float maxFPS, const char* name);
-		Application(const sf::Vector2f& windowSize, float maxFps, const char* name);
+		Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const char* scene);
+		Application(const sf::Vector2f& windowSize, float maxFps, const char* name, const char* scene);
 
 
 		static Application& Get();

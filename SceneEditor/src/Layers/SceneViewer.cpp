@@ -1,6 +1,7 @@
 ﻿#include "SceneViewer.h"
 #include <filesystem>
-#include <iostream>
+#include <Windows.h>
+#include <Micro/Application.h> 
 
 #include "../fileManage/FileManage.h"
 
@@ -110,26 +111,41 @@ void SceneViewer::ExecutePlayCommand() const
 
     std::string msbuildPath = GetMsbuildPathFromVswhere();
     if (!std::filesystem::exists(msbuildPath)) {
-        std::cerr << "MSBuild path invalid or not found!" << std::endl;
         return;
     }
 
     std::string projectPath = m_mainPath;
     if (projectPath.find("\\Resources") != std::string::npos)
         projectPath = projectPath.substr(0, projectPath.find_last_of('\\'));
-    projectPath += "\\Game\\Game.vcxproj";
 
     if (!std::filesystem::exists(projectPath)) {
-        std::cerr << "Game project file not found!" << std::endl;
         return;
     }
 
-    std::string command = "\"" + msbuildPath + "\" \"" + projectPath + "\" /p:Configuration=Debug /p:Platform=x64";
+    std::string command = "\"" + msbuildPath + "\" \"" + projectPath + "\\Game\\Game.vcxproj" + "\" /p:Configuration=Debug /p:Platform=x64";
     std::string fullCommand = "cmd /C \"" + command + "\"";
 
     int result = std::system(fullCommand.c_str());
     if (result != 0)
         return;
+
+
+    typedef Micro::Application* (*CreateAppFunc)(const char*);
+
+	std::string gameDllPath = projectPath + "\\Binaries\\windows-x86_64\\Debug\\Game\\Game.dll";
+    HMODULE gameLibrary = LoadLibraryA(gameDllPath.c_str());
+
+    if (!gameLibrary)
+        return;
+    
+
+    CreateAppFunc createApp = (CreateAppFunc) GetProcAddress(gameLibrary, "CreateApplication");
+    if (!createApp)
+        return;
+
+    std::filesystem::current_path(projectPath);
+    Micro::Application* gameApp = createApp("");
+
 
 
     //if (command.find("\\Resources") != std::string::npos)
