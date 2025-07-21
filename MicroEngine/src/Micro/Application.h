@@ -10,8 +10,8 @@ namespace Micro{
 	class MICRO_API Application
 	{
 	public:
-		Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const char* scene = "");
-		Application(const sf::Vector2f& windowSize, float maxFps, const char* name, const char* scene = "");
+		Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const std::string& scene = "");
+		Application(const sf::Vector2f& windowSize, float maxFps, const char* name, const std::string& scene = "");
 
 
 		static Application& Get();
@@ -27,6 +27,9 @@ namespace Micro{
 		void SetWindowSize(const sf::Vector2u& newSize);
 		sf::Vector2u GetWindowSize() const;
 		void SetWindowTitle(const char* name);
+
+
+		void Close();
 
 
 	protected:

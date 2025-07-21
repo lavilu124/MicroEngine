@@ -6,12 +6,13 @@ static Micro::Application* s_Instance = nullptr;
 
 namespace Micro{
 
-	Application::Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const char* scene){
+	Application::Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const std::string& scene) {
 
-		if (!std::string(scene).empty())
+		if (!scene.empty())
 		{
 			m_inGUiMode = true;
 			m_systemManager.emplace(windowWidth, windowHeight);
+			(*m_systemManager).LoadScene(scene.c_str());
 		}else
 		{
 			m_window.emplace(sf::VideoMode(windowWidth, windowHeight), name, sf::Style::Default);
@@ -26,11 +27,12 @@ namespace Micro{
 		m_camera = &(*m_systemManager).GetCamera();
 	}
 
-	Application::Application(const sf::Vector2f& windowSize, float maxFPS, const char* name, const char* scene){
-		if (!std::string(scene).empty())
+	Application::Application(const sf::Vector2f& windowSize, float maxFPS, const char* name, const std::string& scene){
+		if (!scene.empty())
 		{
 			m_inGUiMode = true;
 			m_systemManager.emplace(windowSize.x, windowSize.y);
+			(*m_systemManager).LoadScene(scene.c_str());
 		}
 		else
 		{
@@ -47,8 +49,17 @@ namespace Micro{
 		return *s_Instance;
 	}
 
+	bool windowOpen(std::optional<sf::RenderWindow>& window)
+	{
+		if (window)
+			return (*window).isOpen();
+
+		return false;
+	}
+
 	void Application::Run() {
-		while ((*m_window).isOpen() || m_inGUiMode) {
+
+		while (windowOpen(m_window) || m_inGUiMode) {
 			InputFunc();
 
 			(*m_systemManager).Update();
@@ -93,6 +104,12 @@ namespace Micro{
 			(*m_window).setTitle(name);
 	}
 
+	void Application::Close()
+	{
+		if (m_window)
+			(*m_window).close();
+		m_inGUiMode = false;
+	}
 
 
 	sf::Vector2u Application::GetWindowSize() const

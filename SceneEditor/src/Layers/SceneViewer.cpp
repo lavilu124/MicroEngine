@@ -1,9 +1,14 @@
 ﻿#include "SceneViewer.h"
 #include <filesystem>
-#include <Windows.h>
-#include <Micro/Application.h> 
+#include <iostream>
+
 
 #include "../fileManage/FileManage.h"
+
+bool posEqual(ImVec2 a, sf::Vector2f b)
+{
+	return (a.x == b.x && a.y == b.y);
+}
 
 SceneViewer::SceneViewer(const std::shared_ptr<SceneContent>& sceneContent, const char* mainPath) : sceneContent(sceneContent), m_mainPath(mainPath)
 {
@@ -11,6 +16,17 @@ SceneViewer::SceneViewer(const std::shared_ptr<SceneContent>& sceneContent, cons
 
 void SceneViewer::OnDetach()
 {
+    if (m_app)
+    {
+        m_app->Close();
+        delete m_app;
+        m_app = nullptr;
+
+        FreeLibrary(gameLibrary);
+        gameLibrary = nullptr;
+
+        m_playing = false;
+    }
     renderTexture.clear();
 }
 
@@ -30,6 +46,30 @@ void SceneViewer::OnUIRender()
     Window();
 }
 
+void SceneViewer::OnUpdate(float ts)
+{
+    Layer::OnUpdate(ts);
+
+    if (m_playing && m_app)
+    {
+		m_app->GetSystemManager()->Update();
+        for (auto& obj : sceneContent->GetGameObjects())
+        {
+            auto LibObj = m_app->GetSystemManager()->GetObjectByName(obj.name.c_str());
+            if (LibObj)
+            {
+                sf::Vector2f pos = LibObj->GetPosition();
+                obj.position = { pos.x, pos.y };
+
+				obj.rotation = LibObj->GetRotation();
+
+				sf::Vector2f scale = LibObj->GetScale();
+				obj.scale = { scale.x, scale.y };
+            }
+        }
+    }
+}
+
 void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     constexpr float buttonWidth = 16.7f;
     constexpr float buttonHeight = 16.7f;
@@ -44,7 +84,7 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
     style.Colors[ImGuiCol_Border] = ImVec4(0, 0, 0, 0);
     style.WindowBorderSize = 0.0f;
 
-    ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight * 1.75));
+    //ImGui::BeginChild("##header", ImVec2(contentRegion.x, buttonHeight * 1.75));
 
     ImGui::SetCursorPos({ 0.0f, 0.0f });
     if (ImGui::ImageButton(m_saveButtonImage->GetDescriptorSet(), ImVec2(buttonWidth, buttonHeight )))
@@ -76,7 +116,7 @@ void SceneViewer::RenderHeader(const ImVec2& contentRegion) {
         ImGui::EndTooltip();
     }
 
-    ImGui::EndChild();
+    //ImGui::EndChild();
 
     style.Colors[ImGuiCol_ChildBg] = originalBgColor;
     style.Colors[ImGuiCol_Border] = originalBorderColor;
@@ -106,100 +146,70 @@ static std::string GetMsbuildPathFromVswhere()
 }
 
 
-void SceneViewer::ExecutePlayCommand() const
+void SceneViewer::ExecutePlayCommand()
 {
 
-    std::string msbuildPath = GetMsbuildPathFromVswhere();
-    if (!std::filesystem::exists(msbuildPath)) {
-        return;
+    if (!m_playing)
+    {
+        std::string msbuildPath = GetMsbuildPathFromVswhere();
+        if (!std::filesystem::exists(msbuildPath)) {
+            return;
+        }
+
+        std::string projectPath = m_mainPath;
+        if (projectPath.find("\\Resources") != std::string::npos)
+            projectPath = projectPath.substr(0, projectPath.find_last_of('\\'));
+
+        if (!std::filesystem::exists(projectPath)) {
+            return;
+        }
+
+        std::string command = "\"" + msbuildPath + "\" \"" + projectPath + "\\Game\\Game.vcxproj" + "\" /p:Configuration=Debug /p:Platform=x64";
+        std::string fullCommand = "cmd /C \"" + command + "\"";
+
+
+		//run in diffrent thread and create loading screen
+        int result = std::system(fullCommand.c_str());
+        if (result != 0)
+            return;
+
+
+        typedef Micro::Application* (*CreateAppFunc)(const std::string&);
+
+        std::string gameDllPath = projectPath + "\\Binaries\\windows-x86_64\\Debug\\Game\\Game.dll";
+    	gameLibrary = LoadLibraryA(gameDllPath.c_str());
+
+        if (!gameLibrary)
+            return;
+
+
+        CreateAppFunc createApp = (CreateAppFunc)GetProcAddress(gameLibrary, "CreateApplication");
+        if (!createApp)
+            return;
+
+        
+		std::filesystem::path scenePath(sceneContent->GetCurrentScene());
+        std::string sceneName = scenePath.filename().string();
+		sceneName = sceneName.substr(0, sceneName.find_last_of('.')); 
+
+        std::filesystem::current_path(projectPath);
+        m_app = createApp(sceneName);
+        m_playing = true;
+
+		m_offset = { 0.0f, 0.0f };
+        m_zoom =  ImGui::GetWindowSize().x / 1920;
     }
+    else
+    {
+        m_app->Close();
+		delete m_app;
+        m_app = nullptr;
 
-    std::string projectPath = m_mainPath;
-    if (projectPath.find("\\Resources") != std::string::npos)
-        projectPath = projectPath.substr(0, projectPath.find_last_of('\\'));
+	    FreeLibrary(gameLibrary);
+        gameLibrary = nullptr;
 
-    if (!std::filesystem::exists(projectPath)) {
-        return;
+        m_playing = false;
     }
-
-    std::string command = "\"" + msbuildPath + "\" \"" + projectPath + "\\Game\\Game.vcxproj" + "\" /p:Configuration=Debug /p:Platform=x64";
-    std::string fullCommand = "cmd /C \"" + command + "\"";
-
-    int result = std::system(fullCommand.c_str());
-    if (result != 0)
-        return;
-
-
-    typedef Micro::Application* (*CreateAppFunc)(const char*);
-
-	std::string gameDllPath = projectPath + "\\Binaries\\windows-x86_64\\Debug\\Game\\Game.dll";
-    HMODULE gameLibrary = LoadLibraryA(gameDllPath.c_str());
-
-    if (!gameLibrary)
-        return;
-    
-
-    CreateAppFunc createApp = (CreateAppFunc) GetProcAddress(gameLibrary, "CreateApplication");
-    if (!createApp)
-        return;
-
-    std::filesystem::current_path(projectPath);
-    Micro::Application* gameApp = createApp("");
-
-
-
-    //if (command.find("\\Resources") != std::string::npos)
-    //    command = command.substr(0, command.find_last_of('\\'));
-    //std::string command2 = command;
-
-    //command += "\\binaries\\windows-x86_64\\Debug\\Game\\Game.exe";
-    //command2 += "\\binaries\\windows-x86_64\\Release\\Game\\Game.exe";
-    //
-    //
-    //
-
-    //auto originalPath = std::filesystem::current_path();
-    //
-    //
-
-    //if (std::filesystem::exists(command)) {
-    //    std::string workingDir = command.substr(0, command.find_last_of('\\'));
-    //    // Save the current path
-    //    
-
-    //    // Change to the game's directory
-    //    std::filesystem::current_path(workingDir);
-
-    //    /*std::string scene = m_sceneContent->GetCurrentScene();
-    //    scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
-    //    command += " ";
-    //    command += scene;*/
-
-
-
-    //    system("Game.exe");
-
-    //    m_doneWithRun = true;
-    //}
-    //else if (std::filesystem::exists(command2)) {
-    //    std::string workingDir = command2.substr(0, command2.find_last_of('\\'));
-    //    // Save the current path
-
-
-    //    // Change to the game's directory
-    //    std::filesystem::current_path(workingDir);
-
-    //    /*std::string scene = m_sceneContent->GetCurrentScene();
-    //    scene = scene.substr(scene.find_last_of('\\') + 1, scene.size() - scene.find_last_of('\\') - 9);
-    //    command2 += " ";
-    //    command2 += scene;*/
-
-
-
-    //    system("Game.exe");
-    //}
-
-    //std::filesystem::current_path(originalPath);
 
 
 }
@@ -238,33 +248,37 @@ void SceneViewer::Window()
     ImVec2 relativeMousePos = { mousePos.x - cursorPos.x, mousePos.y - cursorPos.y };
 
     ImVec2 contentRegion = ImGui::GetContentRegionAvail();
-    // Zoom (scroll wheel)
-    if (ImGui::IsWindowHovered() && io.MouseWheel != 0.0f)
+
+    if (!m_playing)
     {
-        float zoomFactor = 1.1f;
-        float oldZoom = m_zoom;
-        m_zoom *= (io.MouseWheel > 0) ? zoomFactor : (1.0f / zoomFactor);
+        // Zoom (scroll wheel)
+        if (ImGui::IsWindowHovered() && io.MouseWheel != 0.0f)
+        {
+            float zoomFactor = 1.1f;
+            float oldZoom = m_zoom;
+            m_zoom *= (io.MouseWheel > 0) ? zoomFactor : (1.0f / zoomFactor);
 
-        // Mouse position relative to the scene center
-        ImVec2 sceneCenter = ImVec2(contentRegion.x / 2.0f, contentRegion.y / 2.0f);
-        ImVec2 focusPoint = ImVec2(relativeMousePos.x - sceneCenter.x, relativeMousePos.y - sceneCenter.y);
+            // Mouse position relative to the scene center
+            ImVec2 sceneCenter = ImVec2(contentRegion.x / 2.0f, contentRegion.y / 2.0f);
+            ImVec2 focusPoint = ImVec2(relativeMousePos.x - sceneCenter.x, relativeMousePos.y - sceneCenter.y);
 
-        m_offset.x -= focusPoint.x * (1.0f - m_zoom / oldZoom);
-        m_offset.y -= focusPoint.y * (1.0f - m_zoom / oldZoom);
-    }
+            m_offset.x -= focusPoint.x * (1.0f - m_zoom / oldZoom);
+            m_offset.y -= focusPoint.y * (1.0f - m_zoom / oldZoom);
+        }
 
-    // Panning (mouse drag)
-    if (ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
-    {
-        ImVec2 delta = io.MouseDelta;
-        m_offset.x += delta.x;
-        m_offset.y += delta.y;
+        // Panning (mouse drag)
+        if (ImGui::IsMouseDragging(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
+        {
+            ImVec2 delta = io.MouseDelta;
+            m_offset.x += delta.x;
+            m_offset.y += delta.y;
+        }
     }
 
     
     RenderHeader(contentRegion);
     
-    ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetCursorScreenPos(), ImVec2(ImGui::GetCursorScreenPos().x + contentRegion.x, ImGui::GetCursorScreenPos().y + contentRegion.y), IM_COL32(0, 0, 0, 255));
+    ImGui::GetWindowDrawList()->AddRectFilled({0,0}, ImVec2(ImGui::GetCursorScreenPos().x + contentRegion.x, ImGui::GetCursorScreenPos().y + contentRegion.y), IM_COL32(0, 0, 0, 255));
 
     auto pos = ImGui::GetCursorScreenPos();
 
@@ -337,6 +351,8 @@ void SceneViewer::SaveWindow()
 
 void SceneViewer::RenderCameraBorder(ImVec2 contentRegion) const
 {
+    if (m_playing) return;
+
     sf::Vector2f size = { 1920.0f / sceneContent->GetCam().zoom, 1080.0f / sceneContent->GetCam().zoom };
     ImVec2 drawOrigin = ImGui::GetCursorScreenPos();
 
@@ -407,9 +423,6 @@ void SceneViewer::RenderCameraBorder(ImVec2 contentRegion) const
 
     ImGui::PopClipRect();
 }
-
-
-
 
 void SceneViewer::RenderDarknessOverlay(ImVec2 contentRegion) const
 {

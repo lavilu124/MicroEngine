@@ -2,6 +2,7 @@
 #include "SceneContent.h"
 #include <Micro.h>
 #include <lightInclude.h>
+#include <Windows.h>
 
 class SceneViewer : public Walnut::Layer
 {
@@ -16,6 +17,10 @@ public:
 	bool* Open() { return &m_isOpen; }
 
 	bool DoneRun();
+
+
+	void OnUpdate(float ts) override;
+
 
 	std::shared_ptr<SceneContent> sceneContent;
 
@@ -38,7 +43,7 @@ private:
 	void GenerateTextImage(TextObject& text);
 
 
-	void ExecutePlayCommand() const;
+	void ExecutePlayCommand();
 	
 	void RenderHeader(const ImVec2& contentRegion);
 
@@ -65,6 +70,7 @@ private:
 	ImVec2 m_lastMousePos = { 0.0f, 0.0f };
 
 	bool m_isOpen = true;
+	bool m_playing = false;
 
 
 	bool m_doneWithRun = false;
@@ -72,4 +78,7 @@ private:
 	sf::RenderTexture m_lightMaskTexture;
 	std::shared_ptr<Walnut::Image> m_lightMaskImage;
 	std::shared_ptr<uint8_t[]> m_lightMaskData;
+
+	Micro::Application* m_app = nullptr;
+	HMODULE gameLibrary = nullptr;
 };

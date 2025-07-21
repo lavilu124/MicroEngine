@@ -1,1 +1,3 @@
-C:\github\testingLib
+D:\di
+D:\github\Testing101
+D:\github\LibTesting
