@@ -2,14 +2,17 @@
 
 
 namespace Micro{
-	SceneManger::SceneManger(sf::RenderWindow& window, float width, float height) : camera(width, height) {
+	SceneManger::SceneManger(sf::RenderWindow& window) : camera(window.getSize().x, window.getSize().y) {
 		camera.SetCam(window);
 	}
 
-	SceneManger::SceneManger(sf::RenderWindow& window, sf::Vector2f windowSize) : camera(windowSize) {
-		camera.SetCam(window);
+	SceneManger::SceneManger(float width, float height) : camera(width, height)
+	{
 	}
 
+	SceneManger::SceneManger(sf::Vector2f windowSize) : camera(windowSize)
+	{
+	}
 
 
 	void SceneManger::LoadSceneFromFile(std::string Scene, SystemManager* systemManager, FileManager& fileManager) {

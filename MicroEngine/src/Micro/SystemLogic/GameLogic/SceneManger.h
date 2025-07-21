@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+
 #include "../../Objects/Camera.h"
 #include "../../FileOperations/FileManager.h"
 #include "../../../lightInclude.h"
@@ -11,8 +13,10 @@ namespace Micro{
 	class MICRO_API SceneManger
 	{
 	public:
-		SceneManger(sf::RenderWindow& window, float width, float height);
-		SceneManger(sf::RenderWindow& window, sf::Vector2f windowSize);
+		SceneManger(sf::RenderWindow& window);
+
+		SceneManger(float width, float height);
+		SceneManger(sf::Vector2f windowSize);
 
 		void LoadSceneFromFile(std::string Scene, SystemManager* systemManager, FileManager& fileManager);
 

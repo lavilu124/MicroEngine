@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+
 #include "../Core.h"
 #include "GameLogic/SceneManger.h"
 #include "../../lightInclude.h"
@@ -11,6 +13,10 @@ namespace Micro{
 	{
 	public:
 		SystemManager(sf::RenderWindow& window);
+
+		SystemManager(float width, float height);
+
+		SystemManager(const SystemManager& other);
 
 		void Update();
 

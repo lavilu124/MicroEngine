@@ -10,16 +10,15 @@ public:
 	
 	App(const float windowWidth, const float windowHeight, const float maxFPS, const char* scene)
 	: Application(windowWidth, windowHeight, maxFPS, "new game") {
-		m_systemManager.LoadScene("DefualtScene");
-		
+		(*m_systemManager).LoadScene("DefualtScene");
 	}
 
 	void Run() override {
 
-		while (m_window.isOpen()) {
+		while ((*m_window).isOpen() || m_inGUiMode) {
 			InputFunc();
 
-			m_systemManager.Update();
+			(*m_systemManager).Update();
 
 			Display();
 		}
@@ -30,6 +29,6 @@ private:
 
 };
 
-extern "C" __declspec(dllexport) Micro::Application * CreateApplication(const char* scene) {
+Micro::Application* Micro::CreateApplication(const char* scene) {
 	return new App(1920, 1080, 144, scene);
 }

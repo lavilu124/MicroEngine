@@ -48,8 +48,6 @@ namespace Micro{
 		m_window = nullptr;
 	}
 
-
-
 	void Camera::Update(SystemManager& systemManager){
 
 		if (m_window != nullptr) {

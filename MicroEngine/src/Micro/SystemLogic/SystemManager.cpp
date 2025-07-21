@@ -36,12 +36,12 @@ namespace Micro {
     }
 
     SystemManager::SystemManager(sf::RenderWindow& window)
-        : m_sceneManager(window, window.getSize().x, window.getSize().y), m_lighting(LightingArea::FOG, { ((float)window.getSize().x) / -2, ((float)window.getSize().y) / -2 }, { ((float)window.getSize().x), ((float)window.getSize().y) }) {
+        : m_sceneManager(window) , m_lighting(LightingArea::FOG, { ((float)window.getSize().x) / -2,  ((float)window.getSize().y) / -2 }, { (float)window.getSize().x, (float)window.getSize().y}) {
 
 
-        m_windowSize = sf::Vector2f(window.getSize().x, window.getSize().y);
+        m_windowSize = sf::Vector2f(window.getSize());
 
-
+        m_darkness.create(m_windowSize.x, m_windowSize.y);
         m_lighting.SetAreaTexture(&m_darkness);
         m_lighting.scale(m_windowSize.x , m_windowSize.y);
         m_lighting.Clear();
@@ -52,6 +52,39 @@ namespace Micro {
 
         deltaTime = 0;
     }
+
+    SystemManager::SystemManager(float width, float height) : m_sceneManager(width, height), m_lighting(LightingArea::FOG, {width/-2, height / -2}, {width, height})
+    {
+        m_windowSize = { width, height };
+
+        m_darkness.create(m_windowSize.x, m_windowSize.y);
+        m_lighting.SetAreaTexture(&m_darkness);
+        m_lighting.scale(m_windowSize.x, m_windowSize.y);
+        m_lighting.Clear();
+
+
+        m_fileManager.SetPaths();
+        m_fileManager.LoadInput();
+
+        deltaTime = 0;
+    }
+
+    SystemManager::SystemManager(const SystemManager& other) :m_sceneManager(other.m_sceneManager), m_lighting(LightingArea::FOG, { other.m_windowSize.x / -2, other.m_windowSize.y / -2}, other.m_windowSize)
+    {
+        m_windowSize = other.m_windowSize;
+
+        m_lighting.SetAreaTexture(&m_darkness);
+        m_lighting.scale(m_windowSize.x, m_windowSize.y);
+        m_lighting.Clear();
+
+
+        m_fileManager.SetPaths();
+        m_fileManager.LoadInput();
+
+        deltaTime = 0;
+    }
+
+
     void SystemManager::Start() {
         if (m_sceneManager.objects.empty()) return;
 

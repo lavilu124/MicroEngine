@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+
 #include "Core.h"
 #include "SystemLogic/SystemManager.h"
 
@@ -8,8 +10,8 @@ namespace Micro{
 	class MICRO_API Application
 	{
 	public:
-		Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const char* scene);
-		Application(const sf::Vector2f& windowSize, float maxFps, const char* name, const char* scene);
+		Application(float windowWidth, float windowHeight, float maxFPS, const char* name, const char* scene = "");
+		Application(const sf::Vector2f& windowSize, float maxFps, const char* name, const char* scene = "");
 
 
 		static Application& Get();
@@ -26,12 +28,13 @@ namespace Micro{
 		sf::Vector2u GetWindowSize() const;
 		void SetWindowTitle(const char* name);
 
+
 	protected:
-		sf::RenderWindow m_window;
-		SystemManager m_systemManager;
+		std::optional<sf::RenderWindow> m_window;
+		std::optional<SystemManager> m_systemManager;
 		Camera* m_camera;
 
-
+		bool m_inGUiMode = false;
 	};
 
 	Application* CreateApplication(const char* scene);
