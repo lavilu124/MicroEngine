@@ -1,15 +1,32 @@
-# Directories
+# ===== IDE / Visual Studio =====
 .vs/
-Binaries/
-
-# Files
+*.suo
+*.user
 *.vcxproj
 *.vcxproj.user
 *.vcxproj.filters
 *.sln
-*.log
-*.txt
 Makefile
 
-# Exclude
+# ===== Premake / build output directories =====
+bin/
+bin-int/
+Binaries/
+obj/
+Logs/
+
+# ===== Build artifacts =====
+*.log
+*.ipch
+*.pdb
+*.ilk
+*.idb
+*.exp
+
+# ===== Editor / session state (regenerated on every run) =====
+SceneEditor/imgui.ini
+SceneEditor/recent.txt
+SceneEditor/debug_light.png
+
+# ===== Exceptions: vendored binaries the engine/templates ship =====
 !Vendor/Binaries

@@ -1,0 +1,51 @@
+# Auto-normalize line endings: git decides text vs binary, stores LF in the repo,
+# checks out native on each platform (CRLF on Windows via core.autocrlf).
+* text=auto
+
+# ===== Source / text (LF in repo) =====
+*.cpp   text
+*.cc    text
+*.cxx   text
+*.c     text
+*.h     text
+*.hpp   text
+*.hxx   text
+*.inl   text
+*.lua   text
+*.md    text
+*.txt   text
+*.json  text
+*.yml   text
+*.yaml  text
+*.glsl  text
+*.vert  text
+*.frag  text
+
+# ===== Windows scripts (CRLF) =====
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# ===== Unix scripts (LF) =====
+*.sh    text eol=lf
+
+# ===== Binary (never modified) =====
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.bmp   binary
+*.ttf   binary
+*.otf   binary
+*.wav   binary
+*.ogg   binary
+*.mp3   binary
+*.flac  binary
+*.dll   binary
+*.exe   binary
+*.lib   binary
+*.a     binary
+*.so    binary
+*.dylib binary
+*.pdb   binary
+*.ipch  binary
