@@ -2,7 +2,6 @@ project "Walnut-Headless"
    kind "StaticLib"
    language "C++"
    cppdialect "C++20"
-   targetdir "bin/%{cfg.buildcfg}"
    staticruntime "off"
 
    files

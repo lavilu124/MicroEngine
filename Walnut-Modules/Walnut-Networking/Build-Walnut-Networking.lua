@@ -2,7 +2,6 @@ project "Walnut-Networking"
    kind "StaticLib"
    language "C++"
    cppdialect "C++20"
-   targetdir "bin/%{cfg.buildcfg}"
    staticruntime "off"
 
    files { "Source/**.h", "Source/**.cpp" }
@@ -19,7 +18,7 @@ project "Walnut-Networking"
       "../../Walnut/Source",
 
       "../../vendor/imgui",
-      "../../vendor/glfw/include",
+      "../../vendor/GLFW/include",
       "../../vendor/glm",
       "../../vendor/spdlog/include",
       --------------------------------------------------------

@@ -2,7 +2,6 @@ project "Walnut"
    kind "StaticLib"
    language "C++"
    cppdialect "C++20"
-   targetdir "bin/%{cfg.buildcfg}"
    staticruntime "off"
 
    files
@@ -20,7 +19,7 @@ project "Walnut"
       "Platform/GUI",
 
       "../vendor/imgui",
-      "../vendor/glfw/include",
+      "../vendor/GLFW/include",
       "../vendor/stb_image",
 
       "%{IncludeDir.VulkanSDK}",

@@ -2,7 +2,6 @@ project "SceneEditor"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++17"
-   targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
    files { "src/**.h", "src/**.cpp" }
@@ -10,7 +9,7 @@ project "SceneEditor"
    includedirs
    {
       "../vendor/imgui",
-      "../vendor/glfw/include",
+      "../vendor/GLFW/include",
 
       "../Walnut/Source",
       "../Walnut/Platform/GUI",
@@ -19,9 +18,8 @@ project "SceneEditor"
       "%{IncludeDir.glm}",
 
       -- Include Core
-      "../MicroEngine/Source",
-      "$(SolutionDir)dependencies/SFML/SFML-2.6.1/include",
-      "$(SolutionDir)MicroEngine/src"
+      "../MicroEngine/src",
+      "../dependencies/SFML/SFML-2.6.1/include"
    }
 
     links
@@ -31,7 +29,7 @@ project "SceneEditor"
     }
 
     prebuildcommands {
-      'del /q "$(OutDir)Micro.dll"',
+      'if exist "$(OutDir)Micro.dll" del /q "$(OutDir)Micro.dll"',
       'xcopy /y "$(SolutionDir)Binaries\\' .. outputdir .. '\\Micro\\Micro.dll" "$(OutDir)"'
      }
   
@@ -51,11 +49,11 @@ project "SceneEditor"
       runtime "Debug"
       symbols "On"
       links {
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-graphics-d.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-window-d.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-system-d.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-audio-d.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-network-d.lib"
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-graphics-d.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-window-d.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-system-d.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-audio-d.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-network-d.lib"
      }
 
    filter "configurations:Release"
@@ -64,11 +62,11 @@ project "SceneEditor"
       optimize "On"
       symbols "On"
       links {
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-graphics.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-window.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-system.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-audio.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-network.lib"
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-graphics.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-window.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-system.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-audio.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-network.lib"
      }
 
    filter "configurations:Dist"
@@ -78,9 +76,9 @@ project "SceneEditor"
       optimize "On"
       symbols "Off"
       links {
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-graphics.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-window.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-system.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-audio.lib",
-         "$(SolutionDir)dependencies/SFML/SFML-2.6.1/lib/sfml-network.lib"
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-graphics.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-window.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-system.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-audio.lib",
+         "../dependencies/SFML/SFML-2.6.1/lib/sfml-network.lib"
      }

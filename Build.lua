@@ -6,6 +6,7 @@ workspace "Micro Engine"
    -- Workspace-wide build options for MSVC
    filter "system:windows"
       buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
+   filter {}
 
 outputdir  = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
 

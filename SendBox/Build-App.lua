@@ -2,7 +2,6 @@ project "SendBox"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++17"
-   targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
    files { "src/**.h", "src/**.cpp" }
@@ -14,7 +13,6 @@ project "SendBox"
       "src",
 
 	  -- Include Core
-	  "../MicroEngine/Source",
       sfmlRoot .. "/include",
       "../MicroEngine/src"
    }

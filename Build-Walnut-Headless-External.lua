@@ -1,11 +1,11 @@
 -- WalnutExternal-Headless.lua
 
 IncludeDir = {}
-IncludeDir["glm"] = "../Vendor/glm"
-IncludeDir["spdlog"] = "../Vendor/spdlog/include"
+IncludeDir["glm"] = "../vendor/glm"
+IncludeDir["spdlog"] = "../vendor/spdlog/include"
 
 group "Dependencies"
-   include "Vendor/yaml-cpp"
+   include "vendor/yaml-cpp"
 group ""
 
 group "Core"
